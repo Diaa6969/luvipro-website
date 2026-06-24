@@ -14,7 +14,7 @@ const navItems = [
 export function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-obsidian/72 backdrop-blur-xl">
-      <nav className="section-shell flex h-20 items-center justify-between">
+      <nav className="section-shell flex h-16 min-w-0 items-center justify-between gap-3 sm:h-20">
         <BrandLogo />
 
         <div className="hidden items-center gap-8 lg:flex">
@@ -37,7 +37,7 @@ export function Navbar() {
         </div>
 
         <button
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white lg:hidden"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white sm:h-11 sm:w-11 lg:hidden"
           aria-label="Menü öffnen"
         >
           <Menu className="h-5 w-5" />

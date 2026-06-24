@@ -38,9 +38,9 @@ export function OcrVerification() {
               </div>
               <div className="space-y-3">
                 {["VIN", "Hersteller", "Typ", "Erstzulassung", "Kennzeichen"].map((field, index) => (
-                  <div key={field} className="grid grid-cols-[130px_1fr] gap-3 rounded-lg bg-white/5 p-3 text-sm">
+                  <div key={field} className="grid gap-2 rounded-lg bg-white/5 p-3 text-sm sm:grid-cols-[130px_1fr] sm:gap-3">
                     <span className="text-slate-400">{field}</span>
-                    <span className={index === 0 ? "text-pulse" : "text-slate-100"}>
+                    <span className={`${index === 0 ? "text-pulse" : "text-slate-100"} min-w-0 break-words`}>
                       {index === 0 ? "WBA5XXXXXX1234567" : "Platzhalter"}
                     </span>
                   </div>

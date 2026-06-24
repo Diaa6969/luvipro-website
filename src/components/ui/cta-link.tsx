@@ -17,10 +17,10 @@ export function CtaLink({ className = "", variant = "primary", children, ...prop
 
   return (
     <Link
-      className={`cta-sweep group inline-flex min-h-11 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition ${variants[variant]} ${className}`}
+      className={`cta-sweep group inline-flex min-h-11 w-full max-w-full items-center justify-center rounded-full px-5 py-3 text-center text-sm font-semibold transition sm:w-auto ${variants[variant]} ${className}`}
       {...props}
     >
-      <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+      <span className="relative z-10 inline-flex min-w-0 items-center justify-center gap-2 break-words">{children}</span>
     </Link>
   );
 }

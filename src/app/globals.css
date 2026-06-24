@@ -12,10 +12,16 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background: #05060d;
   color: #eef9ff;
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
@@ -62,6 +68,7 @@ body {
 
 .section-shell {
   width: min(1180px, calc(100% - 32px));
+  max-width: calc(100vw - 32px);
   margin-inline: auto;
 }
 
@@ -72,11 +79,19 @@ body {
 .cinematic-page {
   position: relative;
   isolation: isolate;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .cinematic-page > *:not(.cinematic-atmosphere) {
   position: relative;
   z-index: 1;
+}
+
+.cinematic-page section {
+  max-width: 100vw;
+  overflow-x: clip;
 }
 
 .cinematic-page section.bg-obsidian {
@@ -114,8 +129,8 @@ body {
   position: absolute;
   width: 46vw;
   height: 46vw;
-  min-width: 420px;
-  min-height: 420px;
+  min-width: min(420px, 110vw);
+  min-height: min(420px, 110vw);
   border-radius: 999px;
   filter: blur(58px);
   opacity: 0.46;
@@ -138,7 +153,7 @@ body {
 .cinematic-beam {
   position: absolute;
   height: 90px;
-  width: 72vw;
+  width: min(72vw, 760px);
   background: linear-gradient(90deg, transparent, rgba(32, 214, 255, 0.16), rgba(139, 92, 246, 0.16), transparent);
   filter: blur(18px);
   opacity: 0.42;
@@ -147,12 +162,12 @@ body {
 }
 
 .cinematic-beam-one {
-  left: -22vw;
+  left: max(-22vw, -120px);
   top: 18vh;
 }
 
 .cinematic-beam-two {
-  right: -24vw;
+  right: max(-24vw, -120px);
   top: 62vh;
   animation-delay: -6s;
 }
@@ -320,5 +335,28 @@ body {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-shell {
+    width: min(100% - 24px, 1180px);
+    max-width: calc(100vw - 24px);
+  }
+
+  .cinematic-glow {
+    width: 82vw;
+    height: 82vw;
+    filter: blur(42px);
+  }
+
+  .cinematic-beam {
+    width: 92vw;
+    height: 64px;
+    filter: blur(16px);
+  }
+
+  .glass-panel:hover {
+    transform: none;
   }
 }

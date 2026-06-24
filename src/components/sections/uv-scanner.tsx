@@ -8,7 +8,7 @@ export function UvScanner() {
       <div className="section-shell grid items-center gap-12 lg:grid-cols-2">
         <Reveal>
           <div className="relative">
-            <div className="absolute -inset-8 rounded-lg bg-ultraviolet/15 blur-3xl" />
+            <div className="absolute -inset-3 rounded-lg bg-ultraviolet/15 blur-2xl sm:-inset-8 sm:blur-3xl" />
             <div className="glass-panel relative rounded-lg p-6">
               <div className="aspect-square rounded-lg border border-pulse/20 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.35),transparent_34%),linear-gradient(150deg,rgba(255,255,255,0.08),rgba(0,0,0,0.5))] p-8">
                 <div className="flex h-full flex-col justify-between">
