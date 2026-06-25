@@ -17,7 +17,7 @@ export function Hero() {
           <div className="min-w-0 max-w-full">
             <div className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-pulse/30 bg-pulse/10 px-4 py-2 text-sm font-medium text-frost">
               <BadgeCheck className="h-4 w-4 text-pulse" />
-              <span className="min-w-0 break-words">Fahrzeugverifizierung für den deutschen Gebrauchtwagenmarkt</span>
+              <span className="min-w-0 break-words">Jedes Fahrzeug hat eine Geschichte. Wir bringen die Wahrheit ans Licht.</span>
             </div>
             <h1 className="text-balance max-w-full font-[var(--font-space-grotesk)] text-[clamp(2.55rem,11vw,4.5rem)] font-semibold leading-[1.02] text-white sm:text-6xl lg:text-7xl">
               LUVIPRO macht Fahrzeughistorie sichtbar.

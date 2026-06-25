@@ -94,43 +94,39 @@ export function Navbar() {
         </button>
       </nav>
 
-      <div
-        className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
-          isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-        }`}
-        aria-hidden={!isOpen}
-        onClick={closeMenu}
-      >
+      {isOpen ? (
         <div
-          id={menuId}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Mobile Navigation"
-          className={`ml-auto flex h-dvh w-[min(88vw,380px)] max-w-full flex-col overflow-y-auto border-l border-white/10 bg-obsidian/92 p-5 shadow-[0_0_70px_rgba(139,92,246,0.22)] backdrop-blur-2xl transition-transform duration-300 ${
-            isOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-          onClick={(event) => event.stopPropagation()}
+          className="fixed inset-0 z-[9999] overflow-hidden bg-black/80 backdrop-blur-xl lg:hidden"
+          onClick={closeMenu}
         >
-          <div className="flex items-center justify-between gap-4">
-            <BrandLogo />
-            <button
-              type="button"
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition hover:border-pulse/50 hover:bg-pulse/10"
-              aria-label="Menü schließen"
-              onClick={closeMenu}
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(139,92,246,0.24),transparent_34%),radial-gradient(circle_at_84%_72%,rgba(32,214,255,0.16),transparent_32%)]" />
+          <div
+            id={menuId}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation"
+            className="relative flex h-dvh min-h-screen w-full max-w-full flex-col overflow-y-auto border-white/10 bg-[linear-gradient(145deg,rgba(3,7,18,0.96),rgba(8,13,28,0.92))] p-5 text-white shadow-[0_0_90px_rgba(139,92,246,0.28)] sm:p-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <BrandLogo />
+              <button
+                type="button"
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition hover:border-pulse/50 hover:bg-pulse/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
+                aria-label="Menü schließen"
+                onClick={closeMenu}
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
 
-          <div className="mt-8 rounded-lg border border-white/10 bg-white/[0.045] p-3">
-            <nav className="space-y-1" aria-label="Mobile Hauptnavigation">
+            <nav className="mt-9 space-y-2" aria-label="Mobile Hauptnavigation">
               {mobileLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={closeMenu}
-                  className="block rounded-lg px-4 py-3 text-base font-semibold text-slate-100 transition hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
+                  className="block rounded-lg border border-white/10 bg-white/[0.045] px-4 py-4 text-base font-semibold text-slate-100 transition hover:border-pulse/35 hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
                 >
                   {link.label}
                 </Link>
@@ -140,32 +136,32 @@ export function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={closeMenu}
-                className="block rounded-lg px-4 py-3 text-base font-semibold text-slate-100 transition hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
+                className="block rounded-lg border border-white/10 bg-white/[0.045] px-4 py-4 text-base font-semibold text-slate-100 transition hover:border-pulse/35 hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
               >
                 Unser Shop
               </a>
             </nav>
-          </div>
 
-          <div className="mt-auto pt-8">
-            <div className="rounded-lg border border-ultraviolet/20 bg-ultraviolet/10 p-4">
-              <p className="text-xs font-semibold uppercase text-pulse">Rechtliches</p>
-              <nav className="mt-3 flex flex-wrap gap-2" aria-label="Rechtliche Links">
-                {legalLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={closeMenu}
-                    className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-300 transition hover:border-pulse/45 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
+            <div className="mt-auto pt-8">
+              <div className="rounded-lg border border-ultraviolet/20 bg-ultraviolet/10 p-4">
+                <p className="text-xs font-semibold uppercase text-pulse">Rechtliches</p>
+                <nav className="mt-3 flex flex-wrap gap-2" aria-label="Rechtliche Links">
+                  {legalLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={closeMenu}
+                      className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-300 transition hover:border-pulse/45 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : null}
     </header>
   );
 }
