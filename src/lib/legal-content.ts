@@ -12,10 +12,11 @@ export const datenschutzSections: LegalSection[] = [
     title: "Verantwortlicher",
     paragraphs: [
       "Verantwortlicher im Sinne der Datenschutz-Grundverordnung ist:",
-      "[Unternehmensname einfügen]\n[Adresse einfügen]\nDeutschland",
+      "[Unternehmensname einfügen]\n[Rechtsform einfügen]\nStandort: Hannover, Deutschland\n[vollständige ladungsfähige Anschrift einfügen]",
+      "Projektverantwortlicher / Ansprechpartner: Diaa Alameen",
+      "Telefon: +49 177 7969259",
       "Allgemeine Informationen: info@luvipro.de",
       "Kundenservice, Beschwerden und Datenschutzanfragen: customerservice@luvipro.de",
-      "Vertreten durch: [Vertretungsberechtigte Person einfügen]",
       "Falls ein Datenschutzbeauftragter bestellt wurde: [Kontaktdaten des Datenschutzbeauftragten einfügen]",
     ],
   },
@@ -130,6 +131,7 @@ export const datenschutzSections: LegalSection[] = [
     paragraphs: [
       "Wenn Nutzer LUVIPRO per Formular, E-Mail, Telefon oder über andere Kommunikationswege kontaktieren, werden die übermittelten Angaben verarbeitet, um die Anfrage zu bearbeiten.",
       "Dies kann insbesondere Name, E-Mail-Adresse, Telefonnummer, Unternehmensname, Nachrichtentext und technische Metadaten der Anfrage umfassen.",
+      "Projektverantwortlicher / Ansprechpartner: Diaa Alameen. Standort: Hannover, Deutschland. Telefon: +49 177 7969259.",
       "Für allgemeine Informationen kann die Kontaktaufnahme über info@luvipro.de erfolgen. Für Kundenservice, Beschwerden und Datenschutzanfragen kann die Kontaktaufnahme über customerservice@luvipro.de erfolgen.",
     ],
   },
@@ -225,6 +227,7 @@ export const datenschutzSections: LegalSection[] = [
     paragraphs: [
       "Anfragen zum Datenschutz können gerichtet werden an: customerservice@luvipro.de",
       "Für allgemeine Informationen kann LUVIPRO unter folgender Adresse kontaktiert werden: info@luvipro.de",
+      "Projektverantwortlicher / Ansprechpartner: Diaa Alameen. Standort: Hannover, Deutschland. Telefon: +49 177 7969259.",
       "Bitte geben Sie bei Anfragen möglichst an, auf welche Verarbeitung oder welchen Dienst sich Ihre Anfrage bezieht, damit wir diese effizient bearbeiten können.",
     ],
   },
@@ -241,9 +244,11 @@ export const agbSections: LegalSection[] = [
     title: "Anbieter",
     paragraphs: [
       "Anbieter der LUVIPRO Dienste ist:",
-      "[Unternehmensname einfügen]\n[Adresse einfügen]\nDeutschland",
+      "[Unternehmensname einfügen]\n[Rechtsform einfügen]\nStandort: Hannover, Deutschland\n[vollständige Anschrift einfügen]",
+      "Projektverantwortlicher / Ansprechpartner: Diaa Alameen",
+      "Telefon: +49 177 7969259",
       "Allgemeine Informationen: info@luvipro.de",
-      "Kundenservice, Beschwerden und Kundenbetreuung: customerservice@luvipro.de",
+      "Kundenservice, Beschwerden und Support: customerservice@luvipro.de",
     ],
   },
   {
@@ -400,12 +405,73 @@ export const agbSections: LegalSection[] = [
   {
     title: "Kontakt",
     paragraphs: [
+      "Projektverantwortlicher / Ansprechpartner: Diaa Alameen",
+      "Telefon: +49 177 7969259",
       "Für allgemeine Informationen: info@luvipro.de",
-      "Für Kundenservice, Beschwerden und Kundenbetreuung: customerservice@luvipro.de",
+      "Für Kundenservice, Beschwerden und Support: customerservice@luvipro.de",
     ],
   },
   {
     title: "Schlussbestimmungen",
     paragraphs: ["Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt."],
+  },
+];
+
+export const impressumIntro = [
+  "Stand: [Datum einfügen]",
+  "Hinweis: Dieses Impressum ist ein Platzhalter. Die vollständigen Anbieterangaben werden vor dem offiziellen geschäftlichen Betrieb und nach Abschluss der Unternehmensregistrierung ergänzt. Diese Seite muss vor produktiver Nutzung rechtlich geprüft und vervollständigt werden.",
+];
+
+export const impressumSections: LegalSection[] = [
+  {
+    title: "Angaben gemäß § 5 DDG",
+    paragraphs: [
+      "[Unternehmensname einfügen]",
+      "[Rechtsform einfügen]",
+      "Standort: Hannover, Deutschland",
+      "[vollständige ladungsfähige Anschrift einfügen]",
+    ],
+  },
+  {
+    title: "Projektverantwortlicher / Ansprechpartner",
+    paragraphs: ["Diaa Alameen"],
+  },
+  {
+    title: "Kontakt",
+    paragraphs: [
+      "Telefon: +49 177 7969259",
+      "Allgemeine Informationen: info@luvipro.de",
+      "Kundenservice, Beschwerden und Datenschutzanfragen: customerservice@luvipro.de",
+    ],
+  },
+  {
+    title: "Umsatzsteuer-ID",
+    paragraphs: ["[USt-IdNr. einfügen, falls vorhanden]"],
+  },
+  {
+    title: "Registereintrag",
+    paragraphs: ["[Registergericht und Registernummer einfügen, falls vorhanden]"],
+  },
+  {
+    title: "Verantwortlich für den Inhalt",
+    paragraphs: ["Diaa Alameen", "[vollständige Anschrift einfügen]"],
+  },
+  {
+    title: "Rechtlicher Hinweis",
+    paragraphs: [
+      "LUVIPRO befindet sich in der Aufbauphase. Nach Abschluss der Unternehmensregistrierung werden die vollständigen Anbieterangaben, die Rechtsform und die vertretungsberechtigte Person ergänzt.",
+    ],
+  },
+  {
+    title: "Haftung für Inhalte",
+    paragraphs: [
+      "Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden, soweit gesetzlich zulässig.",
+    ],
+  },
+  {
+    title: "Haftung für Links",
+    paragraphs: [
+      "Diese Website kann Links zu externen Websites Dritter enthalten. Auf deren Inhalte haben wir keinen Einfluss. Für die Inhalte verlinkter Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich.",
+    ],
   },
 ];

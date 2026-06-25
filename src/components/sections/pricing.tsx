@@ -19,7 +19,7 @@ const plans = [
     href: "/verify",
   },
   {
-    name: "Shopify-Shop",
+    name: "Unser Shop",
     price: "Zubehör",
     features: ["Sticker-Sets", "Einstiegspakete", "Markenmaterialien", "Gerätepakete"],
     cta: "Zum Shop",
