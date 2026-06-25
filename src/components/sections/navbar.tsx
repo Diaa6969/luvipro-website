@@ -33,7 +33,7 @@ export function Navbar() {
           <CtaLink href="/verify" variant="secondary">
             Fahrzeug prüfen
           </CtaLink>
-          <CtaLink href="/partner-workshops">Partner werden</CtaLink>
+          <CtaLink href="/contact">Partner werden</CtaLink>
         </div>
 
         <button

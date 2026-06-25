@@ -13,7 +13,7 @@ export function PartnerMap() {
             title="Werkstattkarte als vorbereiteter Platzhalter."
             description="Die echte Kartenintegration kommt später. Der Bereich zeigt schon jetzt, wie Partnerwerkstätten regional sichtbar werden."
           />
-          <CtaLink href="/partner-workshops" className="mt-8">
+          <CtaLink href="/contact" className="mt-8">
             Werkstatt eintragen
           </CtaLink>
         </Reveal>

@@ -30,6 +30,8 @@ export function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-white"
               >
                 {link.label}

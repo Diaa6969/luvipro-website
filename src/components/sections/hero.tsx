@@ -26,7 +26,7 @@ export function Hero() {
               Ein vernetztes System aus UV-Inspektionsgeräten, verschlüsselten QR-Stickern, VIN-Suche, Fahrzeugschein-OCR und digitalen PDF-Reports für Werkstätten, Verkäufer und Käufer.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <CtaLink href="/partner-workshops" className="gap-2">
+              <CtaLink href="/contact" className="gap-2">
                 Partnerwerkstatt werden <ArrowRight className="h-4 w-4" />
               </CtaLink>
               <CtaLink href="/verify" variant="secondary">

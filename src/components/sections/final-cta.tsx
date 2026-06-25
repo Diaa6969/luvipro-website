@@ -16,7 +16,7 @@ export function FinalCta() {
               Starte als Partnerwerkstatt, verifiziere ein Fahrzeug oder sichere dir App-Frühzugang.
             </p>
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-              <CtaLink href="/partner-workshops" className="gap-2">
+              <CtaLink href="/contact" className="gap-2">
                 Partnerwerkstatt werden <ArrowRight className="h-4 w-4" />
               </CtaLink>
               <CtaLink href="/verify" variant="secondary">

@@ -9,7 +9,7 @@ const plans = [
     price: "Einrichtung + Nutzung",
     features: ["UV-Inspektionsgeräte", "Report-Aktivierung", "Werkstattprofil", "Partneranfragen"],
     cta: "Partner werden",
-    href: "/partner-workshops",
+    href: "/contact",
   },
   {
     name: "Fahrzeugverifizierung",
@@ -52,7 +52,13 @@ export function Pricing() {
                     </div>
                   ))}
                 </div>
-                <CtaLink href={plan.href} variant={index === 0 ? "primary" : "secondary"} className="mt-8 gap-2">
+                <CtaLink
+                  href={plan.href}
+                  variant={index === 0 ? "primary" : "secondary"}
+                  className="mt-8 gap-2"
+                  target={plan.href.startsWith("http") ? "_blank" : undefined}
+                  rel={plan.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                >
                   {plan.cta}
                   {plan.href.startsWith("http") ? <ExternalLink className="h-4 w-4" /> : null}
                 </CtaLink>
