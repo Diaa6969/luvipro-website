@@ -9,6 +9,9 @@ const links = [
   { label: "App-Frühzugang", href: "/app" },
   { label: "Shopify-Shop", href: "https://luvipro.shop" },
   { label: "Kontakt", href: "/contact" },
+  { label: "Datenschutz", href: "/datenschutz" },
+  { label: "AGB", href: "/agb" },
+  { label: "Terms", href: "/terms" },
 ];
 
 export function Footer() {
