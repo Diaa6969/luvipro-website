@@ -58,7 +58,7 @@ export default async function ReportPreviewPage({
       <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px", fontFamily: "Arial, sans-serif" }}>
         <h1>Bericht nicht gefunden</h1>
         <p>Der QR-Code ist ungültig oder der Bericht ist nicht mehr aktiv.</p>
-        <a href="/">Zur Startseite</a>
+        <Link href="/">Zur Startseite</Link>
       </main>
     );
   }
