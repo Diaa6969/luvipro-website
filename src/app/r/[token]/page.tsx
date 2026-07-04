@@ -46,10 +46,9 @@ async function getInspectionPreview(token: string): Promise<PreviewRow | null> {
 export default async function ReportPreviewPage({
   params,
 }: {
-  params: { token: string } | Promise<{ token: string }>;
+  params: Promise<{ token: string }>;
 }) {
-  const resolvedParams = await params;
-  const token = resolvedParams.token;
+  const { token } = await params;
 
   const preview = await getInspectionPreview(token);
 
