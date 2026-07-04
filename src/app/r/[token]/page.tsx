@@ -105,21 +105,21 @@ export default async function ReportPreviewPage({
         Dies ist die öffentliche Vorschau des LUVIPRO Prüfberichts. Der vollständige Bericht wird erst nach dem Kauf freigeschaltet.
       </p>
 
-      <a
-        href={`https://app.luvipro.de/report-purchase?token=${encodeURIComponent(token)}`}
-        style={{
-          display: "inline-block",
-          marginTop: 24,
-          padding: "14px 22px",
-          borderRadius: 12,
-          background: "#111",
-          color: "#fff",
-          textDecoration: "none",
-          fontWeight: 600,
-        }}
-      >
-        Bericht kaufen
-      </a>
+     <a
+  href={`luvipro://report-purchase?token=${encodeURIComponent(token)}`}
+  style={{
+    display: "inline-block",
+    marginTop: 24,
+    padding: "14px 22px",
+    borderRadius: 12,
+    background: "#111",
+    color: "#fff",
+    textDecoration: "none",
+    fontWeight: 600,
+  }}
+>
+  Bericht kaufen
+</a>
     </main>
   );
 }
