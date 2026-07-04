@@ -106,7 +106,7 @@ export default async function ReportPreviewPage({
       </p>
 
      <a
-  href={`luvipro://report-purchase?token=${encodeURIComponent(token)}`}
+  href={`luvipro://luvipro.de/report-purchase?token=${encodeURIComponent(token)}`}
   style={{
     display: "inline-block",
     marginTop: 24,
