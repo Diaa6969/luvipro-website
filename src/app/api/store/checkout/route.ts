@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
       billing_address_collection: "required",
       "tax_id_collection[enabled]": "true",
       "automatic_tax[enabled]": "true",
+      "invoice_creation[enabled]": "true",
       customer_email: d.email,
       customer_creation: "always",
       locale: "de",
