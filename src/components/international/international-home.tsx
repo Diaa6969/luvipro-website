@@ -184,6 +184,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                 </div>
               ))}
             </div>
+            <CtaLink href="/products" className="mt-8">{t.site.shop} — LU3656060</CtaLink>
           </Reveal>
         </div>
       </section>
