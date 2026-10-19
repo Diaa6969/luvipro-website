@@ -1,7 +1,7 @@
 import {
   AlertTriangle, ArrowRight, BadgeCheck, BadgeEuro, Bell, Car, CarFront, Check,
   CircuitBoard, DatabaseZap, ExternalLink, FileCheck2, FileLock2, FileScan,
-  FileWarning, Fingerprint, Gauge, LockKeyhole, MapPin, MapPinned, Navigation,
+  FileWarning, Fingerprint, LockKeyhole, MapPin, MapPinned, Navigation,
   ScanLine, ScanSearch, ScanText, ShieldAlert, ShieldCheck, Smartphone,
   Sparkles, Store, UserCheck, UserRoundCheck, Wrench, Zap,
 } from "lucide-react";
@@ -14,7 +14,7 @@ import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
 import { InternationalNavbar, LocaleDocument } from "./international-navbar";
 import { internationalHomeCopy, type InternationalLocale } from "@/lib/international-home-copy";
 
-const problemIcons = [Gauge, FileWarning, ShieldAlert];
+const problemIcons = [ScanSearch, FileWarning, ShieldAlert];
 const ecosystemIcons = [ScanSearch, CarFront, FileCheck2, FileCheck2, MapPinned, Store];
 const flowIcons = [Wrench, BadgeEuro, UserCheck];
 const securityIcons = [FileLock2, DatabaseZap, UserRoundCheck];
