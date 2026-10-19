@@ -7,7 +7,7 @@ const links = [
   { label: "Fahrzeug verifizieren", href: "/verify" },
   { label: "Marktplatz", href: "/marketplace" },
   { label: "App-Frühzugang", href: "/app" },
-  { label: "Unser Shop", href: "https://luvipro.shop" },
+  { label: "Gerät & Voranfrage", href: "/products" },
   { label: "Kontakt", href: "/contact" },
   { label: "Impressum", href: "/impressum" },
   { label: "Datenschutz", href: "/datenschutz" },
