@@ -1,0 +1,28 @@
+name: LUVIPRO feature build check
+
+on:
+  push:
+    branches:
+      - feature/international-home-en-ar
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Verify production build (payments disabled)
+        env:
+          STORE_PREORDERS_ENABLED: 'false'
+          STORE_CHECKOUT_ENABLED: 'false'
+        run: npm run build
