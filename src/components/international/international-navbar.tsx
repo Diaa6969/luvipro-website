@@ -133,15 +133,13 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
                   {link.label}
                 </Link>
               ))}
-              <a
-                href="https://luvipro.shop"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/products"
                 onClick={closeMenu}
                 className="block rounded-lg border border-white/10 bg-white/[0.06] px-4 py-4 text-lg font-semibold text-slate-100"
               >
                 {t.site.shop}
-              </a>
+              </Link>
             </nav>
             <div className="mt-7">
               <p className="mb-3 text-xs font-semibold uppercase text-pulse">{t.site.languages}</p>
