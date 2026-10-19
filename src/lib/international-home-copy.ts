@@ -44,7 +44,7 @@ const en = {
       title: "Trust matters in the used-car market.",
       description: "Buyers need clear, understandable evidence of what was inspected, not vague assurances.",
       items: [
-        ["Hidden issues", "Signs of damage and repairs can be overlooked without a structured inspection."],
+        ["UV-assisted paint inspection", "Partner workshops use UV light to examine paint surfaces and document irregularities that may indicate repainting or repair work."],
         ["Unclear information", "Vehicle descriptions and documents alone do not always tell the full story."],
         ["Disconnected processes", "Workshops, sellers and buyers often lack a shared way to understand inspection results."],
       ],
@@ -203,7 +203,7 @@ const ar: typeof en = {
       title: "الثقة عنصر أساسي في سوق السيارات المستعملة.",
       description: "يحتاج المشتري إلى نتائج فحص واضحة ومفهومة، لا إلى وعود عامة لا يمكن التحقق منها.",
       items: [
-        ["مشاكل غير ظاهرة", "قد تمر آثار الضرر والإصلاحات دون ملاحظة عند غياب فحص منظّم."],
+        ["فحص الطلاء بالأشعة فوق البنفسجية", "تستخدم الورش الشريكة الأشعة فوق البنفسجية لفحص أسطح الطلاء وتوثيق المؤشرات التي قد تدل على إعادة الطلاء أو آثار الإصلاح."],
         ["معلومات غير واضحة", "وصف السيارة ووثائقها لا يكشفان دائمًا الصورة الكاملة."],
         ["إجراءات غير مترابطة", "غالبًا لا توجد وسيلة موحدة تساعد الورشة والبائع والمشتري على فهم نتائج الفحص."],
       ],
