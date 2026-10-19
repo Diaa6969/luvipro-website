@@ -19,11 +19,11 @@ const plans = [
     href: "/verify",
   },
   {
-    name: "Unser Shop",
-    price: "Zubehör",
-    features: ["Sticker-Sets", "Einstiegspakete", "Markenmaterialien", "Gerätepakete"],
-    cta: "Zum Shop",
-    href: "https://luvipro.shop",
+    name: "UV-Prüfgerät LU3656060",
+    price: "3.000 € netto / Gerät",
+    features: ["Ein professionelles 365-nm-UV-Gerät", "2 Akkus und Ladegerät", "Transportkoffer und Schutzbrille", "Unverbindliche Voranfrage möglich"],
+    cta: "Gerät ansehen",
+    href: "/products",
   },
 ];
 
