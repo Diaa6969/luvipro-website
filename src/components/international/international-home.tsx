@@ -417,7 +417,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               {[
                 [t.site.workshops, "/partner-workshops"], [t.site.verify, "/verify"],
                 [t.site.marketplace, "/marketplace"], [t.site.app, "/app"],
-                [t.site.shop, "https://luvipro.shop"], [t.site.contact, "/contact"],
+                [t.site.shop, "/products"], [t.site.contact, "/contact"],
                 [t.site.imprint, "/impressum"], [t.site.privacy, "/datenschutz"], [t.site.terms, "/agb"],
               ].map(([label, href]) => (
                 <Link
