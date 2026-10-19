@@ -1,3 +1,17 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://luvipro.de/",
+    languages: {
+      "de-DE": "https://luvipro.de/",
+      "en": "https://luvipro.de/en",
+      "ar": "https://luvipro.de/ar",
+      "x-default": "https://luvipro.de/",
+    },
+  },
+};
+
 import { AppComingSoon } from "@/components/sections/app-coming-soon";
 import { Ecosystem } from "@/components/sections/ecosystem";
 import { FinalCta } from "@/components/sections/final-cta";
