@@ -109,15 +109,13 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-                <a
-                  href="https://luvipro.shop"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/products"
                   onClick={closeMenu}
                   className="block rounded-lg border border-white/10 bg-white/[0.06] px-4 py-4 text-lg font-semibold text-slate-100 shadow-[0_0_28px_rgba(139,92,246,0.08)] transition hover:border-pulse/35 hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
                 >
-                  Unser Shop
-                </a>
+                  Gerät & Voranfrage
+                </Link>
               </nav>
 
               <div className="mt-8">
