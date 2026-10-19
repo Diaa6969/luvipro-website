@@ -1,12 +1,12 @@
-import { AlertTriangle, FileWarning, Gauge, ShieldAlert } from "lucide-react";
+import { AlertTriangle, FileWarning, ScanSearch, ShieldAlert } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const problems = [
   {
-    icon: Gauge,
-    title: "Manipulierte Kilometerstände",
-    text: "Tacho-Betrug und unklare Servicehistorien zerstören Vertrauen vor dem Kauf.",
+    icon: ScanSearch,
+    title: "UV-gestützte Lackprüfung",
+    text: "Unsere Partnerwerkstätten prüfen Lackoberflächen mit UV-Licht und dokumentieren Auffälligkeiten, die auf Nachlackierungen oder Reparaturspuren hindeuten können.",
   },
   {
     icon: FileWarning,
