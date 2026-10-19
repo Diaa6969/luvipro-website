@@ -239,7 +239,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
           </div>
           <Link href="/products" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-pulse hover:text-white">← Zurück zum Gerät</Link>
         </div>
-        <p className="mt-4 text-center text-xs text-slate-500">Ein Produkt · Klare Konditionen · Kein Shopify</p>
+        <p className="mt-4 text-center text-xs text-slate-500">Ein Produkt · Klare Konditionen · Direkt bei LUVIPRO</p>
       </aside>
     </div>
   );
