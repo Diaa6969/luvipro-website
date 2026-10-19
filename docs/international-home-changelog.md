@@ -48,3 +48,13 @@ After a successful build and user visual approval, merge changes separately. **D
 ## Rollback
 
 Since all changes are isolated in a feature branch, simply switch back to `main` and do not merge the feature branch. The production branch stays at its previous state unless separately approved.
+
+## 2026-10-20 — UV paint inspection card
+
+User-approved content adjustment: replace the first card about odometer manipulation with an actual LUVIPRO UV-assisted paint inspection service. Files changed:
+
+- `src/components/sections/problem.tsx`: German first card now **UV-gestützte Lackprüfung**, with qualified text describing potential paint/repair indicators; speedometer icon replaced with UV inspection/search icon.
+- `src/lib/international-home-copy.ts`: English and Arabic card text updated accordingly.
+- `src/components/international/international-home.tsx`: replaced first card icon across the international pages.
+
+No other cards, navigation behavior, backend, production branch or deployment were changed. The earlier Git commits provide an exact rollback if desired. New changes require local build and visual re-check before publishing.
