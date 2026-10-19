@@ -34,8 +34,9 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     if (pending || (mode === "buy" && !paymentsReady)) return;
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(formElement);
     const inquiry: ShopInquiry = {
       sku: DEVICE.sku,
       quantity,
@@ -103,7 +104,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
 
       setReference(result.reference ?? "");
       setNotice({ type: "success", text: "Vielen Dank. Ihre unverbindliche Produktanfrage wurde erfolgreich übermittelt. Wir melden uns bei Ihnen." });
-      event.currentTarget.reset();
+      formElement.reset();
       setQuantity(1);
     } catch (error) {
       setNotice({ type: "error", text: error instanceof Error ? error.message : "Bitte versuchen Sie es erneut." });
