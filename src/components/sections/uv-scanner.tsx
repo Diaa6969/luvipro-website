@@ -1,5 +1,6 @@
 import { CircuitBoard, ScanLine, Sparkles } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
+import { CtaLink } from "@/components/ui/cta-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export function UvScanner() {
@@ -47,6 +48,9 @@ export function UvScanner() {
               </div>
             ))}
           </div>
+          <CtaLink href="/products" className="mt-8">
+            LU3656060 ansehen & unverbindlich anfragen
+          </CtaLink>
         </Reveal>
       </div>
     </section>
