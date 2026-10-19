@@ -31,6 +31,12 @@ const legalLinks = [
   { label: "AGB", href: "/agb" },
 ];
 
+const languageLinks = [
+  { label: "Deutsch", href: "/", code: "de" },
+  { label: "English", href: "/en", code: "en" },
+  { label: "العربية", href: "/ar", code: "ar" },
+];
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -114,6 +120,29 @@ export function Navbar() {
                 </a>
               </nav>
 
+              <div className="mt-8">
+                <p className="mb-3 text-xs font-semibold uppercase text-pulse">Sprache wählen</p>
+                <nav className="flex flex-wrap gap-2" aria-label="Sprache wählen">
+                  {languageLinks.map((item) => (
+                    <Link
+                      key={item.code}
+                      href={item.href}
+                      lang={item.code}
+                      hrefLang={item.code}
+                      onClick={closeMenu}
+                      aria-current={item.code === "de" ? "page" : undefined}
+                      className={`rounded-full border px-3 py-2 text-sm transition ${
+                        item.code === "de"
+                          ? "border-pulse/50 bg-pulse/15 text-white"
+                          : "border-white/15 text-slate-300 hover:border-pulse/50 hover:text-white"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
               <div className="mt-auto pt-10">
                 <div className="rounded-lg border border-ultraviolet/20 bg-ultraviolet/10 p-4">
                   <p className="text-xs font-semibold uppercase text-pulse">Rechtliches</p>
@@ -160,6 +189,30 @@ export function Navbar() {
               Fahrzeug prüfen
             </CtaLink>
             <CtaLink href="/contact">Partner werden</CtaLink>
+          </div>
+
+          <div className="hidden lg:block">
+            <details className="group relative">
+              <summary className="cursor-pointer rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse">
+                DE ▾
+              </summary>
+              <div className="absolute end-0 top-full z-[60] mt-2 min-w-44 rounded-lg border border-white/15 bg-[#080e1d] p-3 shadow-2xl">
+                <nav className="grid gap-2" aria-label="Sprache wählen">
+                  {languageLinks.map((item) => (
+                    <Link
+                      key={item.code}
+                      href={item.href}
+                      lang={item.code}
+                      hrefLang={item.code}
+                      aria-current={item.code === "de" ? "page" : undefined}
+                      className="rounded-lg px-3 py-2 text-sm text-slate-200 transition hover:bg-pulse/10 hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            </details>
           </div>
 
           <button
