@@ -9,7 +9,7 @@ const en = {
     workshops: "Partner workshops",
     app: "LUVIPRO App",
     contact: "Contact",
-    shop: "Our shop",
+    shop: "Device & ordering",
     imprint: "Legal notice",
     privacy: "Privacy policy",
     terms: "Terms and conditions",
@@ -99,7 +99,7 @@ const en = {
       plans: [
         ["Partner workshops", "Partnership inquiries", ["UV inspection hardware", "Inspection workflow", "Workshop profile", "Partner support"], "Become a partner", "/contact"],
         ["Vehicle reports", "Per vehicle", ["VIN-based lookup", "Structured findings", "Digital report", "Clear inspection scope"], "Check a vehicle", "/verify"],
-        ["Our shop", "Hardware and accessories", ["UV inspection device", "Planned accessories", "Product information", "Availability updates"], "Visit our shop", "https://luvipro.shop"],
+        ["Device & ordering", "LU3656060 · €3,000 net", ["365 nm UV inspection device", "Two batteries and charger", "Carrying case and protective glasses", "Non-binding product inquiry"], "View the device", "/products"],
       ] as [string, string, string[], string, string][],
     },
     partnerMap: {
@@ -168,7 +168,7 @@ const ar: typeof en = {
     workshops: "الورش الشريكة",
     app: "تطبيق LUVIPRO",
     contact: "تواصل معنا",
-    shop: "متجرنا",
+    shop: "الجهاز والطلب",
     imprint: "البيانات القانونية",
     privacy: "سياسة الخصوصية",
     terms: "الشروط والأحكام",
@@ -258,7 +258,7 @@ const ar: typeof en = {
       plans: [
         ["الورش الشريكة", "طلبات الشراكة", ["أجهزة فحص بالأشعة فوق البنفسجية", "نظام عمل الفحص", "ملف تعريفي للورشة", "دعم الشركاء"], "انضم كشريك", "/contact"],
         ["تقارير السيارات", "لكل سيارة", ["البحث برقم الهيكل VIN", "نتائج فحص منظّمة", "تقرير رقمي", "نطاق فحص واضح"], "التحقق من السيارة", "/verify"],
-        ["متجرنا", "أجهزة وملحقات", ["جهاز الفحص", "ملحقات مخطط لها", "معلومات المنتجات", "تحديثات التوفر"], "زيارة المتجر", "https://luvipro.shop"],
+        ["الجهاز والطلب", "LU3656060 · 3,000 يورو صافي", ["جهاز فحص بأشعة 365 نانومتر", "بطاريتان وشاحن", "حقيبة ونظارات حماية", "طلب استفسار غير ملزم"], "عرض الجهاز", "/products"],
       ],
     },
     partnerMap: {
