@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { DEVICE } from "@/lib/store";
+import { sendHostingerMail } from "@/lib/hostinger-smtp";
 
 export const runtime = "nodejs";
 
@@ -60,9 +61,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
-  // Stripe Dashboard is the transaction source of truth. This notification is optional.
-  // Resend idempotency keys limit duplicate email delivery across normal Stripe retries.
-  if (process.env.RESEND_API_KEY && process.env.STORE_FROM_EMAIL && process.env.STORE_ORDER_EMAIL) {
+  // Stripe Dashboard remains the source of truth for orders and payment status.
+  // SMTP has no cross-request idempotency. Do not fulfil an order solely because
+  // a notification was received; match the Stripe session ID in the Dashboard.
+  if (process.env.SMTP_USER && process.env.SMTP_PASSWORD && process.env.STORE_ORDER_EMAIL) {
     const emailBody = [
       "LUVIPRO – Stripe meldet eine bezahlte Checkout-Session.",
       "Vor Versand unbedingt Zahlung, Kundenadresse und Rechnung im Stripe Dashboard prüfen.",
@@ -72,29 +74,16 @@ export async function POST(request: NextRequest) {
       `Kontakt: ${session.metadata?.contact || "-"}`,
       `Kunden-E-Mail: ${session.customer_details?.email || "-"}`,
       `Betrag inklusive Steuer und Versand: ${typeof session.amount_total === "number" ? (session.amount_total / 100).toFixed(2) : "-"} ${session.currency || "eur"}`,
-    ].join("\n");
+    ].join("\\n");
     try {
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-          "Idempotency-Key": `stripe-${event.id}`,
-        },
-        body: JSON.stringify({
-          from: process.env.STORE_FROM_EMAIL,
-          to: [process.env.STORE_ORDER_EMAIL],
-          subject: `LUVIPRO: Zahlungsmitteilung ${session.id || DEVICE.sku}`,
-          text: emailBody,
-        }),
-        cache: "no-store",
-        signal: AbortSignal.timeout(10000),
+      await sendHostingerMail({
+        to: process.env.STORE_ORDER_EMAIL,
+        replyTo: process.env.STORE_ORDER_EMAIL,
+        subject: `LUVIPRO: Zahlungsmitteilung ${session.id || DEVICE.sku}`,
+        text: emailBody,
       });
-      if (!response.ok) {
-        console.error("LUVIPRO Stripe paid-session notification failed", response.status);
-        return NextResponse.json({ error: "Notification failed" }, { status: 502 });
-      }
     } catch {
+      console.error("LUVIPRO paid-session SMTP notification failed");
       return NextResponse.json({ error: "Notification unavailable" }, { status: 502 });
     }
   }
