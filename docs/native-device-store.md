@@ -1,5 +1,13 @@
 # LUVIPRO native device store / product ordering — implementation log
 
+> **Current status (2026-10-20):** Automatic device inquiries and optional paid-order
+> alerts are implemented with **Hostinger SMTP** (Nodemailer), not Resend.
+> Hostinger credentials are intentionally **not** stored in GitHub.
+> Visit `docs/hostinger-smtp-setup.md` for the current safe Vercel setup.
+> Historical Resend notes below are retained only as the audit trail of earlier
+> development decisions; they are superseded and must not be followed.
+
+
 Branch: `feature/international-home-en-ar` (extends earlier untranslated German homepage and translated English/Arabic homepages).
 The public `main` branch has not been changed. **No live sales, charges or production deployment were performed.**
 
