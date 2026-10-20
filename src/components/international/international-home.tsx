@@ -292,59 +292,6 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
         </div>
       </section>
 
-      <section id="marketplace" className="bg-obsidian py-24">
-        <div className="section-shell">
-          <div className="grid items-end gap-8 lg:grid-cols-[1fr_auto]">
-            <Reveal><SectionHeading eyebrow={s.market.eyebrow} title={s.market.title} description={s.market.description} /></Reveal>
-            <Reveal delay={0.08}><CtaLink href="/marketplace" variant="secondary" className="gap-2">{s.market.button} <ArrowRight className="h-4 w-4" /></CtaLink></Reveal>
-          </div>
-          <div className="mt-12 grid gap-5 lg:grid-cols-3">
-            {s.market.vehicles.map(([name, details], index) => (
-              <Reveal key={name} delay={index * 0.08}>
-                <article className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.045]">
-                  <div className="flex aspect-[16/10] items-center justify-center bg-[radial-gradient(circle_at_50%_30%,rgba(32,214,255,0.22),transparent_28%),linear-gradient(145deg,rgba(255,255,255,0.06),rgba(0,0,0,0.5))]">
-                    <CarFront className="h-20 w-20 text-white/75" />
-                  </div>
-                  <div className="p-5">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-pulse"><BadgeCheck className="h-4 w-4" />{s.market.example}</div>
-                    <h3 className="mt-4 font-[var(--font-space-grotesk)] text-xl font-semibold" dir="ltr">{name}</h3>
-                    <p className="mt-2 text-sm text-slate-400">{details}</p>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-midnight py-24">
-        <div className="section-shell grid items-center gap-12 lg:grid-cols-[1fr_0.9fr]">
-          <Reveal>
-            <SectionHeading eyebrow={s.app.eyebrow} title={s.app.title} description={s.app.description} />
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <CtaLink href="/app">{s.app.button}</CtaLink>
-              <CtaLink href="/contact" variant="secondary">{s.app.contact}</CtaLink>
-            </div>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <div className="glass-panel mx-auto max-w-sm rounded-lg p-4">
-              <div className="rounded-lg border border-white/10 bg-black/45 p-5">
-                <div className="mx-auto mb-5 h-1 w-20 rounded-full bg-white/20" />
-                <div className="rounded-lg bg-pulse/10 p-4">
-                  <Smartphone className="h-8 w-8 text-pulse" />
-                  <p className="mt-6 font-[var(--font-space-grotesk)] text-2xl font-semibold">{s.app.pass}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">{s.app.passDescription}</p>
-                </div>
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="rounded-lg bg-white/5 p-4"><Bell className="h-5 w-5 text-pulse" /><p className="mt-3 text-sm">{s.app.updates}</p></div>
-                  <div className="rounded-lg bg-white/5 p-4"><Zap className="h-5 w-5 text-pulse" /><p className="mt-3 text-sm">{s.app.search}</p></div>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
       <section className="bg-obsidian py-24">
         <div className="section-shell">
           <Reveal><SectionHeading eyebrow={s.security.eyebrow} title={s.security.title} description={s.security.description} align="center" /></Reveal>
