@@ -328,7 +328,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
                 <CtaLink href="/contact" className="gap-2">{s.end.partner} <ArrowRight className="h-4 w-4" /></CtaLink>
                 <CtaLink href="/verify" variant="secondary">{s.end.verify}</CtaLink>
-                <CtaLink href="/app" variant="secondary">{s.end.app}</CtaLink>
+                <CtaLink href="/partner-workshops" variant="secondary">{s.end.app}</CtaLink>
               </div>
             </div>
           </Reveal>
@@ -345,7 +345,6 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
             <div className="grid gap-3 sm:grid-cols-2">
               {[
                 [t.site.workshops, "/partner-workshops"], [t.site.verify, "/verify"],
-                [t.site.marketplace, "/marketplace"], [t.site.app, "/app"],
                 [t.site.shop, "/products"], [t.site.contact, "/contact"],
                 [t.site.imprint, "/impressum"], [t.site.privacy, "/datenschutz"], [t.site.terms, "/agb"],
               ].map(([label, href]) => (
