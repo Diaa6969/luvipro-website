@@ -1,4 +1,4 @@
-/** Central pricing reference for planned LUVIPRO workshop inspection services. */
+/** Central pricing reference for LUVIPRO workshop inspection services. */
 export const INSPECTION_SERVICES = [
   {
     id: "standard",
@@ -24,6 +24,6 @@ export const INSPECTION_SERVICES = [
   },
 ] as const;
 
-/** Both plans are prospective. Do not take payment or claim inspections are bookable. */
+/** Only confirmed workshop locations appear in availability search. */
 export const INSPECTION_PRICING_NOTE =
-  "Geplante Leistungen über teilnehmende Partnerwerkstätten. Die Verfügbarkeit wird gesondert bekanntgegeben; der konkrete Leistungsumfang wird vor einer Buchung bestätigt.";
+  "Verfügbarkeit abhängig vom Standort der Partnerwerkstatt. Über die Werkstattsuche finden Sie bestätigte Partner; Leistungsumfang und Termin werden von der Werkstatt vereinbart.";
