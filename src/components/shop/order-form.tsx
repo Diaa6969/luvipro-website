@@ -177,7 +177,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
               </label>
             )}
             <p className="text-xs leading-6 text-slate-500">{mode === "preorder"
-              ? "Unser Angebot richtet sich an Unternehmen und gewerbliche Kunden. Ihre Angaben verwenden wir zur Bearbeitung Ihrer Anfrage gemäß unserer Datenschutzerklärung."
+              ? "Unser Angebot richtet sich an Unternehmen und gewerbliche Kunden. Ihre Angaben werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet."
               : "Unser Angebot richtet sich an Unternehmen und gewerbliche Kunden. Ihre Angaben verwenden wir zur Bestell- und Zahlungsabwicklung gemäß unserer Datenschutzerklärung."}</p>
           </section>
 
