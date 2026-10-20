@@ -3,7 +3,8 @@ export type InternationalLocale = "en" | "ar";
 const en = {
   site: {
     home: "Home",
-    products: "Products",
+    products: "Device LU3656060",
+    prices: "Prices",
     verify: "Verify a vehicle",
     marketplace: "Marketplace",
     workshops: "Partner workshops",
@@ -23,7 +24,7 @@ const en = {
     switchLanguage: "Select language",
   },
   sections: {
-    nav: ["Ecosystem", "UV device", "How it works", "Business model", "Marketplace"],
+    nav: ["Ecosystem", "Device", "How it works", "Prices", "Marketplace"],
     hero: {
       badge: "Every vehicle has a story. We bring the truth to light.",
       title: "LUVIPRO makes vehicle history visible.",
@@ -94,11 +95,11 @@ const en = {
     },
     business: {
       eyebrow: "Business model",
-      title: "Professional inspections and transparent digital reports.",
-      description: "The service offering is being prepared. This preview does not represent an active booking or payment system.",
+      title: "Clear pricing for the device and vehicle inspections.",
+      description: "Standard and Premium are planned inspection services delivered through partner workshops. Availability and final details will be confirmed before booking.",
       plans: [
-        ["Partner workshops", "Partnership inquiries", ["UV inspection hardware", "Inspection workflow", "Workshop profile", "Partner support"], "Become a partner", "/contact"],
-        ["Vehicle reports", "Per vehicle", ["VIN-based lookup", "Structured findings", "Digital report", "Clear inspection scope"], "Check a vehicle", "/verify"],
+        ["Standard inspection", "€59.99 / vehicle", ["UV-assisted paint inspection", "Visual exterior inspection", "Interior inspection", "Documented findings"], "View prices", "/products#preise"],
+        ["Premium inspection", "€119.99 / vehicle", ["Everything in Standard", "Fault-code reading", "Paint-thickness measurement", "Extended inspection documentation"], "View prices", "/products#preise"],
         ["Device & ordering", "LU3656060 · €3,000 net", ["365 nm UV inspection device", "Two batteries and charger", "Carrying case and protective glasses", "Non-binding product inquiry"], "View the device", "/products"],
       ] as [string, string, string[], string, string][],
     },
@@ -162,7 +163,8 @@ const en = {
 const ar: typeof en = {
   site: {
     home: "الرئيسية",
-    products: "المنتجات",
+    products: "جهاز LU3656060",
+    prices: "الأسعار",
     verify: "التحقق من السيارة",
     marketplace: "السوق",
     workshops: "الورش الشريكة",
@@ -182,7 +184,7 @@ const ar: typeof en = {
     switchLanguage: "اختيار اللغة",
   },
   sections: {
-    nav: ["المنظومة", "جهاز الأشعة فوق البنفسجية", "طريقة العمل", "نموذج العمل", "السوق"],
+    nav: ["المنظومة", "الجهاز", "طريقة العمل", "الأسعار", "السوق"],
     hero: {
       badge: "لكل سيارة قصة. نحن نسلّط الضوء على الحقيقة.",
       title: "LUVIPRO يكشف تفاصيل تاريخ السيارة.",
@@ -253,11 +255,11 @@ const ar: typeof en = {
     },
     business: {
       eyebrow: "نموذج العمل",
-      title: "فحوص احترافية وتقارير رقمية واضحة.",
-      description: "الخدمات ما زالت قيد التحضير. هذه المعاينة لا تعني أن نظام الحجز أو الدفع متاح حاليًا.",
+      title: "أسعار واضحة للجهاز وخدمات فحص السيارات.",
+      description: "الفحص العادي والبريميوم خدمتان مخطط لهما عبر الورش الشريكة، وسيُؤكَّد التوفر والتفاصيل قبل الحجز.",
       plans: [
-        ["الورش الشريكة", "طلبات الشراكة", ["أجهزة فحص بالأشعة فوق البنفسجية", "نظام عمل الفحص", "ملف تعريفي للورشة", "دعم الشركاء"], "انضم كشريك", "/contact"],
-        ["تقارير السيارات", "لكل سيارة", ["البحث برقم الهيكل VIN", "نتائج فحص منظّمة", "تقرير رقمي", "نطاق فحص واضح"], "التحقق من السيارة", "/verify"],
+        ["الفحص العادي Standard", "59,99 € للسيارة", ["فحص الطلاء بالأشعة فوق البنفسجية", "فحص بصري للهيكل الخارجي", "فحص المقصورة الداخلية", "توثيق نتائج الفحص"], "عرض الأسعار", "/products#preise"],
+        ["الفحص الشامل Premium", "119,99 € للسيارة", ["كل خدمات Standard", "قراءة رموز الأعطال", "قياس سماكة الطلاء", "توثيق فحص موسّع"], "عرض الأسعار", "/products#preise"],
         ["الجهاز والطلب", "LU3656060 · 3,000 يورو صافي", ["جهاز فحص بأشعة 365 نانومتر", "بطاريتان وشاحن", "حقيبة ونظارات حماية", "طلب استفسار غير ملزم"], "عرض الجهاز", "/products"],
       ],
     },
