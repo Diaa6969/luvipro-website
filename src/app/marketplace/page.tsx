@@ -1,26 +1,13 @@
 import type { Metadata } from "next";
-import { PreparationPage } from "@/components/ui/preparation-page";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Marktplatz | LUVIPRO",
-  description: "Der LUVIPRO Marktplatz befindet sich in Vorbereitung.",
+  title: "LUVIPRO | Fahrzeugprüfung",
+  robots: { index: false, follow: true },
 };
 
 export default function MarketplacePage() {
-  return (
-    <PreparationPage
-      eyebrow="Marktplatz"
-      headline="Marketplace in Vorbereitung"
-      text="Der LUVIPRO Marketplace wird künftig verifizierte Fahrzeugdaten, QR-Reports und strukturierte Inserate miteinander verbinden."
-      cards={[
-        { title: "Verifizierte Fahrzeugdaten", text: "in Vorbereitung" },
-        { title: "QR-Reports", text: "in Vorbereitung" },
-        { title: "Strukturierte Inserate", text: "in Vorbereitung" },
-      ]}
-      actions={[
-        { label: "Interesse anmelden", href: "/contact", variant: "primary" },
-        { label: "Fahrzeugverifizierung ansehen", href: "/verify" },
-      ]}
-    />
-  );
+  // The marketplace is outside the initial launch scope. Do not present
+  // fake listings or an unfinished page. Keep legacy links functional.
+  redirect("/verify");
 }
