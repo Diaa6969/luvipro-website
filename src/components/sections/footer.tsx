@@ -5,8 +5,6 @@ import { BrandLogo } from "@/components/ui/brand-logo";
 const links = [
   { label: "Partnerwerkstatt", href: "/partner-workshops" },
   { label: "Fahrzeug verifizieren", href: "/verify" },
-  { label: "Marktplatz", href: "/marketplace" },
-  { label: "App-Frühzugang", href: "/app" },
   { label: "Gerät & Voranfrage", href: "/products" },
   { label: "Kontakt", href: "/contact" },
   { label: "Impressum", href: "/impressum" },
@@ -42,7 +40,7 @@ export function Footer() {
         </div>
         <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 LUVIPRO. Alle Rechte vorbehalten.</p>
-          <p>Oberflächen-MVP. Platzhalter-Links und Platzhaltergrafiken.</p>
+          <p>LUVIPRO · Professionelle UV-Fahrzeugprüfung und digitale Dokumentation.</p>
         </div>
       </div>
     </footer>
