@@ -116,7 +116,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
 
         {mode === "preorder" && (
           <div className="mb-7 rounded-xl border border-pulse/20 bg-pulse/10 p-4 text-sm leading-7 text-slate-200">
-            <strong>Keine verbindliche Bestellung.</strong> Die Übermittlung ist eine Produktanfrage. Preise, Liefertermin und Versand werden vor einer späteren Bestellung gesondert bestätigt.
+            <strong>Keine verbindliche Bestellung.</strong> Die Anfrage ist unverbindlich. Deutschlandweiter Versand: {formatEuro(DEVICE.shippingNetCentsGermany)} netto pro Bestellung; zzgl. anwendbarer Steuer. Der Liefertermin wird separat bestätigt.
           </div>
         )}
 
@@ -219,10 +219,11 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
           <div className="mt-6 space-y-4 border-t border-white/10 pt-5">
             <div className="flex items-center justify-between gap-4 text-sm"><span className="text-slate-300">Einzelpreis netto</span><span>{formatEuro(DEVICE.unitPriceNetCents)}</span></div>
             <div className="flex items-center justify-between gap-4 text-sm"><span className="text-slate-300">Anzahl</span><span>{quantity}</span></div>
-            <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4"><span className="font-semibold">Zwischensumme netto</span><span className="font-[var(--font-space-grotesk)] text-2xl font-bold text-pulse">{formatEuro(DEVICE.unitPriceNetCents * quantity)}</span></div>
+            <div className="flex items-center justify-between gap-4 text-sm"><span className="text-slate-300">Versand innerhalb Deutschlands (einmalig, netto)</span><span className="shrink-0 font-semibold">{formatEuro(DEVICE.shippingNetCentsGermany)}</span></div>
+            <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4"><span className="font-semibold">Gesamtsumme netto</span><span className="font-[var(--font-space-grotesk)] text-2xl font-bold text-pulse">{formatEuro(DEVICE.unitPriceNetCents * quantity + DEVICE.shippingNetCentsGermany)}</span></div>
           </div>
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4 text-xs leading-6 text-slate-400">
-            Zzgl. anwendbarer Umsatzsteuer und ggf. Versand. Ein verbindlicher Endpreis wird vor einem späteren Kaufabschluss ausgewiesen.
+            Inklusive {formatEuro(DEVICE.shippingNetCentsGermany)} Versand netto innerhalb Deutschlands pro Bestellung. Zzgl. anwendbarer Umsatzsteuer. Der verbindliche Endbetrag wird vor dem Bezahlvorgang ausgewiesen.
           </div>
           <Link href="/products" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-pulse hover:text-white">← Zurück zum Gerät</Link>
         </div>
