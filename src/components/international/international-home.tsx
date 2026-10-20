@@ -12,6 +12,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
 import { InternationalNavbar, LocaleDocument } from "./international-navbar";
+import { WorkshopFinder } from "@/components/sections/workshop-finder";
 import { internationalHomeCopy, type InternationalLocale } from "@/lib/international-home-copy";
 
 const problemIcons = [ScanSearch, FileWarning, ShieldAlert];
@@ -285,29 +286,9 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
         </div>
       </section>
 
-      <section className="bg-midnight py-24">
-        <div className="section-shell grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-          <Reveal>
-            <SectionHeading eyebrow={s.partnerMap.eyebrow} title={s.partnerMap.title} description={s.partnerMap.description} />
-            <CtaLink href="/contact" className="mt-8">{s.partnerMap.button}</CtaLink>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <div className="glass-panel relative min-h-[420px] overflow-hidden rounded-lg p-6">
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(217,247,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(217,247,255,0.06)_1px,transparent_1px)] bg-[size:48px_48px]" />
-              <div className="relative flex items-center justify-between">
-                <div>
-                  <p className="text-sm uppercase text-pulse">{s.partnerMap.location}</p>
-                  <p className="mt-2 font-[var(--font-space-grotesk)] text-2xl font-semibold">{s.partnerMap.mapTitle}</p>
-                </div>
-                <Navigation className="h-8 w-8 shrink-0 text-pulse" />
-              </div>
-              {["left-[18%] top-[42%]", "left-[45%] top-[30%]", "left-[62%] top-[58%]", "left-[75%] top-[38%]"].map((position) => (
-                <span key={position} className={`absolute ${position} flex h-12 w-12 items-center justify-center rounded-full border border-pulse/40 bg-pulse/15 shadow-glow`}>
-                  <MapPin className="h-6 w-6 text-pulse" />
-                </span>
-              ))}
-            </div>
-          </Reveal>
+      <section id="partner-map" className="scroll-mt-24 bg-midnight py-24">
+        <div className="section-shell">
+          <Reveal><WorkshopFinder locale={locale} /></Reveal>
         </div>
       </section>
 
