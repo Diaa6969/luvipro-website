@@ -17,17 +17,15 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "LUVIPRO – Digitale Fahrzeugverifizierung für den Gebrauchtwagenmarkt",
   description:
-    "LUVIPRO verbindet UV-Inspektionsgeräte, QR-Reports, VIN-Suche, Fahrzeugschein-OCR und Partnerwerkstätten zu einem digitalen Verifizierungssystem für Gebrauchtwagen.",
+    "LUVIPRO verbindet professionelle UV-Fahrzeugprüfung, FIN/VIN-basierte Fahrzeugzuordnung und digitale Prüfberichte im Partnerwerkstatt-Netzwerk.",
   keywords: [
     "LUVIPRO",
     "Fahrzeugverifizierung",
     "Gebrauchtwagen",
     "VIN Prüfung",
     "UV Inspektion",
-    "QR Report",
     "Partnerwerkstatt",
     "Fahrzeughistorie",
-    "Fahrzeugschein OCR",
     "Gebrauchtwagen Prüfung",
   ],
   metadataBase: new URL("https://luvipro.de"),
@@ -41,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "LUVIPRO – Digitale Fahrzeugverifizierung",
     description:
-      "Ein vernetztes System aus UV-Inspektionsgeräten, QR-Stickern, VIN-Suche, OCR und digitalen Reports für mehr Transparenz im Gebrauchtwagenmarkt.",
+      "LUVIPRO verbindet UV-Fahrzeugprüfung, VIN-basierte Fahrzeugzuordnung und strukturierte digitale Prüfberichte für mehr Transparenz.",
     url: "https://luvipro.de",
     siteName: "LUVIPRO",
     locale: "de_DE",
@@ -59,7 +57,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LUVIPRO – Digitale Fahrzeugverifizierung",
     description:
-      "Mehr Transparenz für Gebrauchtwagen durch UV-Prüfung, QR-Reports, VIN-Suche und Partnerwerkstätten.",
+      "Mehr Transparenz durch professionelle UV-Prüfung, FIN/VIN-basierte Berichte und Partnerwerkstätten.",
     images: ["/brand/luvipro-logo.png"],
   },
 };
