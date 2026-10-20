@@ -35,7 +35,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formElement = event.currentTarget;
-    if (pending || (mode === "buy" && !paymentsReady)) return;
+    if (pending || (mode === "buy" && !paymentsReady) || (mode === "preorder" && !preorderReady)) return;
     const form = new FormData(formElement);
     const inquiry: ShopInquiry = {
       sku: DEVICE.sku,
@@ -62,29 +62,6 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
     setPending(true);
     setNotice(null);
     try {
-      if (mode === "preorder" && !preorderReady) {
-        const body = [
-          "Unverbindliche Produktanfrage – kein Kaufvertrag / keine Zahlung",
-          `Produkt: ${DEVICE.title} (${DEVICE.sku})`,
-          `Menge: ${quantity}`,
-          `Netto-Richtwert: ${formatEuro(DEVICE.unitPriceNetCents * quantity)} (zzgl. Steuern/Versand)`,
-          `Firma: ${inquiry.company}`,
-          `Ansprechpartner: ${inquiry.contact}`,
-          `E-Mail: ${inquiry.email}`,
-          `Telefon: ${inquiry.phone || "Nicht angegeben"}`,
-          `Anschrift: ${inquiry.street || "Nicht angegeben"}, ${inquiry.postalCode} ${inquiry.city}`,
-          `USt-IdNr.: ${inquiry.vatId || "Nicht angegeben"}`,
-          `Nachricht: ${inquiry.note || "Keine"}`,
-        ].join("\n");
-        const mailto = `mailto:customerservice@luvipro.de?subject=${encodeURIComponent("Unverbindliche Anfrage LU3656060")}&body=${encodeURIComponent(body)}`;
-        window.location.href = mailto;
-        setNotice({
-          type: "info",
-          text: "Ihr E-Mail-Programm sollte sich jetzt öffnen. Bitte senden Sie die vorbereitete Nachricht selbst ab. Ihre Anfrage wurde durch die Website noch NICHT versendet.",
-        });
-        return;
-      }
-
       const endpoint = mode === "preorder" ? "/api/store/preorder" : "/api/store/checkout";
       const response = await fetch(endpoint, {
         method: "POST",
@@ -103,7 +80,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
       }
 
       setReference(result.reference ?? "");
-      setNotice({ type: "success", text: "Vielen Dank. Ihre unverbindliche Produktanfrage wurde erfolgreich übermittelt. Wir melden uns bei Ihnen." });
+      setNotice({ type: "success", text: "Vielen Dank! Ihre unverbindliche Produktanfrage wurde vom E-Mail-Dienst zur Zustellung an LUVIPRO angenommen. Wir melden uns bei Ihnen." });
       formElement.reset();
       setQuantity(1);
     } catch (error) {
@@ -140,6 +117,14 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
         {mode === "preorder" && (
           <div className="mb-7 rounded-xl border border-pulse/20 bg-pulse/10 p-4 text-sm leading-7 text-slate-200">
             <strong>Keine verbindliche Bestellung.</strong> Die Übermittlung ist eine Produktanfrage. Preise, Liefertermin und Versand werden vor einer späteren Bestellung gesondert bestätigt.
+          </div>
+        )}
+
+        {mode === "preorder" && !preorderReady && (
+          <div role="status" className="mb-7 rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-sm leading-7 text-amber-100">
+            <strong>Automatischer Versand wird eingerichtet.</strong> Die Anfrage kann noch nicht versendet werden.
+            Bis zur Freischaltung erreichen Sie uns unter{" "}
+            <a className="font-semibold underline underline-offset-2" href="mailto:customerservice@luvipro.de">customerservice@luvipro.de</a>.
           </div>
         )}
 
@@ -191,7 +176,9 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
                 <span>Ich akzeptiere die <Link href="/agb" target="_blank" rel="noopener noreferrer" className="text-pulse underline underline-offset-2">AGB</Link> für einen späteren verbindlichen Kauf. <span className="text-pulse">*</span></span>
               </label>
             )}
-            <p className="text-xs leading-6 text-slate-500">Nur für gewerbliche Kunden. Bitte keine sensiblen personenbezogenen Daten in die Nachricht schreiben.</p>
+            <p className="text-xs leading-6 text-slate-500">{mode === "preorder"
+              ? "Unser Angebot richtet sich an Unternehmen und gewerbliche Kunden. Ihre Angaben verwenden wir zur Bearbeitung Ihrer Anfrage gemäß unserer Datenschutzerklärung."
+              : "Unser Angebot richtet sich an Unternehmen und gewerbliche Kunden. Ihre Angaben verwenden wir zur Bestell- und Zahlungsabwicklung gemäß unserer Datenschutzerklärung."}</p>
           </section>
 
           {notice && (
@@ -206,10 +193,10 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
             </div>
           )}
 
-          <button type="submit" disabled={pending || (mode === "buy" && !paymentsReady)}
+          <button type="submit" disabled={pending || (mode === "buy" && !paymentsReady) || (mode === "preorder" && !preorderReady)}
             className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-pulse px-6 py-4 text-base font-bold text-obsidian shadow-glow transition hover:bg-frost focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pulse disabled:cursor-not-allowed disabled:opacity-45">
             {pending ? "Bitte warten ..." : mode === "preorder"
-              ? (preorderReady ? "Unverbindliche Anfrage senden" : "Anfrage per E-Mail vorbereiten")
+              ? (preorderReady ? "Unverbindliche Anfrage automatisch senden" : "Anfrageversand noch nicht freigeschaltet")
               : (paymentsReady ? "Weiter zur sicheren Zahlung" : "Direktkauf noch nicht verfügbar")}
             {!pending && mode === "preorder" && <ArrowRight className="h-5 w-5" />}
           </button>
@@ -217,8 +204,8 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
           <p className="flex items-start gap-2 text-xs leading-6 text-slate-400">
             <ShieldCheck className="h-4 w-4 shrink-0 text-pulse" />
             {mode === "preorder" ? (preorderReady
-              ? "Ihre Anfrage wird sicher übermittelt; es erfolgt keine automatische Buchung oder Abbuchung."
-              : "Die Website öffnet Ihre E-Mail-App mit einer ausgefüllten Nachricht. Erst Sie selbst senden die Anfrage ab.")
+              ? "Nach erfolgreicher Annahme durch den E-Mail-Dienst erscheint Ihre Referenznummer; es erfolgt keine Buchung oder Abbuchung."
+              : "Der automatische Anfrageversand wird erst nach Einrichtung des geschützten E-Mail-Dienstes freigeschaltet. Bis dahin können Sie uns direkt kontaktieren.")
               : "Nach Freischaltung erfolgt die Zahlung über eine sichere Stripe-Checkout-Seite. Zahlungsdaten werden nicht in dieser Website gespeichert."}
           </p>
         </form>
