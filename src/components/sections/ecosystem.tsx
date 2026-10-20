@@ -1,14 +1,14 @@
-import { Bot, FileCheck2, MapPinned, QrCode, ScanSearch, Store, Wrench } from "lucide-react";
+import { CarFront, FileCheck2, MapPinned, ScanSearch, Search, ShieldCheck, Wrench } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const ecosystemItems = [
-  { icon: ScanSearch, title: "UV-Inspektionsgerät", text: "Partnerwerkstätten prüfen versteckte Sicherheitsmerkmale direkt am Fahrzeug." },
-  { icon: QrCode, title: "Verschlüsselter QR-Sticker", text: "Fahrzeuge erhalten einen scanbaren Nachweis für Reports und Status." },
-  { icon: Bot, title: "Fahrzeugschein-OCR & VIN-Abgleich", text: "Fahrzeugschein-Daten werden digital extrahiert und für Plausibilität vorbereitet." },
+  { icon: ScanSearch, title: "UV-Inspektionsgerät", text: "Professionelle UV-Prüftechnik unterstützt Werkstätten bei der Untersuchung von Lackoberflächen." },
+  { icon: Search, title: "VIN-/FIN-Suche", text: "Fahrzeugberichte werden über die Fahrzeug-Identifizierungsnummer zugeordnet und gefunden." },
+  { icon: CarFront, title: "Fahrzeugprüfung", text: "Strukturierte Prüfabläufe dokumentieren Ergebnisse aus UV-Prüfung und Sichtkontrolle." },
   { icon: FileCheck2, title: "PDF-Reports", text: "Strukturierte Fahrzeugreports für Verkauf, Ankauf und Dokumentation." },
-  { icon: MapPinned, title: "Partnernetzwerk", text: "Werkstattprofile und regionale Abdeckung als spätere Kartenintegration." },
-  { icon: Store, title: "Marktplatz", text: "Verifizierte Inserate werden als eigene Vertrauenskategorie sichtbar." },
+  { icon: MapPinned, title: "Partnerwerkstätten", text: "Über die Werkstattsuche lassen sich verfügbare Partnerstandorte in der eigenen Region prüfen." },
+  { icon: ShieldCheck, title: "Nachvollziehbarkeit", text: "Prüfberichte halten den dokumentierten Untersuchungsumfang und seine Ergebnisse fest." },
 ];
 
 export function Ecosystem() {
@@ -40,7 +40,7 @@ export function Ecosystem() {
         </div>
         <div className="mt-12 flex items-center justify-center gap-3 text-sm text-slate-400">
           <Wrench className="h-4 w-4 text-pulse" />
-          Oberflächen-Vorschau. Integrationen folgen in späteren Produktphasen.
+          Klar dokumentierte Fahrzeugprüfungen: von der Werkstatt bis zum digitalen Bericht.
         </div>
       </div>
     </section>
