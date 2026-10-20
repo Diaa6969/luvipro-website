@@ -78,11 +78,12 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
   const closeMenu = () => setIsOpen(false);
   const navItems = t.sections.nav.map((label, index) => ({
     label,
-    href: ["#ecosystem", "#scanner", "#how-it-works", "#pricing", "#marketplace"][index],
+    href: [`/${locale}#ecosystem`, "/products", `/${locale}#how-it-works`, "/products#preise", `/${locale}#marketplace`][index],
   }));
   const mobileLinks = [
     { label: t.site.home, href: `/${locale}` },
     { label: t.site.products, href: "/products" },
+    { label: t.site.prices, href: "/products#preise" },
     { label: t.site.verify, href: "/verify" },
     { label: t.site.marketplace, href: "/marketplace" },
     { label: t.site.workshops, href: "/partner-workshops" },
@@ -133,13 +134,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/products"
-                onClick={closeMenu}
-                className="block rounded-lg border border-white/10 bg-white/[0.06] px-4 py-4 text-lg font-semibold text-slate-100"
-              >
-                {t.site.shop}
-              </Link>
+
             </nav>
             <div className="mt-7">
               <p className="mb-3 text-xs font-semibold uppercase text-pulse">{t.site.languages}</p>
