@@ -82,3 +82,21 @@ To roll back, stay on or switch to the untouched `main` branch; do not merge the
 3. Verify both inspection prices and scopes, including Premium being additive to Standard.
 4. Verify the enquiry form does not launch a local mail app, does not show a fake success with missing Resend config, and still previews quantity totals accurately.
 5. With a **test** verified sender and pre-order flag enabled in a separate approved test environment, submit a synthetic non-binding enquiry and confirm email delivery to the specified mailbox and reference display.
+
+
+## 2026-10-20 — workshop availability map, publication copy, shipping and Resend
+
+**Scope:** Feature branch only. The previous form/UI versions remain in earlier Git commits. No payment or order was executed.
+
+1. **Inspection availability:** Both German Standard and Premium `Verfügbarkeit prüfen` buttons now navigate to `/#partner-map`. English and Arabic inspection CTA buttons scroll to their respective `#partner-map` section. `src/components/sections/workshop-finder.tsx` adds searchable city/postal-code form and a truthful empty state. Its verified-partner list is deliberately empty until real workshop information is approved; it never invents workshops. The `/partner-workshops` and `/verify` routes contain the same finder; previous decorative, fake map pins were removed.
+2. **Launch copy:** Removed German QR/AI/OCR device claims and marketing placeholders, the marketplace/App preview panels from the launch homepages, and the unsuited marketplace navigation links. Removed “geplant/in Vorbereitung” statements from visible equipment and inspection marketing; unfinished real functionality is **not represented as active** (the order form accurately states when email/Stripe is off). Replaced old `/marketplace` placeholder with redirect to useful `/verify` and updated App product explainer route.
+3. **Shipping:** `DEVICE.shippingNetCentsGermany=2999` (EUR 29.99 **net per order**, not per device). This appears on product page, the B2B order price calculation and automated Resend request; Stripe Checkout `shipping_rate_data` always reflects this fixed rate and restricts country to DE. Applicable taxes are calculated separately. **Please confirm whether EUR 29.99 was intended net or gross before opening sales.**
+4. **Resend:** Server-side API exists and is integrated with the order form; mail recipient `STORE_ORDER_EMAIL` is configured for `customerservice@luvipro.de` in the sample environment. The checkout/inquiry buttons depend on secure server environment variables. Without an actual verified sender/API key, automatic requests cannot be enabled or end-to-end tested. See `docs/resend-setup.md` for the user's required account setup. No credentials were obtained or inserted into Git.
+
+### Verification
+- GitHub Actions runs `npm ci && npm run build` on each feature branch push. No manual browser or real payment/email tests performed.
+- Check `/`, `/en`, `/ar`, `/products`, `/products#preise`, `/order?mode=preorder`, `/order?mode=buy`, `/partner-workshops`, and `/verify` on desktop and narrow viewport.
+- Before moving changes to `main` require a separate deployment decision; main remains unchanged.
+
+### Rollback
+Use the feature branch commit history to restore any changed file, or keep the production branch `main` untouched.
