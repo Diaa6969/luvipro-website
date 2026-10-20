@@ -12,7 +12,7 @@ const navItems = [
   { label: "Gerät", href: "/products" },
   { label: "Ablauf", href: "/#how-it-works" },
   { label: "Preise", href: "/products#preise" },
-  { label: "Marktplatz", href: "/#marketplace" },
+  { label: "Werkstätten", href: "/#partner-map" },
 ];
 
 const mobileLinks = [
@@ -20,9 +20,7 @@ const mobileLinks = [
   { label: "Gerät LU3656060", href: "/products" },
   { label: "Preise", href: "/products#preise" },
   { label: "Fahrzeug verifizieren", href: "/verify" },
-  { label: "Marketplace", href: "/marketplace" },
   { label: "Partnerwerkstätten", href: "/partner-workshops" },
-  { label: "LUVIPRO App", href: "/app" },
   { label: "Kontakt", href: "/contact" },
 ];
 
