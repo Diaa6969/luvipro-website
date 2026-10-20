@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       `Kontakt: ${session.metadata?.contact || "-"}`,
       `Kunden-E-Mail: ${session.customer_details?.email || "-"}`,
       `Betrag inklusive Steuer und Versand: ${typeof session.amount_total === "number" ? (session.amount_total / 100).toFixed(2) : "-"} ${session.currency || "eur"}`,
-    ].join("\\n");
+    ].join("\n");
     try {
       await sendHostingerMail({
         to: process.env.STORE_ORDER_EMAIL,
