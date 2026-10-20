@@ -12,7 +12,7 @@ function sameOrigin(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   if (!isPreorderBackendReady()) {
-    return NextResponse.json({ error: "Die Online-Anfrage ist noch nicht freigeschaltet. Bitte verwenden Sie die E-Mail-Anfrage." }, { status: 503 });
+    return NextResponse.json({ error: "Der automatische Anfrageversand ist noch nicht aktiviert. Bitte kontaktieren Sie customerservice@luvipro.de." }, { status: 503 });
   }
   if (!sameOrigin(request) || !request.headers.get("content-type")?.includes("application/json")) {
     return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 403 });
