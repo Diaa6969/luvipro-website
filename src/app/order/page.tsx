@@ -9,7 +9,7 @@ import { isPreorderBackendReady, isStripeCheckoutReady } from "@/lib/store";
 
 export const metadata: Metadata = {
   title: "Gerät anfragen oder kaufen | LUVIPRO LU3656060",
-  description: "Unverbindliche Anfrage für das LUVIPRO LU3656060 UV-Prüfgerät. Sichere Direktzahlung nach Verkaufsstart.",
+  description: "Unverbindliche Anfrage für das LUVIPRO LU3656060 UV-Prüfgerät. Sichere Direktzahlung über Stripe bei aktivierter Zahlungsfunktion.",
   robots: { index: false, follow: true },
   alternates: { canonical: "https://luvipro.de/order" },
 };
@@ -35,11 +35,11 @@ export default async function OrderPage({ searchParams }: { searchParams: Search
             Ihr Weg zum <span className="text-pulse">LU3656060.</span>
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-            Fordern Sie Ihr professionelles UV-Prüfgerät unverbindlich an oder nutzen Sie nach der Freischaltung unseren integrierten Direktkauf direkt auf unserer Website.
+            Fragen Sie Ihr professionelles UV-Prüfgerät unverbindlich an oder nutzen Sie den integrierten Direktkauf, sobald die sichere Zahlung aktiviert ist.
           </p>
           <div className="mt-6 flex flex-wrap gap-4 text-sm text-slate-300">
             <span className="inline-flex items-center gap-2"><ClipboardList className="h-4 w-4 text-pulse" /> Unverbindliche Anfrage</span>
-            <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4 text-pulse" /> Später: Stripe Checkout</span>
+            <span className="inline-flex items-center gap-2"><CreditCard className="h-4 w-4 text-pulse" /> Stripe Checkout</span>
             <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-pulse" /> Für Unternehmen</span>
           </div>
         </div>
