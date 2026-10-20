@@ -150,7 +150,7 @@ const en = {
       description: "Discover the LUVIPRO concept, ask about joining the partner network or follow the upcoming app launch.",
       partner: "Become a partner workshop",
       verify: "Vehicle information",
-      app: "About the app",
+      app: "Find a workshop",
     },
     footer: {
       description: "UV-supported vehicle inspection and digital reporting for the used-car market.",
@@ -310,7 +310,7 @@ const ar: typeof en = {
       description: "تعرّف على LUVIPRO، واستفسر عن الانضمام إلى شبكة الشركاء، وتابع أخبار إطلاق التطبيق.",
       partner: "انضم كورشة شريكة",
       verify: "معلومات السيارة",
-      app: "عن التطبيق",
+      app: "البحث عن ورشة",
     },
     footer: {
       description: "فحص السيارات بمساعدة الأشعة فوق البنفسجية والتقارير الرقمية لسوق السيارات المستعملة.",
