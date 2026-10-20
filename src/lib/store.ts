@@ -88,8 +88,8 @@ export function parseInquiry(payload: unknown): { ok: true; data: ShopInquiry } 
 export function isPreorderBackendReady() {
   return (
     process.env.STORE_PREORDERS_ENABLED === "true" &&
-    Boolean(process.env.RESEND_API_KEY) &&
-    Boolean(process.env.STORE_FROM_EMAIL) &&
+    Boolean(process.env.SMTP_USER) &&
+    Boolean(process.env.SMTP_PASSWORD) &&
     Boolean(process.env.STORE_ORDER_EMAIL)
   );
 }
