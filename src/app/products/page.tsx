@@ -10,6 +10,7 @@ import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
 import { Reveal } from "@/components/ui/reveal";
 import { CtaLink } from "@/components/ui/cta-link";
 import { IncludedItem, ProductShowcase } from "@/components/shop/product-showcase";
+import { Pricing } from "@/components/sections/pricing";
 import { BUNDLE_ITEMS, DEVICE, formatEuro, isStripeCheckoutReady } from "@/lib/store";
 
 export const metadata: Metadata = {
@@ -157,6 +158,8 @@ export default function ProductsPage() {
           </div>
         </div>
       </section>
+
+      <Pricing id="preise" embedded />
 
       <section className="bg-obsidian py-20 sm:py-24">
         <div className="section-shell">
