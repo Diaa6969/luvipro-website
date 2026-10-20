@@ -15,27 +15,27 @@ import { BUNDLE_ITEMS, DEVICE, formatEuro, isStripeCheckoutReady } from "@/lib/s
 
 export const metadata: Metadata = {
   title: "LUVIPRO LU3656060 kaufen & vorbestellen | UV-Prüfgerät für Werkstätten",
-  description: "LUVIPRO LU3656060: professionelles UV-Prüfgerät mit 365 nm, zwei Akkus, Ladegerät, Koffer und Schutzbrille. Jetzt unverbindlich anfragen. Direktkauf in Vorbereitung.",
+  description: "LUVIPRO LU3656060: professionelles UV-Prüfgerät mit 365 nm, zwei Akkus, Ladegerät, Koffer und Schutzbrille. Gerät, Leistungen, Lieferumfang und B2B-Preise im Überblick.",
   alternates: { canonical: "https://luvipro.de/products" },
 };
 
 const benefits = [
   { icon: ScanLine, title: "UV-Inspektion mit 365 nm", body: "Unterstützt Werkstätten bei der Untersuchung von Lackoberflächen und der Dokumentation auffälliger Stellen." },
-  { icon: FileCheck2, title: "Digitaler Prüfablauf", body: "Vorbereitet für die strukturierte Fahrzeugprüfung und spätere Zuordnung digitaler Berichte über die FIN/VIN." },
-  { icon: BatteryCharging, title: "Mobiler Einsatz", body: "Das geplante Lieferpaket enthält zwei Akkus, ein Ladegerät und einen Transportkoffer." },
+  { icon: FileCheck2, title: "Digitaler Prüfablauf", body: "Für strukturierte Fahrzeugprüfungen und nachvollziehbare Dokumentation mit FIN/VIN-Bezug." },
+  { icon: BatteryCharging, title: "Mobiler Einsatz", body: "Zum Set gehören zwei Akkus, ein Ladegerät und ein Transportkoffer." },
 ];
 
 const steps = [
   { icon: Building2, title: "1. Unternehmen angeben", body: "Kontaktdaten Ihrer Werkstatt oder Ihres Unternehmens eintragen." },
   { icon: Package, title: "2. Menge wählen", body: "Gewünschte Anzahl der Geräte und Lieferinformationen hinterlegen." },
-  { icon: Headphones, title: "3. Nächster Schritt", body: "Unverbindliche Anfrage versenden oder später den sicheren Direktkauf verwenden." },
+  { icon: Headphones, title: "3. Nächster Schritt", body: "Geräteanfrage absenden oder die sichere Zahlungsart auswählen." },
 ];
 
 const faqs = [
-  { q: "Kann ich das Gerät bereits direkt kaufen?", a: "Die Kaufstrecke ist technisch vorbereitet, aber noch nicht freigeschaltet. Bis zum Verkaufsstart können Sie eine unverbindliche Anfrage vorbereiten." },
+  { q: "Wie funktioniert die Bestellung?", a: "Sie können Ihr Gerät direkt über unsere Bestellstrecke anfragen. Die Online-Zahlung ist nur bei aktivierter, sicherer Stripe-Kasse möglich." },
   { q: "Ist eine Vorbestellung verbindlich?", a: "Nein. Eine unverbindliche Voranfrage stellt keine Bestellung und keinen Kaufvertrag dar. Wir kontaktieren Sie zu Verfügbarkeit und Konditionen." },
-  { q: "Welche Lieferzeit gilt?", a: "Liefertermine und Versandkosten werden vor einem verbindlichen Kauf ausgewiesen beziehungsweise individuell bestätigt." },
-  { q: "Ist der Preis inklusive Mehrwertsteuer?", a: "Der angegebene Preis von 3.000 € versteht sich netto. Die gesetzlich anwendbaren Steuern und gegebenenfalls Versandkosten werden vor dem Kauf berechnet." },
+  { q: "Was kostet der Versand in Deutschland?", a: "Der Versand innerhalb Deutschlands kostet pauschal 29,99 € netto pro Bestellung, zuzüglich anwendbarer Umsatzsteuer. Der Liefertermin wird vor dem Versand bestätigt." },
+  { q: "Ist der Preis inklusive Mehrwertsteuer?", a: "Der Gerätepreis beträgt 3.000,00 € netto zuzüglich 29,99 € Versand netto pro Bestellung innerhalb Deutschlands sowie anwendbarer Umsatzsteuer." },
   { q: "Für wen ist das Gerät gedacht?", a: "Das Angebot richtet sich an gewerbliche Käufer, insbesondere Werkstätten, Händler und Prüfunternehmen (B2B)." },
 ];
 
@@ -57,7 +57,7 @@ export default function ProductsPage() {
           <Reveal delay={0.1}>
             <div className="flex flex-wrap items-center gap-3">
               <span className="rounded-full border border-pulse/30 bg-pulse/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-pulse">LUVIPRO Hardware</span>
-              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-300">Marktstart in Vorbereitung</span>
+              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-300">Für gewerbliche Kunden</span>
             </div>
             <p className="mt-6 text-sm font-semibold uppercase tracking-[0.22em] text-pulse">Professional UV Inspection</p>
             <h1 className="mt-3 max-w-xl font-[var(--font-space-grotesk)] text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -70,7 +70,7 @@ export default function ProductsPage() {
               <span className="font-[var(--font-space-grotesk)] text-4xl font-bold text-white">{formatEuro(DEVICE.unitPriceNetCents)}</span>
               <span className="pb-1 text-sm text-slate-300">netto / Gerät</span>
             </div>
-            <p className="mt-3 text-sm leading-6 text-slate-400">Zzgl. anwendbarer Umsatzsteuer und ggf. Versandkosten. Preisangabe für Geschäftskunden (B2B).</p>
+            <p className="mt-3 text-sm leading-6 text-slate-400">Zzgl. 29,99 € Versand netto pro Bestellung innerhalb Deutschlands und anwendbarer Umsatzsteuer. Für Geschäftskunden (B2B).</p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
               <CtaLink href="/order?mode=preorder" className="gap-2">Unverbindlich voranfragen <ArrowRight className="h-4 w-4" /></CtaLink>
               <CtaLink href="/order?mode=buy" variant="secondary" className="gap-2">
@@ -79,7 +79,7 @@ export default function ProductsPage() {
             </div>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <p className="flex items-center gap-2 text-sm text-slate-300"><ShieldCheck className="h-5 w-5 shrink-0 text-pulse" /> Gewerblicher Verkauf</p>
-              <p className="flex items-center gap-2 text-sm text-slate-300"><Truck className="h-5 w-5 shrink-0 text-pulse" /> Versanddetails vor Kaufabschluss</p>
+              <p className="flex items-center gap-2 text-sm text-slate-300"><Truck className="h-5 w-5 shrink-0 text-pulse" /> 29,99 € Versand innerhalb Deutschlands</p>
             </div>
           </Reveal>
         </div>
@@ -110,11 +110,11 @@ export default function ProductsPage() {
           <Reveal>
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-pulse">Lieferumfang</p>
             <h2 className="font-[var(--font-space-grotesk)] text-3xl font-semibold sm:text-4xl">Ein Gerät. Ein durchdachtes Set.</h2>
-            <p className="mt-5 max-w-xl leading-7 text-slate-300">Der geplante Lieferumfang des LUVIPRO LU3656060 für den mobilen Werkstatteinsatz:</p>
+            <p className="mt-5 max-w-xl leading-7 text-slate-300">Lieferumfang des LUVIPRO LU3656060 für den mobilen Werkstatteinsatz:</p>
             <div className="mt-8 grid gap-4">
               {BUNDLE_ITEMS.map(item => <IncludedItem key={item} label={item} />)}
             </div>
-            <p className="mt-6 text-xs leading-6 text-slate-500">Abbildungen dienen der Visualisierung. Die finale Ausstattung wird vor Vertragsabschluss bestätigt.</p>
+            <p className="mt-6 text-xs leading-6 text-slate-500">Die Produktvisualisierung ist schematisch und kein Originalfoto. Verbindliche Produktdetails ergeben sich aus der Bestätigung Ihres Auftrags.</p>
           </Reveal>
           <Reveal delay={0.1}>
             <div className="glass-panel rounded-2xl p-7 sm:p-9">
@@ -124,15 +124,15 @@ export default function ProductsPage() {
                 ["Wellenlänge", DEVICE.wavelength],
                 ["Einsatz", "Professionelle Fahrzeug-UV-Inspektion"],
                 ["Zielgruppe", "Werkstätten und gewerbliche Kunden"],
-                ["Verfügbarkeit", "Verkaufsstart in Vorbereitung"],
-                ["Liefergebiet", "Deutschland (Erstphase)"],
+                ["Bestellung", "Produktanfrage und Direktkauf"],
+                ["Liefergebiet", "Deutschland"],
               ].map(([label, value]) => (
                 <div key={label} className="flex flex-wrap justify-between gap-x-6 gap-y-2 border-b border-white/10 py-4">
                   <span className="text-sm text-slate-400">{label}</span><span className="text-sm font-semibold text-white">{value}</span>
                 </div>
               ))}
               <div className="mt-7 rounded-xl border border-pulse/20 bg-pulse/10 p-4 text-sm leading-6 text-slate-200">
-                Das Produkt befindet sich noch in Vorbereitung. Es erfolgt aktuell keine Zahlungsannahme über diese Website.
+                Versand innerhalb Deutschlands: 29,99 € netto pro Bestellung. Ob die direkte Online-Zahlung aktiviert ist, sehen Sie im Bestellvorgang.
               </div>
             </div>
           </Reveal>
@@ -178,7 +178,7 @@ export default function ProductsPage() {
               <CtaLink href="/order?mode=preorder" className="gap-2">Zur Produktanfrage <ArrowRight className="h-4 w-4" /></CtaLink>
             </div>
           </div>
-          <p className="mt-6 flex items-start gap-2 text-sm text-slate-400"><CheckCircle2 className="h-5 w-5 shrink-0 text-pulse" />Keine Zahlung im Anfragemodus. Die direkte Zahlung wird erst zum Verkaufsstart aktiviert.</p>
+          <p className="mt-6 flex items-start gap-2 text-sm text-slate-400"><CheckCircle2 className="h-5 w-5 shrink-0 text-pulse" />Eine unverbindliche Anfrage löst keine Zahlung aus. Die direkte Zahlung ist nur bei aktivierter sicherer Kasse möglich.</p>
         </div>
       </section>
       <Footer />
