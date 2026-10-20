@@ -62,3 +62,23 @@ Inspect:
 - Homepage links, menu, language switcher and the original German pages remain working.
 
 To roll back, stay on or switch to the untouched `main` branch; do not merge the feature branch. Existing initial baseline is commit `d999bbb61f1f4f9658c6b2d1ff0ace95b7f82bec`. Detailed commit history on the feature branch preserves per-file changes.
+
+
+## 2026-10-20 — approved follow-up: automatic enquiries, header and inspection prices
+
+- Replaced the old one-line warning about sensitive information in the pre-order form with the user's approved business customer/privacy wording. The future checkout mode has truthful order/payment processing wording.
+- Removed the `mailto:` fallback from the pre-order submit handler. The form now requires a configured server-side Resend integration and returns a genuine success reference **only after Resend's API accepts the email**. When not configured, its submit button is disabled with an explicit notice and contact address. Actual delivery still requires a verified sender and real keys, which were not available in this GitHub session; no sender was enabled.
+- The existing `/api/store/preorder` endpoint already delivers directly to the configured `STORE_ORDER_EMAIL` (default proposed address `customerservice@luvipro.de`), and is still gated by `STORE_PREORDERS_ENABLED`, `RESEND_API_KEY`, `STORE_FROM_EMAIL` and `STORE_ORDER_EMAIL`. The server-side backend remains non-operational until the user configures those protected environment variables.
+- Desktop header: **Gerät** points to `/products`; **Preise** points to `/products#preise`. Mobile menus follow the same pattern. Existing home anchors were made absolute so they still work when visiting product/order pages.
+- Implemented Standard inspection **59.99 EUR** (UV-assisted paint inspection, exterior visual check, interior check and structured findings) and Premium inspection **119.99 EUR** (Standard plus fault-code reading, paint thickness measurements and extended documentation). Rates and features are centrally stored in `src/lib/inspection-pricing.ts`; they appear on the German homepage and the integrated product page, alongside the LU3656060 **3,000 EUR net B2B** device price.
+- The English and Arabic homepage price cards/nav labels now mention both inspection packages accurately; price links go to the German product price section (localized product page not yet built).
+- The normal/premium inspection services are shown as **planned, not currently bookable**, and do not charge money.
+- This remains a feature branch. Do not merge into `main` or activate payment and email secrets without further user review.
+
+### Validation checklist
+
+1. Confirm build with GitHub Actions or `npm run build`.
+2. Verify homepage German/English/Arabic headers and mobile menu routes: `/products`, `/products#preise`.
+3. Verify both inspection prices and scopes, including Premium being additive to Standard.
+4. Verify the enquiry form does not launch a local mail app, does not show a fake success with missing Resend config, and still previews quantity totals accurately.
+5. With a **test** verified sender and pre-order flag enabled in a separate approved test environment, submit a synthetic non-binding enquiry and confirm email delivery to the specified mailbox and reference display.
