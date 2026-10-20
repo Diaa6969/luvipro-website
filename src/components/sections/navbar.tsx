@@ -8,16 +8,17 @@ import { CtaLink } from "@/components/ui/cta-link";
 import { BrandLogo } from "@/components/ui/brand-logo";
 
 const navItems = [
-  { label: "Ecosystem", href: "#ecosystem" },
-  { label: "UV-Gerät", href: "#scanner" },
-  { label: "Ablauf", href: "#how-it-works" },
-  { label: "Preise", href: "#pricing" },
-  { label: "Marktplatz", href: "#marketplace" },
+  { label: "Ecosystem", href: "/#ecosystem" },
+  { label: "Gerät", href: "/products" },
+  { label: "Ablauf", href: "/#how-it-works" },
+  { label: "Preise", href: "/products#preise" },
+  { label: "Marktplatz", href: "/#marketplace" },
 ];
 
 const mobileLinks = [
   { label: "Startseite", href: "/" },
-  { label: "Produkte", href: "/products" },
+  { label: "Gerät LU3656060", href: "/products" },
+  { label: "Preise", href: "/products#preise" },
   { label: "Fahrzeug verifizieren", href: "/verify" },
   { label: "Marketplace", href: "/marketplace" },
   { label: "Partnerwerkstätten", href: "/partner-workshops" },
@@ -109,13 +110,7 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-                <Link
-                  href="/products"
-                  onClick={closeMenu}
-                  className="block rounded-lg border border-white/10 bg-white/[0.06] px-4 py-4 text-lg font-semibold text-slate-100 shadow-[0_0_28px_rgba(139,92,246,0.08)] transition hover:border-pulse/35 hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
-                >
-                  Gerät & Voranfrage
-                </Link>
+
               </nav>
 
               <div className="mt-8">
