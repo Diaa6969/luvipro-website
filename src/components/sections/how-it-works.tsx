@@ -3,9 +3,9 @@ import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const flows = [
-  { icon: Wrench, title: "Werkstätten", steps: ["UV-Inspektionsgerät nutzen", "Fahrzeug prüfen", "Report aktivieren"] },
-  { icon: BadgeEuro, title: "Verkäufer", steps: ["Nachweis erhalten", "Inserat veredeln", "Vertrauen schaffen"] },
-  { icon: UserCheck, title: "Käufer", steps: ["QR scannen", "VIN suchen", "Report verstehen"] },
+  { icon: Wrench, title: "Werkstätten", steps: ["UV-Inspektionsgerät einsetzen", "Fahrzeug prüfen und dokumentieren", "Digitalen Report erstellen"] },
+  { icon: BadgeEuro, title: "Verkäufer", steps: ["Fahrzeugprüfung anfragen", "Prüfbericht weitergeben", "Transparenz beim Verkauf schaffen"] },
+  { icon: UserCheck, title: "Käufer", steps: ["FIN/VIN eingeben", "Zugänglichen Prüfbericht ansehen", "Ergebnisse einordnen"] },
 ];
 
 export function HowItWorks() {
