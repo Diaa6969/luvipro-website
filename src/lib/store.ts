@@ -5,6 +5,7 @@ export const DEVICE = {
   title: "LUVIPRO LU3656060",
   wavelength: "365 nm",
   unitPriceNetCents: 300000,
+  shippingNetCentsGermany: 2999, // fixed per order, NOT per unit, exclusive of tax
   currency: "EUR",
   minQuantity: 1,
   maxQuantity: 10,
@@ -97,7 +98,6 @@ export function isStripeCheckoutReady() {
   return (
     process.env.STORE_CHECKOUT_ENABLED === "true" &&
     Boolean(process.env.STRIPE_SECRET_KEY) &&
-    Boolean(process.env.STRIPE_PRICE_ID) &&
-    Boolean(process.env.STRIPE_SHIPPING_RATE_ID)
+    Boolean(process.env.STRIPE_PRICE_ID)
   );
 }
