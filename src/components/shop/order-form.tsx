@@ -73,7 +73,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
 
       if (mode === "buy") {
         if (!result.url || !result.url.startsWith("https://checkout.stripe.com/")) {
-          throw new Error("Die sichere Bezahlseite ist nicht verfügbar. Bitte versuchen Sie es später.");
+          throw new Error("Die sichere Bezahlseite ist derzeit nicht verfügbar. Bitte kontaktieren Sie uns.");
         }
         window.location.assign(result.url);
         return;
@@ -104,13 +104,13 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
             className={`rounded-xl border p-5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse ${mode === "buy" ? "border-pulse/70 bg-pulse/10" : "border-white/10 bg-white/[0.025] hover:border-pulse/30"}`}>
             <CreditCard className="h-6 w-6 text-pulse" />
             <span className="mt-3 block text-lg font-bold text-white">Direkt kaufen</span>
-            <span className="mt-1 block text-sm leading-6 text-slate-300">{paymentsReady ? "Sichere Zahlung über Stripe." : "Bereits vorbereitet · noch nicht freigeschaltet."}</span>
+            <span className="mt-1 block text-sm leading-6 text-slate-300">{paymentsReady ? "Sichere Zahlung über Stripe." : "Sichere Zahlung derzeit nicht aktiviert."}</span>
           </button>
         </div>
 
         {mode === "buy" && !paymentsReady && (
           <div className="mb-7 rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-sm leading-7 text-amber-100" role="status">
-            <strong>Direktkauf in Vorbereitung.</strong> Die Zahlungsfunktion ist derzeit bewusst deaktiviert. Es wird keine Zahlung ausgelöst und keine Bestellung angenommen. Für eine unverbindliche Anfrage wechseln Sie zum ersten Reiter.
+            <strong>Direktzahlung aktuell deaktiviert.</strong> Die Zahlungsfunktion kann nur mit aktivierter Stripe-Kasse genutzt werden. Es wird keine Zahlung ausgelöst und keine Bestellung angenommen. Für eine unverbindliche Anfrage wechseln Sie zum ersten Reiter.
           </div>
         )}
 
@@ -122,7 +122,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
 
         {mode === "preorder" && !preorderReady && (
           <div role="status" className="mb-7 rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-sm leading-7 text-amber-100">
-            <strong>Automatischer Versand wird eingerichtet.</strong> Die Anfrage kann noch nicht versendet werden.
+            <strong>Automatischer Anfrageversand ist derzeit deaktiviert.</strong> Die Anfrage kann erst versendet werden, sobald die E-Mail-Anbindung aktiviert ist.
             Bis zur Freischaltung erreichen Sie uns unter{" "}
             <a className="font-semibold underline underline-offset-2" href="mailto:customerservice@luvipro.de">customerservice@luvipro.de</a>.
           </div>
@@ -141,7 +141,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
           </section>
 
           <section>
-            <h2 className="mb-5 text-xl font-bold text-white">2. Geplante Lieferanschrift</h2>
+            <h2 className="mb-5 text-xl font-bold text-white">2. Lieferanschrift</h2>
             <div className="grid gap-5 sm:grid-cols-2">
               <label className={`${labelClass} sm:col-span-2`}>Straße & Hausnummer<input className={controlClass} name="street" autoComplete="street-address" maxLength={180} placeholder="Musterstraße 10" /></label>
               <label className={labelClass}>PLZ<input className={controlClass} name="postalCode" autoComplete="postal-code" maxLength={12} placeholder="30159" /></label>
@@ -149,7 +149,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
               <label className={labelClass}>Land<input className={controlClass} value="Deutschland" readOnly aria-readonly="true" /></label>
               <label className={labelClass}>USt-IdNr. (optional)<input className={controlClass} name="vatId" maxLength={40} placeholder="DE..." /></label>
             </div>
-            <p className="mt-3 text-xs leading-6 text-slate-400">Der Vertrieb ist für die erste Phase auf Deutschland ausgerichtet. Beim späteren Direktkauf bestätigt Stripe die Liefer- und Rechnungsadresse.</p>
+            <p className="mt-3 text-xs leading-6 text-slate-400">Lieferung innerhalb Deutschlands. Beim Direktkauf bestätigt Stripe die Liefer- und Rechnungsadresse.</p>
           </section>
 
           <section>
@@ -196,7 +196,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
           <button type="submit" disabled={pending || (mode === "buy" && !paymentsReady) || (mode === "preorder" && !preorderReady)}
             className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-pulse px-6 py-4 text-base font-bold text-obsidian shadow-glow transition hover:bg-frost focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pulse disabled:cursor-not-allowed disabled:opacity-45">
             {pending ? "Bitte warten ..." : mode === "preorder"
-              ? (preorderReady ? "Unverbindliche Anfrage automatisch senden" : "Anfrageversand noch nicht freigeschaltet")
+              ? (preorderReady ? "Unverbindliche Anfrage automatisch senden" : "Anfrageversand derzeit deaktiviert")
               : (paymentsReady ? "Weiter zur sicheren Zahlung" : "Direktkauf noch nicht verfügbar")}
             {!pending && mode === "preorder" && <ArrowRight className="h-5 w-5" />}
           </button>
@@ -205,7 +205,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
             <ShieldCheck className="h-4 w-4 shrink-0 text-pulse" />
             {mode === "preorder" ? (preorderReady
               ? "Nach erfolgreicher Annahme durch den E-Mail-Dienst erscheint Ihre Referenznummer; es erfolgt keine Buchung oder Abbuchung."
-              : "Der automatische Anfrageversand wird erst nach Einrichtung des geschützten E-Mail-Dienstes freigeschaltet. Bis dahin können Sie uns direkt kontaktieren.")
+              : "Bei deaktiviertem E-Mail-Dienst ist keine automatische Anfrage möglich. Sie erreichen uns direkt über die angegebene Kontaktadresse.")
               : "Nach Freischaltung erfolgt die Zahlung über eine sichere Stripe-Checkout-Seite. Zahlungsdaten werden nicht in dieser Website gespeichert."}
           </p>
         </form>
