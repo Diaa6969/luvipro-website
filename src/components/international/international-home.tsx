@@ -271,7 +271,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                     ))}
                   </div>
                   <CtaLink
-                    href={href}
+                    href={index < 2 ? "#partner-map" : href}
                     variant={index === 0 ? "primary" : "secondary"}
                     className="mt-8 gap-2"
                     target={href.startsWith("http") ? "_blank" : undefined}
