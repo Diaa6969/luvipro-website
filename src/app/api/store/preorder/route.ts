@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DEVICE, formatEuro, isPreorderBackendReady, parseInquiry } from "@/lib/store";
+import { sendHostingerMail } from "@/lib/hostinger-smtp";
 
 export const runtime = "nodejs";
 
@@ -55,29 +56,21 @@ export async function POST(request: NextRequest) {
   ].join("\n");
 
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: process.env.STORE_FROM_EMAIL,
-        to: [process.env.STORE_ORDER_EMAIL],
-        reply_to: d.email,
-        subject: `Unverbindliche Produktanfrage ${DEVICE.sku} · ${reference}`,
-        text: emailText,
-      }),
-      cache: "no-store",
-      signal: AbortSignal.timeout(10000),
+    await sendHostingerMail({
+      to: process.env.STORE_ORDER_EMAIL!,
+      replyTo: d.email,
+      subject: `Unverbindliche Produktanfrage ${DEVICE.sku} · ${reference}`,
+      text: emailText,
     });
-    if (!response.ok) {
-      console.error("LUVIPRO preorder email provider error", response.status);
-      return NextResponse.json({ error: "Übermittlung derzeit nicht möglich. Bitte kontaktieren Sie uns per E-Mail." }, { status: 502 });
-    }
-    return NextResponse.json({ reference }, { status: 200, headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json(
+      { reference },
+      { status: 200, headers: { "Cache-Control": "no-store" } },
+    );
   } catch {
-    console.error("LUVIPRO preorder email transport failed");
-    return NextResponse.json({ error: "Verbindung vorübergehend nicht verfügbar. Bitte kontaktieren Sie uns per E-Mail." }, { status: 502 });
+    // Never expose SMTP errors, credentials, or server responses to visitors.
+    console.error("LUVIPRO Hostinger SMTP delivery failed");
+    return NextResponse.json({
+      error: "Übermittlung zurzeit nicht möglich. Bitte kontaktieren Sie customerservice@luvipro.de.",
+    }, { status: 502 });
   }
 }
