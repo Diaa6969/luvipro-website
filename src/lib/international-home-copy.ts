@@ -24,7 +24,7 @@ const en = {
     switchLanguage: "Select language",
   },
   sections: {
-    nav: ["Ecosystem", "Device", "How it works", "Prices", "Marketplace"],
+    nav: ["Ecosystem", "Device", "How it works", "Prices", "Workshops"],
     hero: {
       badge: "Every vehicle has a story. We bring the truth to light.",
       title: "LUVIPRO makes vehicle history visible.",
@@ -63,12 +63,12 @@ const en = {
         ["Partner network", "A developing network of workshops offering LUVIPRO inspections."],
         ["Future services", "Additional digital features may be introduced after the initial launch."],
       ],
-      note: "Some features are still in preparation. Live availability will be announced separately.",
+      note: "LUVIPRO combines device-supported inspection, VIN identification and structured digital reports.",
     },
     device: {
       eyebrow: "Inspection technology",
       title: "A UV inspection device for professional workshops.",
-      description: "The LUVIPRO LU3656060 is planned as the first hardware product, designed to support a structured vehicle inspection workflow.",
+      description: "The LU3656060 is LUVIPRO’s 365 nm UV inspection device for structured professional vehicle examinations.",
       badge: "LU3656060 · 365 nm",
       labels: ["UV", "VIN", "PDF"],
       items: ["Professional UV-supported examination", "Inspection documentation linked to the vehicle VIN", "Results prepared for a digital vehicle report"],
@@ -76,7 +76,7 @@ const en = {
     document: {
       eyebrow: "Vehicle information",
       title: "A clear connection between the vehicle and its report.",
-      description: "VIN-based report access is planned for launch. Additional document-reading or automation capabilities are not part of the initial offer.",
+      description: "VIN-based identification links a vehicle with its inspection report. Report access is subject to appropriate permissions.",
       cards: ["Vehicle identification", "Responsible processing"],
       preview: "Illustrative report lookup",
       document: "Vehicle details",
@@ -96,9 +96,9 @@ const en = {
     business: {
       eyebrow: "Business model",
       title: "Clear pricing for the device and vehicle inspections.",
-      description: "Standard and Premium are planned inspection services delivered through partner workshops. Availability and final details will be confirmed before booking.",
+      description: "Standard and Premium inspections are offered through participating partner workshops. Check your region for confirmed available workshops.",
       plans: [
-        ["Standard inspection", "€59.99 / vehicle", ["UV-assisted paint inspection", "Visual exterior inspection", "Interior inspection", "Documented findings"], "View prices", "/products#preise"],
+        ["Standard inspection", "€59.99 / vehicle", ["UV-assisted paint inspection", "Visual exterior inspection", "Interior inspection", "Documented findings"], "Check availability", "/partner-workshops"],
         ["Premium inspection", "€119.99 / vehicle", ["Everything in Standard", "Fault-code reading", "Paint-thickness measurement", "Extended inspection documentation"], "View prices", "/products#preise"],
         ["Device & ordering", "LU3656060 · €3,000 net", ["365 nm UV inspection device", "Two batteries and charger", "Carrying case and protective glasses", "Non-binding product inquiry"], "View the device", "/products"],
       ] as [string, string, string[], string, string][],
@@ -106,7 +106,7 @@ const en = {
     partnerMap: {
       eyebrow: "Partner network",
       title: "Building a network of inspection workshops.",
-      description: "Partner workshop discovery is being prepared. The map shown here is an illustration, not a live list of locations.",
+      description: "Find confirmed partner workshops by postal code or city. Only verified, published workshop locations appear in results.",
       button: "Ask about becoming a partner",
       location: "Germany",
       mapTitle: "Workshop network preview",
@@ -155,7 +155,7 @@ const en = {
     footer: {
       description: "UV-supported vehicle inspection and digital reporting for the used-car market.",
       copyright: "All rights reserved.",
-      note: "Website preview. Some services are not yet available.",
+      note: "LUVIPRO · Vehicle inspection technology and digital documentation.",
     },
   },
 };
@@ -184,7 +184,7 @@ const ar: typeof en = {
     switchLanguage: "اختيار اللغة",
   },
   sections: {
-    nav: ["المنظومة", "الجهاز", "طريقة العمل", "الأسعار", "السوق"],
+    nav: ["المنظومة", "الجهاز", "طريقة العمل", "الأسعار", "الورش"],
     hero: {
       badge: "لكل سيارة قصة. نحن نسلّط الضوء على الحقيقة.",
       title: "LUVIPRO يكشف تفاصيل تاريخ السيارة.",
@@ -223,12 +223,12 @@ const ar: typeof en = {
         ["شبكة الورش الشريكة", "شبكة قيد التطوير من الورش التي ستقدّم خدمات فحص LUVIPRO."],
         ["خدمات مستقبلية", "قد تُضاف خدمات رقمية أخرى بعد مرحلة الإطلاق الأولى."],
       ],
-      note: "بعض الميزات ما زالت قيد التحضير، وسيُعلن عن توفرها عند الإطلاق.",
+      note: "تجمع LUVIPRO بين الفحص باستخدام الجهاز، وتحديد السيارة برقم الهيكل، والتقارير الرقمية المنظمة.",
     },
     device: {
       eyebrow: "تقنية الفحص",
       title: "جهاز فحص بالأشعة فوق البنفسجية للورش الاحترافية.",
-      description: "من المخطط إطلاق جهاز LUVIPRO LU3656060 كأول منتج، لدعم عملية فحص سيارات منظّمة.",
+      description: "جهاز LUVIPRO LU3656060 يعمل بطول موجي 365 نانومتر لدعم الفحص المهني والمنظم للسيارات.",
       badge: "LU3656060 · 365 nm",
       labels: ["UV", "VIN", "PDF"],
       items: ["فحص احترافي بمساعدة الأشعة فوق البنفسجية", "توثيق الفحص بالاعتماد على رقم الهيكل", "إعداد النتائج لتقرير سيارة رقمي"],
@@ -236,7 +236,7 @@ const ar: typeof en = {
     document: {
       eyebrow: "معلومات السيارة",
       title: "ربط واضح بين السيارة وتقرير الفحص الخاص بها.",
-      description: "من المخطط إتاحة البحث عن التقارير برقم الهيكل عند الإطلاق. أما القراءة الآلية للمستندات والميزات الإضافية فليست ضمن العرض الأولي.",
+      description: "يربط رقم الهيكل VIN السيارة بتقرير الفحص الخاص بها، مع مراعاة صلاحيات الوصول للبيانات والتقارير.",
       cards: ["تحديد هوية السيارة", "معالجة مسؤولة للبيانات"],
       preview: "معاينة توضيحية للبحث",
       document: "بيانات السيارة",
@@ -256,9 +256,9 @@ const ar: typeof en = {
     business: {
       eyebrow: "نموذج العمل",
       title: "أسعار واضحة للجهاز وخدمات فحص السيارات.",
-      description: "الفحص العادي والبريميوم خدمتان مخطط لهما عبر الورش الشريكة، وسيُؤكَّد التوفر والتفاصيل قبل الحجز.",
+      description: "فحص Standard وPremium من خدمات ورش LUVIPRO الشريكة. تحقق من توافر ورشة مؤكدة في منطقتك.",
       plans: [
-        ["الفحص العادي Standard", "59,99 € للسيارة", ["فحص الطلاء بالأشعة فوق البنفسجية", "فحص بصري للهيكل الخارجي", "فحص المقصورة الداخلية", "توثيق نتائج الفحص"], "عرض الأسعار", "/products#preise"],
+        ["الفحص العادي Standard", "59,99 € للسيارة", ["فحص الطلاء بالأشعة فوق البنفسجية", "فحص بصري للهيكل الخارجي", "فحص المقصورة الداخلية", "توثيق نتائج الفحص"], "التحقق من التوفر", "/partner-workshops"],
         ["الفحص الشامل Premium", "119,99 € للسيارة", ["كل خدمات Standard", "قراءة رموز الأعطال", "قياس سماكة الطلاء", "توثيق فحص موسّع"], "عرض الأسعار", "/products#preise"],
         ["الجهاز والطلب", "LU3656060 · 3,000 يورو صافي", ["جهاز فحص بأشعة 365 نانومتر", "بطاريتان وشاحن", "حقيبة ونظارات حماية", "طلب استفسار غير ملزم"], "عرض الجهاز", "/products"],
       ],
@@ -266,7 +266,7 @@ const ar: typeof en = {
     partnerMap: {
       eyebrow: "شبكة الشركاء",
       title: "نبني شبكة من ورش فحص السيارات.",
-      description: "يجري التحضير لخدمة العثور على الورش الشريكة. الخريطة المعروضة توضيحية وليست قائمة فعلية بالمواقع.",
+      description: "ابحث برمز المنطقة البريدي أو المدينة عن الورش الشريكة المؤكدة والمنشورة فقط.",
       button: "استفسر عن الشراكة",
       location: "ألمانيا",
       mapTitle: "معاينة شبكة الورش",
@@ -315,7 +315,7 @@ const ar: typeof en = {
     footer: {
       description: "فحص السيارات بمساعدة الأشعة فوق البنفسجية والتقارير الرقمية لسوق السيارات المستعملة.",
       copyright: "جميع الحقوق محفوظة.",
-      note: "نسخة تعريفية. بعض الخدمات غير متاحة بعد.",
+      note: "LUVIPRO · تقنية فحص السيارات والتوثيق الرقمي.",
     },
   },
 };
