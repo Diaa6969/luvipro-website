@@ -6,7 +6,7 @@ The public `main` branch has not been changed. **No live sales, charges or produ
 ## What is implemented
 
 - `/products`: complete premium single-device page for **LU3656060**, `365 nm`, **3,000 EUR net** per device, product description, CSS concept visualization, planned bundle contents, specifications, FAQ and two order paths. Does not assert certification or current availability; product illustration explicitly marked as a concept (not an actual photo).
-- `/order?mode=preorder`: B2B company/contact form, optional shipping address, quantity 1–10, total in EUR net, privacy acknowledgement, success/error notice. With no email service configured, prepares a **mailto:** message for the customer to send themselves (and clearly states it has not been sent automatically). This is an inquiry, not a binding sale.
+- `/order?mode=preorder`: B2B company/contact form, optional shipping address, quantity 1–10, total in EUR net, privacy acknowledgement, success/error notice. With no email service configured, **the submit button is disabled** and a visible notice provides the contact address. When configured, the form sends directly to the server and shows a reference number only after the email provider accepts the message. This is an inquiry, not a binding sale.
 - `/order?mode=buy`: same form with AGB acknowledgement and clearly **disabled payment** until explicitly configured on the server. No charge can occur without the secrets and the enabling flag.
 - `/api/store/preorder`: input checks and email to LUVIPRO via Resend REST once enabled. No database or production Supabase records touched.
 - `/api/store/checkout`: Stripe-hosted Checkout prepared for one product only, price fetched and independently validated (active, one-time, EUR 3,000, exclusive tax), 1–10 quantity, invoice request, Germany shipping, Stripe Tax, tax ID collection. Price cannot be overridden by the browser. **Off by default**.
@@ -19,7 +19,7 @@ The public `main` branch has not been changed. **No live sales, charges or produ
 ## No-launch defaults
 
 With the example/default environment:
-- `STORE_PREORDERS_ENABLED=false`: inquiries use the user's mail program; website does not claim successful delivery.
+- `STORE_PREORDERS_ENABLED=false`: the form is displayed in preview mode but cannot submit; customer can contact us using the displayed mail link.
 - `STORE_CHECKOUT_ENABLED=false`: direct card payments are unavailable; `/api/store/checkout` returns 503 before any Stripe call.
 - `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, etc. remain **unset**. Never commit keys to Git.
 - The purchase UI can be reviewed without triggering real sales.
@@ -56,7 +56,7 @@ npm run dev
 
 Inspect:
 - `http://localhost:3000/products`: mobile/desktop appearance, price and item list.
-- `http://localhost:3000/order?mode=preorder`: quantity/price calculations and non-binding mail fallback.
+- `http://localhost:3000/order?mode=preorder`: quantity/price calculations, updated business/privacy wording and disabled submission until Resend is configured.
 - `http://localhost:3000/order?mode=buy`: card payment remains blocked.
 - `http://localhost:3000/order/success`: no false success without a valid paid Stripe session.
 - Homepage links, menu, language switcher and the original German pages remain working.
