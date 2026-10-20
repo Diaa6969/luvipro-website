@@ -15,7 +15,7 @@ export function UvScanner() {
                 <div className="flex h-full flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm text-slate-200">
-                      UV-Prüfgerät V1
+                      LUVIPRO LU3656060
                     </span>
                     <CircuitBoard className="h-9 w-9 text-pulse" />
                   </div>
@@ -23,7 +23,7 @@ export function UvScanner() {
                     <ScanLine className="h-20 w-20 text-pulse" />
                   </div>
                   <div className="grid grid-cols-3 gap-3">
-                    {["UV", "VIN", "QR"].map((label) => (
+                    {["UV", "VIN", "PDF"].map((label) => (
                       <div key={label} className="rounded-lg bg-black/30 p-3 text-center text-sm font-semibold">
                         {label}
                       </div>
@@ -38,10 +38,10 @@ export function UvScanner() {
           <SectionHeading
             eyebrow="Technik"
             title="UV-Inspektionsgerät für Partnerwerkstätten."
-            description="Die Gerätetechnik wird als professionelles Prüfwerkzeug für lokale Werkstätten positioniert. Sie schafft den physischen Startpunkt für den digitalen LUVIPRO Nachweis."
+            description="Das LUVIPRO LU3656060 mit 365 nm unterstützt die strukturierte UV-gestützte Fahrzeugprüfung in Werkstätten und die anschließende Dokumentation der Befunde."
           />
           <div className="mt-8 space-y-4">
-            {["Prüfung von UV-Sicherheitsmerkmalen", "Vorbereitung für QR-Sticker-Aktivierung", "Dokumentation für digitale Fahrzeugreports"].map((item) => (
+            {["UV-gestützte Untersuchung von Lackoberflächen", "Dokumentation von Auffälligkeiten und Reparaturspuren", "Zuordnung der Prüfung zur Fahrzeug-FIN und zum digitalen Report"].map((item) => (
               <div key={item} className="flex items-center gap-3 text-slate-200">
                 <Sparkles className="h-5 w-5 text-pulse" />
                 {item}
