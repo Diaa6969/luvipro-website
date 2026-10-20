@@ -15,7 +15,7 @@ export function Pricing({ id = "pricing", embedded = false }: PricingProps) {
           <SectionHeading
             eyebrow="Leistungen & Preise"
             title="Ein Prüfgerät. Zwei Inspektionspakete."
-            description="Transparente Orientierung für professionelle UV-Technik und die geplanten Fahrzeugprüfungen durch LUVIPRO Partnerwerkstätten."
+            description="Unsere Angebote für professionelle UV-Prüftechnik und strukturierte Fahrzeugchecks im LUVIPRO Partnernetzwerk."
           />
         </Reveal>
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
@@ -29,7 +29,7 @@ export function Pricing({ id = "pricing", embedded = false }: PricingProps) {
                 <p className="mt-5 font-[var(--font-space-grotesk)] text-4xl font-bold text-white">
                   {formatEuro(plan.priceCents)}
                 </p>
-                <p className="mt-2 text-sm text-slate-400">pro Fahrzeugprüfung · geplantes Angebot</p>
+                <p className="mt-2 text-sm text-slate-400">pro Fahrzeugprüfung</p>
                 <div className="mt-7 flex-1 space-y-4">
                   {plan.features.map((feature) => (
                     <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-slate-300">
@@ -38,8 +38,8 @@ export function Pricing({ id = "pricing", embedded = false }: PricingProps) {
                     </div>
                   ))}
                 </div>
-                <CtaLink href="/contact" variant={plan.id === "premium" ? "primary" : "secondary"} className="mt-8 gap-2">
-                  Verfügbarkeit anfragen <ArrowRight className="h-4 w-4" />
+                <CtaLink href="/#partner-map" variant={plan.id === "premium" ? "primary" : "secondary"} className="mt-8 gap-2">
+                  Verfügbarkeit prüfen <ArrowRight className="h-4 w-4" />
                 </CtaLink>
               </div>
             </Reveal>
