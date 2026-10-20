@@ -78,16 +78,14 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
   const closeMenu = () => setIsOpen(false);
   const navItems = t.sections.nav.map((label, index) => ({
     label,
-    href: [`/${locale}#ecosystem`, "/products", `/${locale}#how-it-works`, "/products#preise", `/${locale}#marketplace`][index],
+    href: [`/${locale}#ecosystem`, "/products", `/${locale}#how-it-works`, "/products#preise", `/${locale}#partner-map`][index],
   }));
   const mobileLinks = [
     { label: t.site.home, href: `/${locale}` },
     { label: t.site.products, href: "/products" },
     { label: t.site.prices, href: "/products#preise" },
     { label: t.site.verify, href: "/verify" },
-    { label: t.site.marketplace, href: "/marketplace" },
     { label: t.site.workshops, href: "/partner-workshops" },
-    { label: t.site.app, href: "/app" },
     { label: t.site.contact, href: "/contact" },
   ];
   const legalLinks = [
