@@ -25,6 +25,7 @@ type StripeSession = {
   payment_status?: string;
   currency?: string;
   amount_total?: number;
+  total_details?: { amount_tax?: number; amount_shipping?: number };
   created?: number;
   metadata?: { sku?: string; company?: string };
   customer_details?: {
@@ -147,6 +148,7 @@ export async function issueDeviceInvoiceAfterFulfillment(stripeSessionId: string
   if (!isEnabled()) throw new Error("Invoice issuance is disabled");
   if (!/^cs_(test|live)_[A-Za-z0-9]{10,}$/.test(stripeSessionId)) throw new Error("Invalid Stripe session");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(actualDeliveryDate)) throw new Error("Invalid actual delivery date");
+  if (Number.isNaN(Date.parse(actualDeliveryDate + "T00:00:00Z")) || actualDeliveryDate > berlinDate()) throw new Error("Delivery date not confirmed");
   const issuer = configuredDeviceIssuer();
   if (!issuer) throw new Error("Legal invoice issuer is not configured");
 
@@ -173,7 +175,7 @@ export async function issueDeviceInvoiceAfterFulfillment(stripeSessionId: string
   const pricing = calculateInvoicePricing("device", quantity);
   // For non-domestic/zero/reverse-charge or discounted Stripe results, stop;
   // this domestic 19% template must never silently produce an incorrect tax invoice.
-  if (session.amount_total !== pricing.grossCents) {
+  if (session.amount_total !== pricing.grossCents || session.total_details?.amount_tax !== pricing.vatCents) {
     throw new Error("Unexpected Stripe tax/total - manual tax review required");
   }
   const customer = stripeCustomer(session);
