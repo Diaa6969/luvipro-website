@@ -28,3 +28,31 @@ jobs:
           STORE_PREORDERS_ENABLED: 'false'
           STORE_CHECKOUT_ENABLED: 'false'
         run: npm run build
+      - name: Render three synthetic invoice PDFs locally (no customer data)
+        shell: bash
+        timeout-minutes: 2
+        env:
+          STORE_PREORDERS_ENABLED: 'false'
+          STORE_CHECKOUT_ENABLED: 'false'
+          INVOICE_ISSUANCE_ENABLED: 'false'
+        run: |
+          npm run dev -- --hostname 127.0.0.1 > /tmp/luvipro-invoice-dev.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid 2>/dev/null || true' EXIT
+          for kind in device inspection_standard inspection_premium; do
+            ok=0
+            for i in $(seq 1 20); do
+              if curl --fail --silent --show-error "http://127.0.0.1:3000/api/billing/sample?kind=$kind" -o "/tmp/luvipro-$kind.pdf" 2>/dev/null; then
+                ok=1
+                break
+              fi
+              sleep 2
+            done
+            if [ "$ok" -ne 1 ]; then
+              cat /tmp/luvipro-invoice-dev.log
+              exit 1
+            fi
+            test "$(head -c 5 "/tmp/luvipro-$kind.pdf")" = "%PDF-"
+            PDF="/tmp/luvipro-$kind.pdf" node -e 'const fs=require("fs");const {PDFDocument}=require("pdf-lib");PDFDocument.load(fs.readFileSync(process.env.PDF)).then(d=>{if(d.getPageCount()!==1)process.exit(1)}).catch(()=>process.exit(1))'
+            echo "Synthetic $kind PDF: PASS"
+          done
