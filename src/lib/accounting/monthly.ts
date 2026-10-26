@@ -69,7 +69,7 @@ export function monthOf(date: string) {
 }
 
 /** Caller supplies only invoices issued by LUVIPRO (never workshops' own turnover).
- * Unsigned/reserved drafts are excluded. Monthly VAT is indicative; Soll-/Ist-
+ * Reserved drafts without an invoice are excluded; fully generated invoices\n * appear even if email delivery is pending. Monthly VAT is indicative; Soll-/Ist-
  * Versteuerung, corrections, import VAT and §19 UStG require tax review.
  */
 export function buildMonthlyTable(year: number, outgoing: OutgoingInvoice[], incoming: IncomingInvoice[]): MonthlyRow[] {
@@ -83,7 +83,7 @@ export function buildMonthlyTable(year: number, outgoing: OutgoingInvoice[], inc
   const byMonth = new Map(rows.map(row => [row.month, row]));
 
   for (const invoice of outgoing) {
-    if (invoice.delivery_state !== "sent" || !invoice.invoice_date) continue;
+    if (!["prepared", "sending", "sent", "failed"].includes(invoice.delivery_state) || !invoice.invoice_date) continue;
     const row = byMonth.get(monthOf(invoice.invoice_date));
     if (!row || !isSafeCents(invoice.net_cents) || !isSafeCents(invoice.vat_cents) || !isSafeCents(invoice.gross_cents)) continue;
     row.outgoingCount++;
