@@ -203,6 +203,10 @@ export async function issueDeviceInvoiceAfterFulfillment(stripeSessionId: string
     const updated = await transition(current.id, "reserved", {
       delivery_state: "prepared",
       invoice_snapshot: document,
+      invoice_date: document.invoiceDate,
+      net_cents: pricing.netCents,
+      vat_cents: pricing.vatCents,
+      gross_cents: pricing.grossCents,
       pdf_base64: bytes.toString("base64"),
     });
     if (!updated) current = await getInvoice(current.id);
