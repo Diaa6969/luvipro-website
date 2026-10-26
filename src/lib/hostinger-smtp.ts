@@ -9,6 +9,7 @@ export async function sendHostingerMail(message: {
   replyTo: string;
   subject: string;
   text: string;
+  attachments?: { filename: string; content: Buffer; contentType: string }[];
 }) {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASSWORD;
@@ -33,5 +34,6 @@ export async function sendHostingerMail(message: {
     replyTo: message.replyTo,
     subject: message.subject,
     text: message.text,
+    attachments: message.attachments,
   });
 }
