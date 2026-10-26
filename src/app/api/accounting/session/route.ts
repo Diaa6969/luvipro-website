@@ -17,11 +17,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.redirect(new URL("/intern/finanzen/login?error=1", request.url), 303);
   }
   const result = NextResponse.redirect(new URL("/intern/finanzen", request.url), 303);
-  result.cookies.set(accountingCookieName, createAccountingSession(), {
-    httpOnly: true, sameSite: "strict", secure: process.env.NODE_ENV === "production",
-    path: "/intern", maxAge: accountingMaxAgeSeconds,
-  });
-  // API endpoints need the same cookie; use '/' path and strict same-site.
+  // Shared with server-rendered accounting pages and protected API endpoints.
   result.cookies.set(accountingCookieName, createAccountingSession(), {
     httpOnly: true, sameSite: "strict", secure: process.env.NODE_ENV === "production",
     path: "/", maxAge: accountingMaxAgeSeconds,
@@ -33,6 +29,5 @@ export async function DELETE(request: NextRequest) {
   if (!isSameOrigin(request)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const response = NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   response.cookies.set(accountingCookieName, "", { maxAge: 0, path: "/" });
-  response.cookies.set(accountingCookieName, "", { maxAge: 0, path: "/intern" });
   return response;
 }
