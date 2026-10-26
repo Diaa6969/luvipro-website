@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "test:invoices": "node scripts/test-invoice-pricing.mjs"
+    "test:invoices": "node scripts/test-invoice-pricing.mjs",
+    "test:accounting": "node scripts/test-accounting-monthly.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",
