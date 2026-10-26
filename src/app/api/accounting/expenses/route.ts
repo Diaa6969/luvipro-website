@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       gross_cents: split.grossCents, vat_rate: rate,
       vorsteuer_confirmed, paid, file_path,
     });
-    return NextResponse.redirect(new URL("/intern/finanzen?year=" + invoice_date.slice(0, 4) + "&saved=1", req.url), 303);
+    return NextResponse.json({ saved: true, year: Number(invoice_date.slice(0, 4)) }, { headers: { "Cache-Control": "no-store" } });
   } catch {
     // No user PII or receipt bytes in logs; avoid displaying raw DB errors.
     return NextResponse.json({
