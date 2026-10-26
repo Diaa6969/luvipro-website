@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, CreditCard, Mail, Minus, Plus, ShieldCheck } from "lucide-react";
 import { DEVICE, formatEuro, type ShopInquiry } from "@/lib/store";
+import { calculateInvoicePricing, moneyEUR } from "@/lib/invoicing/prices";
 
 type Mode = "preorder" | "buy";
 type Props = { initialMode: Mode; paymentsReady: boolean; preorderReady: boolean };
@@ -21,6 +22,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState<{ type: "info" | "error" | "success"; text: string } | null>(null);
   const [reference, setReference] = useState("");
+  const deviceTotals = calculateInvoicePricing("device", quantity);
 
   function selectMode(next: Mode) {
     setMode(next);
@@ -220,10 +222,14 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
             <div className="flex items-center justify-between gap-4 text-sm"><span className="text-slate-300">Einzelpreis netto</span><span>{formatEuro(DEVICE.unitPriceNetCents)}</span></div>
             <div className="flex items-center justify-between gap-4 text-sm"><span className="text-slate-300">Anzahl</span><span>{quantity}</span></div>
             <div className="flex items-center justify-between gap-4 text-sm"><span className="text-slate-300">Versand innerhalb Deutschlands (einmalig, netto)</span><span className="shrink-0 font-semibold">{formatEuro(DEVICE.shippingNetCentsGermany)}</span></div>
-            <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4"><span className="font-semibold">Gesamtsumme netto</span><span className="font-[var(--font-space-grotesk)] text-2xl font-bold text-pulse">{formatEuro(DEVICE.unitPriceNetCents * quantity + DEVICE.shippingNetCentsGermany)}</span></div>
+            <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4"><span className="font-semibold">Gesamtsumme netto</span><span className="font-[var(--font-space-grotesk)] text-2xl font-bold text-pulse">{moneyEUR(deviceTotals.netCents)}</span></div>
+          </div>
+          <div className="mt-5 space-y-3 border-t border-white/10 pt-5">
+            <div className="flex items-center justify-between gap-3 text-sm text-slate-300"><span>Umsatzsteuer 19 %</span><span>{moneyEUR(deviceTotals.vatCents)}</span></div>
+            <div className="flex items-center justify-between gap-3 font-semibold text-white"><span>Gesamtbetrag inkl. USt.</span><span className="text-xl text-pulse">{moneyEUR(deviceTotals.grossCents)}</span></div>
           </div>
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4 text-xs leading-6 text-slate-400">
-            Inklusive {formatEuro(DEVICE.shippingNetCentsGermany)} Versand netto innerhalb Deutschlands pro Bestellung. Zzgl. anwendbarer Umsatzsteuer. Der verbindliche Endbetrag wird vor dem Bezahlvorgang ausgewiesen.
+            Berechnung für eine Lieferung innerhalb Deutschlands mit 19 % USt. Bei Sonderregelungen muss der steuerliche Endbetrag vor dem Kauf gesondert bestätigt werden.
           </div>
           <Link href="/products" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-pulse hover:text-white">← Zurück zum Gerät</Link>
         </div>
