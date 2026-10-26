@@ -75,7 +75,7 @@ export default async function AccountingDashboard({ searchParams }: {
           <>
             {params.saved === "1" && <p role="status" className="mb-6 rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm text-emerald-200">Eingangsrechnung mit Originalbeleg gespeichert.</p>}
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <Highlight label="Ausgangsrechnungen netto" value={eur(totals!.revenueNet)} note="Nur ausgestellte und gespeicherte LUVIPRO-Rechnungen" icon={TrendingUp} />
+              <Highlight label="Ausgangsrechnungen netto" value={eur(totals!.revenueNet)} note="Nur generierte LUVIPRO-Rechnungen, unabhängig vom E-Mail-Versand" icon={TrendingUp} />
               <Highlight label="Eingangsbelege brutto" value={eur(totals!.costsGross)} note="Erfasste Lieferantenrechnungen inkl. Umsatzsteuer" icon={Receipt} />
               <Highlight label="Umsatzsteuer (Ausgang)" value={eur(totals!.revenueVat)} note="Aus den LUVIPRO-Ausgangsrechnungen" icon={FileText} />
               <Highlight label="USt-Saldo (Schätzung)" value={eur(totals!.vatBalance)} note="Ausgangs-USt minus bestätigte Vorsteuer, keine UStVA" icon={Banknote} />
@@ -122,7 +122,7 @@ export default async function AccountingDashboard({ searchParams }: {
                         <td className="whitespace-nowrap p-3 font-semibold">{inv.invoice_number}</td><td className="p-3">{dateDE(inv.invoice_date)}</td>
                         <td className="p-3">{inv.invoice_snapshot?.customer?.name || "–"}</td><td className="whitespace-nowrap p-3">{typeof inv.gross_cents === "number" ? eur(inv.gross_cents) : "–"}</td>
                         <td className="p-3 text-xs">{inv.delivery_state === "sent" ? "Versendet" : inv.delivery_state}</td>
-                        <td className="p-3">{inv.delivery_state === "sent" ? <a className="text-pulse underline" href={`/api/accounting/documents?kind=out&id=${inv.id}`}>PDF</a> : "–"}</td>
+                        <td className="p-3">{inv.delivery_state !== "reserved" ? <a className="text-pulse underline" href={`/api/accounting/documents?kind=out&id=${inv.id}`}>PDF</a> : "–"}</td>
                       </tr>
                     ))}</tbody>
                   </table>
