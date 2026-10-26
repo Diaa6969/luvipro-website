@@ -70,7 +70,7 @@ export async function readInvoicePDF(id: string): Promise<Buffer | null> {
     "luvipro_billing_invoices?select=pdf_base64,delivery_state&id=eq." + encodeURIComponent(id) + "&limit=1",
   );
   const rows = await response.json() as { pdf_base64: string | null; delivery_state: string }[];
-  if (rows[0]?.delivery_state !== "sent" || !rows[0].pdf_base64) return null;
+  if (!rows[0] || rows[0].delivery_state === "reserved" || !rows[0].pdf_base64) return null;
   return Buffer.from(rows[0].pdf_base64, "base64");
 }
 
