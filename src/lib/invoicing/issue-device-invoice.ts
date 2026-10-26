@@ -164,10 +164,12 @@ export async function issueDeviceInvoiceAfterFulfillment(stripeSessionId: string
   if (lines.length !== 1 || lines[0].price?.id !== process.env.STRIPE_PRICE_ID) {
     throw new Error("Stripe line items differ from the configured LUVIPRO product");
   }
-  const quantity = lines[0].quantity;
-  if (!Number.isInteger(quantity) || quantity! < 1 || quantity! > DEVICE.maxQuantity) {
+  const parsedQuantity = lines[0].quantity;
+  if (typeof parsedQuantity !== "number" || !Number.isInteger(parsedQuantity) ||
+      parsedQuantity < 1 || parsedQuantity > DEVICE.maxQuantity) {
     throw new Error("Invalid purchased quantity");
   }
+  const quantity = parsedQuantity;
   const pricing = calculateInvoicePricing("device", quantity);
   // For non-domestic/zero/reverse-charge or discounted Stripe results, stop;
   // this domestic 19% template must never silently produce an incorrect tax invoice.
