@@ -4,6 +4,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { DEVICE, formatEuro } from "@/lib/store";
 import { INSPECTION_SERVICES, INSPECTION_PRICING_NOTE } from "@/lib/inspection-pricing";
+import { calculateInvoicePricing, moneyEUR } from "@/lib/invoicing/prices";
 
 type PricingProps = { id?: string; embedded?: boolean };
 
@@ -29,7 +30,8 @@ export function Pricing({ id = "pricing", embedded = false }: PricingProps) {
                 <p className="mt-5 font-[var(--font-space-grotesk)] text-4xl font-bold text-white">
                   {formatEuro(plan.priceCents)}
                 </p>
-                <p className="mt-2 text-sm text-slate-400">pro Fahrzeugprüfung</p>
+                <p className="mt-2 text-sm text-slate-400">pro Fahrzeugprüfung · inkl. 19 % USt.</p>
+                <p className="mt-2 text-xs text-slate-400">Netto: {moneyEUR(calculateInvoicePricing(plan.id === "standard" ? "inspection_standard" : "inspection_premium").netCents)} · USt.: {moneyEUR(calculateInvoicePricing(plan.id === "standard" ? "inspection_standard" : "inspection_premium").vatCents)}</p>
                 <div className="mt-7 flex-1 space-y-4">
                   {plan.features.map((feature) => (
                     <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-slate-300">
@@ -54,6 +56,7 @@ export function Pricing({ id = "pricing", embedded = false }: PricingProps) {
                 {formatEuro(DEVICE.unitPriceNetCents)}
               </p>
               <p className="mt-2 text-sm text-slate-400">netto / Gerät · B2B</p>
+              <p className="mt-2 text-xs text-slate-400">Gerät inkl. 19 % USt.: {moneyEUR(calculateInvoicePricing("device").lines[0].grossCents)} · Versand separat</p>
               <div className="mt-7 flex-1 space-y-4">
                 {[
                   "365-nm-UV-Prüfgerät für Werkstätten",
