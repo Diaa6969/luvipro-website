@@ -73,7 +73,9 @@ export async function POST(request: NextRequest) {
       billing_address_collection: "required",
       "tax_id_collection[enabled]": "true",
       "automatic_tax[enabled]": "true",
-      "invoice_creation[enabled]": "true",
+      // Formal invoice is generated only after verified fulfillment by our
+      // numbered invoice engine. Stripe handles the payment receipt.
+      "invoice_creation[enabled]": "false",
       customer_email: d.email,
       customer_creation: "always",
       locale: "de",
