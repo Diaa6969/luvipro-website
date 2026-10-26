@@ -98,6 +98,10 @@ export function isStripeCheckoutReady() {
   return (
     process.env.STORE_CHECKOUT_ENABLED === "true" &&
     Boolean(process.env.STRIPE_SECRET_KEY) &&
-    Boolean(process.env.STRIPE_PRICE_ID)
+    Boolean(process.env.STRIPE_PRICE_ID) &&
+    process.env.INVOICE_ISSUANCE_ENABLED === "true" &&
+    Boolean(process.env.INVOICE_INTERNAL_TOKEN) &&
+    Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY) &&
+    Boolean(process.env.INVOICE_SELLER_TAX_ID)
   );
 }
