@@ -15,6 +15,16 @@ export type BankOrder = {
 };
 
 export type BankDetails = { iban: string; holder: string; bic?: string };
+/** A syntactically plausible IBAN alone is NOT safe for collecting transfers. */
+export function isValidGermanIban(raw: string): boolean {
+  const iban = raw.replace(/\s/g, "").toUpperCase();
+  if (!/^DE\d{20}$/.test(iban)) return false;
+  const reordered = iban.slice(4) + "1314" + iban.slice(2, 4);
+  let rest = 0;
+  for (const ch of reordered) rest = (rest * 10 + Number(ch)) % 97;
+  return rest === 1;
+}
+
 export function assertBankOrder(order: BankOrder) {
   const totals = calculateInvoicePricing("device", order.quantity);
   if (order.net_cents !== totals.netCents || order.vat_cents !== totals.vatCents ||
