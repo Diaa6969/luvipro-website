@@ -82,7 +82,7 @@ BEGIN
       OR p_quantity NOT BETWEEN 1 AND 10
       OR trim(p_company) = '' OR length(p_company)>120
       OR trim(p_contact) = '' OR length(p_contact)>120
-      OR p_email !~ '^[^[:space:]@]+@[^[:space:]@]+\\.[^[:space:]@]+$' OR length(p_email)>160
+      OR p_email NOT LIKE '%@%.%' OR length(p_email)>160
       OR trim(p_address) = '' OR length(p_address)>180 OR
       trim(p_postal_code) = '' OR length(p_postal_code)>12 OR
       trim(p_city) = '' OR length(p_city)>120 OR length(coalesce(p_phone,''))>60 THEN
