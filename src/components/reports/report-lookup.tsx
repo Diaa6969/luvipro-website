@@ -11,7 +11,7 @@ type SearchMode = ReportSearchMode;
  * A VIN or report number is a SEARCH REFERENCE, never an access credential.
  * No personal inspection data, PDFs or unauthenticated Supabase records are
  * returned from this public website. Purchased files are served in-app after
- * authenticated authorization; QR and public-token endpoints are not used.
+ * authenticated authorization; legacy public access routes are not used.
  */
 export function ReportLookup() {
   const [mode, setMode] = useState<SearchMode>("vin");
