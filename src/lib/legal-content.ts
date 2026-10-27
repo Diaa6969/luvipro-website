@@ -33,7 +33,7 @@ export const datenschutzSections: LegalSection[] = [
       "Fahrzeugdaten, VIN und fahrzeugbezogene Prüfdaten",
       "Bild- und UV-Prüfnachweise",
       "Standortdaten bei Nutzung der Werkstattsuche",
-      "Dokumentendaten bei Fahrzeugschein-OCR",
+      "hochgeladene Dokumente, sofern die jeweilige Funktion Dokumente erfordert",
       "zahlungsbezogene Transaktionsinformationen",
       "Partnerwerkstatt- und Prüferdaten",
       "technische Logdaten und Sicherheitsprotokolle",
@@ -70,11 +70,11 @@ export const datenschutzSections: LegalSection[] = [
     ],
   },
   {
-    title: "Dokumenten-Scanning und Fahrzeugschein-OCR",
+    title: "Fahrzeugdokumente und Dokumentenprüfung",
     paragraphs: [
-      "Wenn Nutzer oder Verkäufer im Rahmen einer Fahrzeugverifizierung ein offizielles Fahrzeugdokument, insbesondere den Fahrzeugschein, hochladen, kann LUVIPRO eine automatisierte Texterkennung, OCR, einsetzen.",
-      "Zweck der Verarbeitung ist insbesondere das Auslesen relevanter Fahrzeugdaten, der Abgleich der VIN mit dem Fahrzeugdokument, die Prüfung der Datenkonsistenz, die Vermeidung falscher oder manipulierter Fahrzeugangaben und der Schutz der Integrität digitaler Fahrzeugberichte.",
-      "Soweit technisch umgesetzt, wird die Originaldatei des hochgeladenen Dokuments nach erfolgreicher Prüfung und Abgleichung gelöscht oder durch eine datensparsame Prüfreferenz ersetzt. Gespeichert werden können insbesondere das Ergebnis des Abgleichs, Zeitstempel, Prüfstatus und technisch erforderliche Nachweise.",
+      "Werden im Rahmen einer angebotenen Fahrzeugverifizierung Dokumente hochgeladen, verarbeitet LUVIPRO die bereitgestellten Inhalte nur für den jeweils angegebenen Prüf- oder Zuordnungszweck.",
+      "Dazu gehören insbesondere die Prüfung der Datenkonsistenz, die Zuordnung zu Fahrzeug und Bericht sowie die Vermeidung falscher oder manipulierter Fahrzeugangaben.",
+      "Die Speicherung von Originaldokumenten und Prüfnachweisen richtet sich nach dem angegebenen Zweck, berechtigten Nachweisinteressen und gesetzlichen Aufbewahrungspflichten. Dokumente werden nicht länger als erforderlich aufbewahrt.",
       "Falls eine gesetzliche Pflicht, ein Sicherheitsinteresse oder ein Streitfall entgegensteht, kann eine längere Speicherung erforderlich sein. In diesem Fall wird die Speicherung auf das erforderliche Maß beschränkt.",
     ],
   },
@@ -140,7 +140,7 @@ export const datenschutzSections: LegalSection[] = [
       "Erstellung und Verwaltung digitaler Fahrzeugreports",
       "VIN-Suche und VIN-Abgleich",
       "Berichtsuche anhand von FIN/VIN oder Berichtsnummer",
-      "Fahrzeugschein-OCR und Dokumentenabgleich",
+      "Dokumentenprüfung und Fahrzeugzuordnung, soweit angeboten",
       "Partnerwerkstatt-Suche",
       "Termin- und Prüfungsvermittlung",
       "Zahlungsabwicklung über externe Anbieter",
@@ -164,7 +164,7 @@ export const datenschutzSections: LegalSection[] = [
       "Personenbezogene Daten werden nur so lange gespeichert, wie dies für die jeweiligen Zwecke erforderlich ist.",
       "Für technische Zugriffsdaten gelten kürzere Speicherfristen, soweit keine Sicherheitsvorfälle oder Rechtsstreitigkeiten entgegenstehen.",
       "Finalisierte Fahrzeugreports, technische Prüfnachweise, Audit-Logs und Berichtsnummer-Zuordnungen können länger gespeichert werden, soweit dies zur Integrität der Fahrzeughistorie, zur Betrugsprävention, zur Qualitätssicherung, zur Nachweisführung oder zur Wahrung berechtigter Interessen erforderlich ist.",
-      "Dokumentenbilder, insbesondere Fahrzeugschein-Uploads, sollen nach erfolgreicher OCR-Prüfung und VIN-Abgleichung gelöscht oder auf datensparsame Prüfinformationen reduziert werden, soweit keine entgegenstehenden Gründe bestehen.",
+      "Hochgeladene Dokumente werden gelöscht, wenn ihr Verarbeitungszweck entfällt und keine gesetzlichen Aufbewahrungs- oder berechtigten Nachweispflichten entgegenstehen.",
       "Gesetzlich aufzubewahrende Geschäfts- und Steuerunterlagen werden entsprechend den anwendbaren Aufbewahrungsvorschriften gespeichert. Sonstige Daten werden nur so lange verarbeitet, wie dies für den jeweiligen Zweck oder zur Erfüllung gesetzlicher Pflichten erforderlich ist."
     ],
   },
@@ -208,7 +208,7 @@ export const datenschutzSections: LegalSection[] = [
     title: "Keine automatisierte Einzelfallentscheidung",
     paragraphs: [
       "Soweit nicht ausdrücklich anders angegeben, findet keine ausschließlich automatisierte Entscheidung im Sinne von Art. 22 DSGVO statt, die gegenüber Nutzern rechtliche Wirkung entfaltet oder sie in ähnlicher Weise erheblich beeinträchtigt.",
-      "Automatisierte Prüfungen, OCR-Abgleiche oder Plausibilitätsprüfungen dienen der technischen Unterstützung, Datenkonsistenz und Betrugsprävention.",
+      "Technische Prüfungen und Plausibilitätskontrollen dienen der Datenkonsistenz, Qualitätssicherung und Betrugsprävention.",
     ],
   },
   {
