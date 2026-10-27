@@ -6,6 +6,7 @@ import { isAccountingAdmin, accountingEnabled } from "@/lib/accounting/admin-aut
 import { readAccountingYear } from "@/lib/accounting/database";
 import { buildMonthlyTable, sumMonths, validYear, type IncomingInvoice, type OutgoingInvoice } from "@/lib/accounting/monthly";
 import { ExpenseForm } from "@/components/accounting/expense-form";
+import { BankTransferPanel } from "@/components/accounting/bank-transfer-panel";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -109,6 +110,8 @@ export default async function AccountingDashboard({ searchParams }: {
               </div>
               <p className="mt-4 text-xs leading-6 text-amber-200">* Netto-Differenz ist kein steuerlicher Gewinn: Wareneinkauf, Bestände, Abschreibungen, Ist-/Soll-Versteuerung, Rückzahlungen und Buchungskorrekturen benötigen buchhalterische Prüfung. USt-Saldo ist eine Orientierung, keine amtliche Umsatzsteuer-Voranmeldung.</p>
             </section>
+
+            <BankTransferPanel />
 
             <div className="mt-10 grid gap-6 xl:grid-cols-2">
               <section className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
