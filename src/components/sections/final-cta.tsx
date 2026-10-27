@@ -13,14 +13,14 @@ export function FinalCta() {
               Baue mit LUVIPRO die nächste Vertrauensschicht für Gebrauchtwagen.
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-              Starte als Partnerwerkstatt, verifiziere ein Fahrzeug oder sichere dir App-Frühzugang.
+              Starte als Partnerwerkstatt, suche einen Prüfbericht per FIN/VIN oder Berichtsnummer oder informiere dich über die App.
             </p>
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               <CtaLink href="/contact" className="gap-2">
                 Partnerwerkstatt werden <ArrowRight className="h-4 w-4" />
               </CtaLink>
-              <CtaLink href="/verify" variant="secondary">
-                Fahrzeug prüfen
+              <CtaLink href="/reports" variant="secondary">
+                Prüfbericht suchen
               </CtaLink>
               <CtaLink href="/app" variant="secondary">
                 App-Frühzugang
