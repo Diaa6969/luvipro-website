@@ -7,12 +7,8 @@ import { createPortal } from "react-dom";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { CtaLink } from "@/components/ui/cta-link";
 import { internationalHomeCopy, type InternationalLocale } from "@/lib/international-home-copy";
+import { LanguagePicker } from "@/components/ui/language-picker";
 
-const languageLinks = [
-  { code: "de", label: "Deutsch", href: "/" },
-  { code: "en", label: "English", href: "/en" },
-  { code: "ar", label: "العربية", href: "/ar" },
-];
 
 export function LocaleDocument({ locale }: { locale: InternationalLocale }) {
   useEffect(() => {
@@ -29,29 +25,6 @@ export function LocaleDocument({ locale }: { locale: InternationalLocale }) {
   return null;
 }
 
-function LanguageLinks({ locale, close }: { locale: InternationalLocale; close?: () => void }) {
-  return (
-    <div className="flex flex-wrap items-center gap-2" aria-label={internationalHomeCopy[locale].site.switchLanguage}>
-      {languageLinks.map((entry) => (
-        <Link
-          key={entry.code}
-          href={entry.href}
-          hrefLang={entry.code}
-          lang={entry.code}
-          onClick={close}
-          aria-current={locale === entry.code ? "page" : undefined}
-          className={`rounded-full border px-3 py-2 text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse ${
-            locale === entry.code
-              ? "border-pulse/60 bg-pulse/20 text-white"
-              : "border-white/15 text-slate-300 hover:border-pulse/50 hover:text-white"
-          }`}
-        >
-          {entry.label}
-        </Link>
-      ))}
-    </div>
-  );
-}
 
 export function InternationalNavbar({ locale }: { locale: InternationalLocale }) {
   const t = internationalHomeCopy[locale];
@@ -78,16 +51,16 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
   const closeMenu = () => setIsOpen(false);
   const navItems = t.sections.nav.map((label, index) => ({
     label,
-    href: [`/${locale}#ecosystem`, "/products", `/${locale}#how-it-works`, "/products#preise", `/${locale}#partner-map`][index],
+    href: [`/${locale}#ecosystem`, `/${locale}/products`, `/${locale}#how-it-works`, `/${locale}/products`, `/${locale}#partner-map`][index],
   }));
   const mobileLinks = [
     { label: t.site.home, href: `/${locale}` },
-    { label: t.site.products, href: "/products" },
-    { label: t.site.prices, href: "/products#preise" },
-    { label: locale === "ar" ? "البحث عن تقرير" : "Find a report", href: "/reports" },
-    { label: t.site.verify, href: "/verify" },
-    { label: t.site.workshops, href: "/partner-workshops" },
-    { label: t.site.contact, href: "/contact" },
+    { label: t.site.products, href: `/${locale}/products` },
+    { label: t.site.prices, href: `/${locale}/products` },
+    { label: locale === "ar" ? "البحث عن تقرير" : "Find a report", href: `/${locale}/reports` },
+    { label: t.site.verify, href: `/${locale}/reports` },
+    { label: t.site.workshops, href: `/${locale}/workshops` },
+    { label: t.site.contact, href: `/${locale}/contact` },
   ];
   const legalLinks = [
     { label: t.site.imprint, href: "/impressum" },
@@ -137,7 +110,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
             </nav>
             <div className="mt-7">
               <p className="mb-3 text-xs font-semibold uppercase text-pulse">{t.site.languages}</p>
-              <LanguageLinks locale={locale} close={closeMenu} />
+              <LanguagePicker current={locale} />
             </div>
             <div className="mt-auto pt-10">
               <div className="rounded-lg border border-ultraviolet/20 bg-ultraviolet/10 p-4">
@@ -170,8 +143,8 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
             ))}
           </div>
           <div className="hidden items-center gap-3 md:flex">
-            <CtaLink href="/reports" variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
-            <CtaLink href="/contact">{t.site.partner}</CtaLink>
+            <CtaLink href={`/${locale}/reports`} variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
+            <CtaLink href={`/${locale}/contact`}>{t.site.partner}</CtaLink>
           </div>
           <div className="hidden lg:block">
             <details className="group relative">
@@ -179,7 +152,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
                 {t.site.languages} ▾
               </summary>
               <div className="absolute end-0 top-full z-[60] mt-2 min-w-52 rounded-lg border border-white/15 bg-[#080e1d] p-3 shadow-2xl">
-                <LanguageLinks locale={locale} />
+                <LanguagePicker current={locale} compact />
               </div>
             </details>
           </div>
