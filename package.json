@@ -12,7 +12,8 @@
     "test:accounting": "node scripts/test-accounting-monthly.mjs",
     "test:bank-orders": "node scripts/test-bank-transfer.mjs",
     "test:bank-admin-edge": "node scripts/test-bank-admin-edge.mjs",
-    "test:reports": "node scripts/test-report-search.mjs"
+    "test:reports": "node scripts/test-report-search.mjs",
+    "test:locales": "node scripts/test-site-locales.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",
