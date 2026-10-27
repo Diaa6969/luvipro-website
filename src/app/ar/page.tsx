@@ -1,3 +1,4 @@
+import { languageAlternates } from "@/lib/site-locales";
 import type { Metadata } from "next";
 import { InternationalHome } from "@/components/international/international-home";
 
@@ -9,12 +10,7 @@ export const metadata: Metadata = {
   description,
   alternates: {
     canonical: "https://luvipro.de/ar",
-    languages: {
-      "de-DE": "https://luvipro.de/",
-      "en": "https://luvipro.de/en",
-      "ar": "https://luvipro.de/ar",
-      "x-default": "https://luvipro.de/",
-    },
+    languages: languageAlternates,
   },
   openGraph: {
     title,
