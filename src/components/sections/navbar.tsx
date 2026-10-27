@@ -13,13 +13,15 @@ const navItems = [
   { label: "Ablauf", href: "/#how-it-works" },
   { label: "Preise", href: "/products#preise" },
   { label: "Werkstätten", href: "/#partner-map" },
+  { label: "Berichte", href: "/reports" },
 ];
 
 const mobileLinks = [
   { label: "Startseite", href: "/" },
   { label: "Gerät LU3656060", href: "/products" },
   { label: "Preise", href: "/products#preise" },
-  { label: "Fahrzeug verifizieren", href: "/verify" },
+  { label: "Prüfbericht suchen", href: "/reports" },
+  { label: "Fahrzeugprüfung", href: "/verify" },
   { label: "Partnerwerkstätten", href: "/partner-workshops" },
   { label: "Kontakt", href: "/contact" },
 ];
@@ -176,8 +178,8 @@ export function Navbar() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <CtaLink href="/verify" variant="secondary">
-              Fahrzeug prüfen
+            <CtaLink href="/reports" variant="secondary">
+              Prüfbericht suchen
             </CtaLink>
             <CtaLink href="/contact">Partner werden</CtaLink>
           </div>
