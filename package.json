@@ -10,7 +10,8 @@
     "type-check": "tsc --noEmit",
     "test:invoices": "node scripts/test-invoice-pricing.mjs",
     "test:accounting": "node scripts/test-accounting-monthly.mjs",
-    "test:bank-orders": "node scripts/test-bank-transfer.mjs"
+    "test:bank-orders": "node scripts/test-bank-transfer.mjs",
+    "test:bank-admin-edge": "node scripts/test-bank-admin-edge.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",
