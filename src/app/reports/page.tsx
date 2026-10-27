@@ -21,7 +21,7 @@ export default function ReportsPage() {
         <div className="max-w-4xl">
           <p className="text-sm font-semibold uppercase tracking-widest text-pulse">Digitale Fahrzeugberichte</p>
           <h1 className="mt-5 max-w-3xl font-[var(--font-space-grotesk)] text-4xl font-semibold leading-tight sm:text-6xl">
-            Prüfbericht finden. Sicher herunterladen.
+            Prüfbericht per VIN oder Nummer.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
             Die Suche erfolgt über die FIN/VIN oder die individuelle Berichtsnummer,
