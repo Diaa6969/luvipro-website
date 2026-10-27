@@ -84,6 +84,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
     { label: t.site.home, href: `/${locale}` },
     { label: t.site.products, href: "/products" },
     { label: t.site.prices, href: "/products#preise" },
+    { label: locale === "ar" ? "البحث عن تقرير" : "Find a report", href: "/reports" },
     { label: t.site.verify, href: "/verify" },
     { label: t.site.workshops, href: "/partner-workshops" },
     { label: t.site.contact, href: "/contact" },
@@ -169,7 +170,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
             ))}
           </div>
           <div className="hidden items-center gap-3 md:flex">
-            <CtaLink href="/verify" variant="secondary">{t.site.verifyShort}</CtaLink>
+            <CtaLink href="/reports" variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
             <CtaLink href="/contact">{t.site.partner}</CtaLink>
           </div>
           <div className="hidden lg:block">
