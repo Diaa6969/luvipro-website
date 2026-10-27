@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BatteryCharging, CarFront, Check, FileCheck2, FileLock2, Fingerprint, Globe2, Mail, MapPin, ScanLine, ShieldCheck } from "lucide-react";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { LanguagePicker } from "@/components/ui/language-picker";
+import { DocumentLanguage } from "@/components/ui/document-language";
 import { localeHome, localeHref, type SiteLocale } from "@/lib/site-locales";
 import { siteTranslation } from "@/lib/site-translation";
 import { EuropeanLookup } from "./european-lookup";
@@ -69,6 +70,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
   const t = siteTranslation(locale);
   return (
     <main lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} className="cinematic-page min-h-screen overflow-hidden bg-obsidian text-white">
+      <DocumentLanguage locale={locale} />
       <EuropeanHeader locale={locale} />
       <section className="relative overflow-hidden bg-radial-grid py-20 sm:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(126,34,206,0.25),transparent_45%),radial-gradient(circle_at_20%_70%,rgba(32,214,255,0.12),transparent_35%)]" />
@@ -161,6 +163,7 @@ export function EuropeanInner({ locale, section }: { locale: SiteLocale; section
     section === "workshops" ? t.partnerText : section === "contact" ? t.legalNote : t.searchNotice;
   return (
     <main lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} className="cinematic-page min-h-screen bg-obsidian text-white">
+      <DocumentLanguage locale={locale} />
       <EuropeanHeader locale={locale} />
       <section className="section-shell min-h-[65vh] pb-20 pt-16 sm:pt-24">
         <Link href={localeHome(locale)} className="text-sm text-pulse hover:text-white">← {t.back}</Link>
