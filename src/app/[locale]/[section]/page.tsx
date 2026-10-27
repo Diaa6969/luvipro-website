@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { EuropeanInner } from "@/components/international/european-home";
-import { isSiteLocale, siteLocales } from "@/lib/site-locales";
+import { isSiteLocale, siteLocales, localeHref } from "@/lib/site-locales";
 import { siteTranslation } from "@/lib/site-translation";
 
 const sections=["products","reports","workshops","contact","app"] as const;
@@ -18,8 +18,9 @@ export async function generateMetadata({params}:{params:Promise<{locale:string;s
   const title=section==="products"?"LUVIPRO LU3656060":section==="reports"?t.reportTitle:
     section==="workshops"?t.partnerTitle:section==="contact"?t.navContact:t.app;
   const url=`https://luvipro.de/${locale}/${section}`;
+  const translatedUrls = Object.fromEntries(siteLocales.map(([code, , tag]) => [tag, localeHref(code,section)]));
   return {title:`${title} | LUVIPRO`,description: t.intro,
-    alternates:{canonical:url},robots:{index:section!=="app",follow:true},
+    alternates:{canonical:url,languages:{...translatedUrls,"x-default":localeHref("de",section)}},robots:{index:section!=="app",follow:true},
     openGraph:{title:`${title} | LUVIPRO`,description:t.intro,url,type:"website"}};
 }
 export default async function LocalizedInformationPage({params}:{params:Promise<{locale:string;section:string}>}){
