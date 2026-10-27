@@ -3,10 +3,9 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ClipboardCopy, FileSearch, ShieldCheck } from "lucide-react";
+import { normalizeReportReference, validReportReference, type ReportSearchMode } from "@/lib/reports/reference";
 
-type SearchMode = "vin" | "report";
-const safeReport = /^[A-Za-z0-9][A-Za-z0-9-]{5,63}$/;
-const safeVin = /^[A-HJ-NPR-Z0-9]{17}$/;
+type SearchMode = ReportSearchMode;
 
 /**
  * A VIN or report number is a SEARCH REFERENCE, never an access credential.
@@ -23,8 +22,8 @@ export function ReportLookup() {
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const value = input.trim().toUpperCase().replace(/\s/g, "");
-    const valid = mode === "vin" ? safeVin.test(value) : safeReport.test(value);
+    const value = normalizeReportReference(input);
+    const valid = validReportReference(mode, value);
     if (!valid) {
       setError(mode === "vin"
         ? "Bitte eine vollständige, gültig formatierte FIN/VIN mit 17 Zeichen eingeben."
@@ -83,7 +82,7 @@ export function ReportLookup() {
         />
         {error && <p className="text-sm text-rose-200" role="alert">{error}</p>}
         <button className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-pulse px-5 py-3 font-semibold text-obsidian transition hover:bg-frost">
-          Berichtszugang prüfen <ArrowRight className="h-4 w-4" />
+          Referenz für die App vorbereiten <ArrowRight className="h-4 w-4" />
         </button>
       </form>
       {submitted && (
