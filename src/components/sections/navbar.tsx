@@ -71,7 +71,7 @@ export function Navbar() {
     isMounted && isOpen
       ? createPortal(
           <div
-            className="fixed inset-0 z-[99999] overflow-y-auto bg-[#020617]/95 text-white backdrop-blur-xl lg:hidden"
+            className="fixed inset-0 z-[99999] overflow-y-auto bg-[#030815] text-white xl:hidden"
             onClick={closeMenu}
           >
             <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(139,92,246,0.24),transparent_32%),radial-gradient(circle_at_86%_80%,rgba(32,214,255,0.16),transparent_30%)]" />
@@ -136,11 +136,11 @@ export function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-obsidian/72 backdrop-blur-xl">
+      <header className="luvipro-fixed-header fixed inset-x-0 top-0 z-50 border-b border-[#243450] bg-[#050d1c]">
         <nav className="section-shell flex h-16 min-w-0 items-center justify-between gap-3 sm:h-20">
           <BrandLogo />
 
-          <div className="hidden items-center gap-8 lg:flex">
+          <div className="hidden items-center gap-5 xl:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -152,18 +152,18 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 2xl:flex">
             <CtaLink href="/reports" variant="secondary">
               Prüfbericht suchen
             </CtaLink>
             <CtaLink href="/contact">Partner werden</CtaLink>
           </div>
 
-          <div className="hidden lg:block"><LanguagePicker current="de" compact /></div>
+          <div className="ms-auto shrink-0 xl:ms-0"><LanguagePicker current="de" compact /></div>
 
           <button
             type="button"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white sm:h-11 sm:w-11 lg:hidden"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-[#101b32] text-white sm:h-11 sm:w-11 xl:hidden"
             aria-label="Menü öffnen"
             aria-controls={menuId}
             aria-expanded={isOpen}

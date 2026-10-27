@@ -21,7 +21,7 @@ export function EuropeanHeader({ locale, section }: { locale: SiteLocale; sectio
     [t.navContact, localeHref(locale, "contact")],
   ] as const;
   return (
-    <header className="relative z-50 border-b border-white/10 bg-[#060c1b]/90 backdrop-blur-xl">
+    <header className="relative z-50 border-b border-[#243450] bg-[#060c1b]">
       <div className="section-shell flex min-h-20 items-center justify-between gap-4">
         <BrandLogo homeHref={localeHome(locale)} />
         <nav className="hidden items-center gap-5 xl:flex" aria-label="Main navigation">
@@ -33,7 +33,7 @@ export function EuropeanHeader({ locale, section }: { locale: SiteLocale; sectio
             <summary className="cursor-pointer list-none rounded-xl border border-white/20 bg-white/10 px-3 py-3 text-sm text-white [&::-webkit-details-marker]:hidden" aria-label="Open menu">
               ☰
             </summary>
-            <nav className="absolute end-0 z-[70] mt-3 grid min-w-[220px] max-w-[85vw] gap-1 rounded-xl border border-white/15 bg-[#070e1e] p-3 shadow-2xl">
+            <nav className="absolute end-0 z-[70] mt-3 grid min-w-[220px] max-w-[85vw] gap-1 rounded-xl border border-white/20 bg-[#070e1e] p-3 shadow-2xl">
               {items.map(([text,href]) => <Link key={href} href={href} className="rounded-lg px-4 py-3 text-sm text-slate-200 hover:bg-white/10">{text}</Link>)}
             </nav>
           </details>
