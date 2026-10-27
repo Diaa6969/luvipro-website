@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/international-home-en-ar
+      - feature/european-locales
   workflow_dispatch:
 
 permissions:
@@ -31,6 +32,8 @@ jobs:
         run: npm run test:bank-admin-edge
       - name: Validate report references and absence of public scan/QR text
         run: npm run test:reports
+      - name: Validate 31 supported website locales and all translations
+        run: npm run test:locales
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'

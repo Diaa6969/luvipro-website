@@ -1,14 +1,10 @@
+import { languageAlternates } from "@/lib/site-locales";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   alternates: {
     canonical: "https://luvipro.de/",
-    languages: {
-      "de-DE": "https://luvipro.de/",
-      "en": "https://luvipro.de/en",
-      "ar": "https://luvipro.de/ar",
-      "x-default": "https://luvipro.de/",
-    },
+    languages: languageAlternates,
   },
 };
 
