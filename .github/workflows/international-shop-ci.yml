@@ -27,6 +27,8 @@ jobs:
         run: npm run test:accounting
       - name: Run bank transfer scenario tests (synthetic)
         run: npm run test:bank-orders
+      - name: Test staged admin auth bridge with fake Supabase JWT (no network)
+        run: npm run test:bank-admin-edge
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'
