@@ -39,7 +39,8 @@ export function bankDetails(): BankDetails {
 export function isBankTransferReady() {
   if (process.env.STORE_BANK_TRANSFER_ENABLED !== "true" ||
       !process.env.SUPABASE_SERVICE_ROLE_KEY || !process.env.SUPABASE_URL ||
-      !process.env.SMTP_USER || !process.env.SMTP_PASSWORD || !process.env.BANK_TRANSFER_HOLDER) return false;
+      !process.env.SMTP_USER || !process.env.SMTP_PASSWORD || !process.env.BANK_TRANSFER_HOLDER ||
+      (process.env.BANK_ORDER_RATE_SECRET || "").length < 32) return false;
   try { bankDetails(); return true; } catch { return false; }
 }
 export async function getBankOrder(id: string): Promise<BankOrder> {
@@ -63,7 +64,7 @@ async function patchOrder(id: string, status: BankOrder["payment_mail_status"], 
 async function audit(id: string, kind: string, actor?: string) {
   await db("luvipro_bank_order_events", { order_id: id, event_kind: kind, actor_id: actor || null });
 }
-export async function createBankOrder(d: ShopInquiry, requestKey: string) {
+export async function createBankOrder(d: ShopInquiry, requestKey: string, ipHash: string) {
   if (!isBankTransferReady()) throw new Error("Bank transfer currently disabled");
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestKey))
     throw new Error("Invalid request reference");
@@ -75,7 +76,7 @@ export async function createBankOrder(d: ShopInquiry, requestKey: string) {
       p_request_key: requestKey,
       p_company: d.company, p_contact: d.contact, p_email: d.email,
       p_address: d.street, p_postal_code: d.postalCode, p_city: d.city,
-      p_phone: d.phone, p_quantity: d.quantity,
+      p_phone: d.phone, p_quantity: d.quantity, p_ip_hash: ipHash,
     });
   const info = entries?.[0];
   if (!info?.order_id) throw new Error("Order registration failed");
