@@ -2,12 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, CreditCard, Mail, Minus, Plus, ShieldCheck } from "lucide-react";
+import { ArrowRight, CheckCircle2, CreditCard, Landmark, Mail, Minus, Plus, ShieldCheck } from "lucide-react";
 import { DEVICE, formatEuro, type ShopInquiry } from "@/lib/store";
 import { calculateInvoicePricing, moneyEUR } from "@/lib/invoicing/prices";
 
-type Mode = "preorder" | "buy";
-type Props = { initialMode: Mode; paymentsReady: boolean; preorderReady: boolean };
+type Mode = "preorder" | "buy" | "bank";
+type Props = { initialMode: Mode; paymentsReady: boolean; preorderReady: boolean; bankReady: boolean };
 
 const controlClass = "mt-2 block min-h-12 w-full rounded-xl border border-white/15 bg-[#0b1221] px-4 py-3 text-base text-white placeholder:text-slate-500 outline-none transition focus:border-pulse/65 focus:ring-2 focus:ring-pulse/20";
 const labelClass = "block text-sm font-medium text-slate-200";
@@ -16,18 +16,20 @@ function textValue(form: FormData, key: string) {
   return String(form.get(key) ?? "").trim();
 }
 
-export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) {
+export function OrderForm({ initialMode, paymentsReady, preorderReady, bankReady }: Props) {
   const [mode, setMode] = useState<Mode>(initialMode);
   const [quantity, setQuantity] = useState(1);
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState<{ type: "info" | "error" | "success"; text: string } | null>(null);
   const [reference, setReference] = useState("");
+  const [requestKey, setRequestKey] = useState(() => crypto.randomUUID());
   const deviceTotals = calculateInvoicePricing("device", quantity);
 
   function selectMode(next: Mode) {
     setMode(next);
     setNotice(null);
     setReference("");
+    setRequestKey(crypto.randomUUID());
   }
 
   function changeQuantity(amount: number) {
@@ -37,7 +39,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formElement = event.currentTarget;
-    if (pending || (mode === "buy" && !paymentsReady) || (mode === "preorder" && !preorderReady)) return;
+    if (pending || (mode === "buy" && !paymentsReady) || (mode === "preorder" && !preorderReady) || (mode === "bank" && !bankReady)) return;
     const form = new FormData(formElement);
     const inquiry: ShopInquiry = {
       sku: DEVICE.sku,
@@ -57,18 +59,18 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
       website: textValue(form, "website"),
     };
 
-    if (!inquiry.privacyAccepted || (mode === "buy" && !inquiry.termsAccepted)) {
+    if (!inquiry.privacyAccepted || (mode !== "preorder" && !inquiry.termsAccepted)) {
       setNotice({ type: "error", text: "Bitte prüfen und bestätigen Sie die notwendigen Hinweise." });
       return;
     }
     setPending(true);
     setNotice(null);
     try {
-      const endpoint = mode === "preorder" ? "/api/store/preorder" : "/api/store/checkout";
+      const endpoint = mode === "preorder" ? "/api/store/preorder" : mode === "bank" ? "/api/store/bank-transfer" : "/api/store/checkout";
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(inquiry),
+        body: JSON.stringify({ ...inquiry, requestKey }),
       });
       const result: { error?: string; url?: string; reference?: string } = await response.json();
       if (!response.ok) throw new Error(result.error || "Die Anfrage konnte nicht verarbeitet werden.");
@@ -82,9 +84,10 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
       }
 
       setReference(result.reference ?? "");
-      setNotice({ type: "success", text: "Vielen Dank! Ihre unverbindliche Produktanfrage wurde vom E-Mail-Dienst zur Zustellung an LUVIPRO angenommen. Wir melden uns bei Ihnen." });
+      setNotice({ type: "success", text: mode === "bank" ? "Ihre Banküberweisungs-Bestellung wurde aufgenommen. Zahlungsinformationen mit eindeutiger Referenz wurden an Ihre E-Mail-Adresse gesendet. Bitte erst anhand dieser Angaben überweisen." : "Vielen Dank! Ihre unverbindliche Produktanfrage wurde vom E-Mail-Dienst zur Zustellung an LUVIPRO angenommen. Wir melden uns bei Ihnen." });
       formElement.reset();
       setQuantity(1);
+      setRequestKey(crypto.randomUUID());
     } catch (error) {
       setNotice({ type: "error", text: error instanceof Error ? error.message : "Bitte versuchen Sie es erneut." });
     } finally {
@@ -95,7 +98,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
   return (
     <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_330px]">
       <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.045] p-5 shadow-[0_15px_60px_rgba(0,0,0,.22)] sm:p-8">
-        <div className="mb-8 grid gap-3 sm:grid-cols-2" role="group" aria-label="Bestellart wählen">
+        <div className="mb-8 grid gap-3 sm:grid-cols-3" role="group" aria-label="Bestellart wählen">
           <button type="button" onClick={() => selectMode("preorder")} aria-pressed={mode === "preorder"}
             className={`rounded-xl border p-5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse ${mode === "preorder" ? "border-pulse/70 bg-pulse/10" : "border-white/10 bg-white/[0.025] hover:border-pulse/30"}`}>
             <Mail className="h-6 w-6 text-pulse" />
@@ -108,8 +111,17 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
             <span className="mt-3 block text-lg font-bold text-white">Direkt kaufen</span>
             <span className="mt-1 block text-sm leading-6 text-slate-300">{paymentsReady ? "Sichere Zahlung über Stripe." : "Sichere Zahlung derzeit nicht aktiviert."}</span>
           </button>
+          <button type="button" onClick={() => selectMode("bank")} aria-pressed={mode === "bank"}
+            className={`rounded-xl border p-5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse ${mode === "bank" ? "border-pulse/70 bg-pulse/10" : "border-white/10 bg-white/[0.025] hover:border-pulse/30"}`}>
+            <Landmark className="h-6 w-6 text-pulse" />
+            <span className="mt-3 block text-lg font-bold text-white">Banküberweisung</span>
+            <span className="mt-1 block text-sm leading-6 text-slate-300">{bankReady ? "Verbindlich bestellen und per Vorkasse überweisen." : "Banküberweisung derzeit nicht aktiviert."}</span>
+          </button>
         </div>
 
+        {mode === "bank" && !bankReady && (
+          <div className="mb-7 rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-sm leading-7 text-amber-100" role="status">Banküberweisung ist noch nicht aktiviert. Es wird keine Zahlung ausgelöst.</div>
+        )}
         {mode === "buy" && !paymentsReady && (
           <div className="mb-7 rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-sm leading-7 text-amber-100" role="status">
             <strong>Direktzahlung aktuell deaktiviert.</strong> Die Zahlungsfunktion kann nur mit aktivierter Stripe-Kasse genutzt werden. Es wird keine Zahlung ausgelöst und keine Bestellung angenommen. Für eine unverbindliche Anfrage wechseln Sie zum ersten Reiter.
@@ -172,7 +184,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
               <input name="privacyAccepted" type="checkbox" required className="mt-1 h-4 w-4 accent-cyan-400" />
               <span>Ich habe die <Link href="/datenschutz" target="_blank" rel="noopener noreferrer" className="text-pulse underline underline-offset-2">Datenschutzhinweise</Link> zur Kenntnis genommen. <span className="text-pulse">*</span></span>
             </label>
-            {mode === "buy" && (
+            {mode !== "preorder" && (
               <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-slate-300">
                 <input name="termsAccepted" type="checkbox" required={paymentsReady} className="mt-1 h-4 w-4 accent-cyan-400" />
                 <span>Ich akzeptiere die <Link href="/agb" target="_blank" rel="noopener noreferrer" className="text-pulse underline underline-offset-2">AGB</Link> für einen späteren verbindlichen Kauf. <span className="text-pulse">*</span></span>
@@ -195,9 +207,9 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
             </div>
           )}
 
-          <button type="submit" disabled={pending || (mode === "buy" && !paymentsReady) || (mode === "preorder" && !preorderReady)}
+          <button type="submit" disabled={pending || (mode === "buy" && !paymentsReady) || (mode === "preorder" && !preorderReady) || (mode === "bank" && !bankReady)}
             className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-pulse px-6 py-4 text-base font-bold text-obsidian shadow-glow transition hover:bg-frost focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pulse disabled:cursor-not-allowed disabled:opacity-45">
-            {pending ? "Bitte warten ..." : mode === "preorder"
+            {pending ? "Bitte warten ..." : mode === "bank" ? (bankReady ? "Verbindlich bestellen · Banküberweisung" : "Banküberweisung noch nicht verfügbar") : mode === "preorder"
               ? (preorderReady ? "Unverbindliche Anfrage automatisch senden" : "Anfrageversand derzeit deaktiviert")
               : (paymentsReady ? "Weiter zur sicheren Zahlung" : "Direktkauf noch nicht verfügbar")}
             {!pending && mode === "preorder" && <ArrowRight className="h-5 w-5" />}
@@ -208,7 +220,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady }: Props) 
             {mode === "preorder" ? (preorderReady
               ? "Nach erfolgreicher Annahme durch den E-Mail-Dienst erscheint Ihre Referenznummer; es erfolgt keine Buchung oder Abbuchung."
               : "Bei deaktiviertem E-Mail-Dienst ist keine automatische Anfrage möglich. Sie erreichen uns direkt über die angegebene Kontaktadresse.")
-              : "Nach Freischaltung erfolgt die Zahlung über eine sichere Stripe-Checkout-Seite. Zahlungsdaten werden nicht in dieser Website gespeichert."}
+              : mode === "bank" ? "Nach Bestellung erhalten Sie eine Zahlungsaufforderung mit eindeutigem Verwendungszweck. Die steuerliche Rechnung folgt dem tatsächlichen Zahlungs- und Lieferablauf." : "Nach Freischaltung erfolgt die Zahlung über eine sichere Stripe-Checkout-Seite. Zahlungsdaten werden nicht in dieser Website gespeichert."}
           </p>
         </form>
       </div>
