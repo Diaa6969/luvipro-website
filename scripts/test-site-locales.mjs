@@ -58,7 +58,7 @@ for(const code of expected){
   assert.match(all[code].priceNote,/119,99|119\.99/);
   assert.match(all[code].searchNotice,/PDF/i);
 }
-assert.deepEqual(Object.keys(all).sort(),expected.sort());
+assert.deepEqual(Object.keys(all).sort(),Array.from(expected).sort());
 const picker = readFileSync("src/components/ui/language-picker.tsx","utf8");
 assert.match(picker,/siteLocales\.filter/);
 assert.match(picker,/aria-current/);
