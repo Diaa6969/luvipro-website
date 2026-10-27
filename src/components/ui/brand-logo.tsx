@@ -3,16 +3,17 @@ import Link from "next/link";
 
 type BrandLogoProps = {
   size?: "nav" | "footer";
+  homeHref?: string;
 };
 
-export function BrandLogo({ size = "nav" }: BrandLogoProps) {
+export function BrandLogo({ size = "nav", homeHref = "/" }: BrandLogoProps) {
   const dimensions =
     size === "footer"
       ? "h-[50px] w-[150px]"
       : "h-9 w-[110px] sm:h-11 sm:w-[140px]";
 
   return (
-    <Link href="/" className="group relative inline-flex items-center" aria-label="LUVIPRO Startseite">
+    <Link href={homeHref} className="group relative inline-flex items-center" aria-label="LUVIPRO Startseite">
       <span className="pointer-events-none absolute -inset-2 rounded-full bg-ultraviolet/15 blur-lg transition duration-300 group-hover:bg-ultraviolet/22" />
       <span
         className={`relative flex ${dimensions} items-center justify-center overflow-hidden rounded-lg border border-pulse/20 bg-black/45 p-1 shadow-purple backdrop-blur-xl transition duration-300 group-hover:border-ultraviolet/45 group-hover:shadow-glow`}

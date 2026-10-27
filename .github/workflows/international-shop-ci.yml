@@ -1,0 +1,66 @@
+name: LUVIPRO feature build check
+
+on:
+  push:
+    branches:
+      - feature/international-home-en-ar
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run invoice VAT tests (synthetic)
+        run: npm run test:invoices
+      - name: Run monthly accounting tests (synthetic)
+        run: npm run test:accounting
+      - name: Run bank transfer scenario tests (synthetic)
+        run: npm run test:bank-orders
+      - name: Test staged admin auth bridge with fake Supabase JWT (no network)
+        run: npm run test:bank-admin-edge
+      - name: Validate report references and absence of public scan/QR text
+        run: npm run test:reports
+      - name: Verify production build (payments disabled)
+        env:
+          STORE_PREORDERS_ENABLED: 'false'
+          STORE_CHECKOUT_ENABLED: 'false'
+        run: npm run build
+      - name: Render three synthetic invoice PDFs locally (no customer data)
+        shell: bash
+        timeout-minutes: 2
+        env:
+          STORE_PREORDERS_ENABLED: 'false'
+          STORE_CHECKOUT_ENABLED: 'false'
+          INVOICE_ISSUANCE_ENABLED: 'false'
+        run: |
+          npm run dev -- --hostname 127.0.0.1 > /tmp/luvipro-invoice-dev.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid 2>/dev/null || true' EXIT
+          for kind in device inspection_standard inspection_premium; do
+            ok=0
+            for i in $(seq 1 20); do
+              if curl --fail --silent --show-error "http://127.0.0.1:3000/api/billing/sample?kind=$kind" -o "/tmp/luvipro-$kind.pdf" 2>/dev/null; then
+                ok=1
+                break
+              fi
+              sleep 2
+            done
+            if [ "$ok" -ne 1 ]; then
+              cat /tmp/luvipro-invoice-dev.log
+              exit 1
+            fi
+            test "$(head -c 5 "/tmp/luvipro-$kind.pdf")" = "%PDF-"
+            PDF="/tmp/luvipro-$kind.pdf" node -e 'const fs=require("fs");const {PDFDocument}=require("pdf-lib");PDFDocument.load(fs.readFileSync(process.env.PDF)).then(d=>{if(d.getPageCount()!==1)process.exit(1)}).catch(()=>process.exit(1))'
+            echo "Synthetic $kind PDF: PASS"
+          done

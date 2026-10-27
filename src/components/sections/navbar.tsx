@@ -8,20 +8,21 @@ import { CtaLink } from "@/components/ui/cta-link";
 import { BrandLogo } from "@/components/ui/brand-logo";
 
 const navItems = [
-  { label: "Ecosystem", href: "#ecosystem" },
-  { label: "UV-Gerät", href: "#scanner" },
-  { label: "Ablauf", href: "#how-it-works" },
-  { label: "Preise", href: "#pricing" },
-  { label: "Marktplatz", href: "#marketplace" },
+  { label: "Ecosystem", href: "/#ecosystem" },
+  { label: "Gerät", href: "/products" },
+  { label: "Ablauf", href: "/#how-it-works" },
+  { label: "Preise", href: "/products#preise" },
+  { label: "Werkstätten", href: "/#partner-map" },
+  { label: "Berichte", href: "/reports" },
 ];
 
 const mobileLinks = [
   { label: "Startseite", href: "/" },
-  { label: "Produkte", href: "/products" },
-  { label: "Fahrzeug verifizieren", href: "/verify" },
-  { label: "Marketplace", href: "/marketplace" },
+  { label: "Gerät LU3656060", href: "/products" },
+  { label: "Preise", href: "/products#preise" },
+  { label: "Prüfbericht suchen", href: "/reports" },
+  { label: "Fahrzeugprüfung", href: "/verify" },
   { label: "Partnerwerkstätten", href: "/partner-workshops" },
-  { label: "LUVIPRO App", href: "/app" },
   { label: "Kontakt", href: "/contact" },
 ];
 
@@ -29,6 +30,12 @@ const legalLinks = [
   { label: "Impressum", href: "/impressum" },
   { label: "Datenschutz", href: "/datenschutz" },
   { label: "AGB", href: "/agb" },
+];
+
+const languageLinks = [
+  { label: "Deutsch", href: "/", code: "de" },
+  { label: "English", href: "/en", code: "en" },
+  { label: "العربية", href: "/ar", code: "ar" },
 ];
 
 export function Navbar() {
@@ -103,16 +110,31 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-                <a
-                  href="https://luvipro.shop"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={closeMenu}
-                  className="block rounded-lg border border-white/10 bg-white/[0.06] px-4 py-4 text-lg font-semibold text-slate-100 shadow-[0_0_28px_rgba(139,92,246,0.08)] transition hover:border-pulse/35 hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
-                >
-                  Unser Shop
-                </a>
+
               </nav>
+
+              <div className="mt-8">
+                <p className="mb-3 text-xs font-semibold uppercase text-pulse">Sprache wählen</p>
+                <nav className="flex flex-wrap gap-2" aria-label="Sprache wählen">
+                  {languageLinks.map((item) => (
+                    <Link
+                      key={item.code}
+                      href={item.href}
+                      lang={item.code}
+                      hrefLang={item.code}
+                      onClick={closeMenu}
+                      aria-current={item.code === "de" ? "page" : undefined}
+                      className={`rounded-full border px-3 py-2 text-sm transition ${
+                        item.code === "de"
+                          ? "border-pulse/50 bg-pulse/15 text-white"
+                          : "border-white/15 text-slate-300 hover:border-pulse/50 hover:text-white"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
 
               <div className="mt-auto pt-10">
                 <div className="rounded-lg border border-ultraviolet/20 bg-ultraviolet/10 p-4">
@@ -156,10 +178,34 @@ export function Navbar() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <CtaLink href="/verify" variant="secondary">
-              Fahrzeug prüfen
+            <CtaLink href="/reports" variant="secondary">
+              Prüfbericht suchen
             </CtaLink>
             <CtaLink href="/contact">Partner werden</CtaLink>
+          </div>
+
+          <div className="hidden lg:block">
+            <details className="group relative">
+              <summary className="cursor-pointer rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse">
+                DE ▾
+              </summary>
+              <div className="absolute end-0 top-full z-[60] mt-2 min-w-44 rounded-lg border border-white/15 bg-[#080e1d] p-3 shadow-2xl">
+                <nav className="grid gap-2" aria-label="Sprache wählen">
+                  {languageLinks.map((item) => (
+                    <Link
+                      key={item.code}
+                      href={item.href}
+                      lang={item.code}
+                      hrefLang={item.code}
+                      aria-current={item.code === "de" ? "page" : undefined}
+                      className="rounded-lg px-3 py-2 text-sm text-slate-200 transition hover:bg-pulse/10 hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            </details>
           </div>
 
           <button

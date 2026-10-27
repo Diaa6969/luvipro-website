@@ -4,10 +4,19 @@
     <loc>https://luvipro.de/</loc>
   </url>
   <url>
+    <loc>https://luvipro.de/en</loc>
+  </url>
+  <url>
+    <loc>https://luvipro.de/ar</loc>
+  </url>
+  <url>
     <loc>https://luvipro.de/products</loc>
   </url>
   <url>
     <loc>https://luvipro.de/verify</loc>
+  </url>
+  <url>
+    <loc>https://luvipro.de/reports</loc>
   </url>
   <url>
     <loc>https://luvipro.de/marketplace</loc>

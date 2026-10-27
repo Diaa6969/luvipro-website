@@ -4,8 +4,8 @@ import { Reveal } from "@/components/ui/reveal";
 
 const stats = [
   { value: "UV", label: "UV-Inspektionsgeräte" },
-  { value: "QR", label: "Verschlüsselte QR-Sticker" },
-  { value: "AI", label: "Fahrzeugschein-OCR & VIN-Abgleich" },
+  { value: "VIN", label: "Fahrzeugsuche über FIN / VIN" },
+  { value: "PDF", label: "Digitale Fahrzeugberichte" },
 ];
 
 export function Hero() {
@@ -23,7 +23,7 @@ export function Hero() {
               LUVIPRO macht Fahrzeughistorie sichtbar.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
-              Ein vernetztes System aus UV-Inspektionsgeräten, verschlüsselten QR-Stickern, VIN-Suche, Fahrzeugschein-OCR und digitalen PDF-Reports für Werkstätten, Verkäufer und Käufer.
+              Professionelle UV-Prüfgeräte, VIN-basierte Fahrzeugsuche und strukturierte digitale Prüfberichte für Werkstätten, Verkäufer und Käufer.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <CtaLink href="/contact" className="gap-2">
@@ -43,7 +43,7 @@ export function Hero() {
               <div className="aspect-[4/3] min-w-0 rounded-lg border border-white/10 bg-[radial-gradient(circle_at_55%_20%,rgba(32,214,255,0.32),transparent_25%),linear-gradient(145deg,rgba(8,17,31,0.35),rgba(0,0,0,0.72))] p-4 sm:p-6">
                 <div className="flex items-start justify-between">
                   <div className="min-w-0">
-                    <p className="text-sm uppercase text-pulse">Live-Fahrzeug</p>
+                    <p className="text-sm uppercase text-pulse">Beispiel-Fahrzeug</p>
                     <p className="mt-2 break-words font-[var(--font-space-grotesk)] text-xl font-semibold sm:text-2xl">
                       BMW 530d Touring
                     </p>
@@ -53,10 +53,10 @@ export function Hero() {
                 <div className="mt-8 rounded-lg border border-white/10 bg-black/35 p-3 sm:mt-10 sm:p-4">
                   <div className="mb-4 h-2 w-32 rounded-full bg-pulse/80" />
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    {["VIN-Abgleich", "UV-/QR-Prüfung", "OCR-Prüfung", "PDF-Report"].map((item) => (
+                    {["VIN-Suche", "UV-Lackprüfung", "Sichtprüfung", "Digitaler Report"].map((item) => (
                       <div key={item} className="rounded-lg border border-white/10 bg-white/5 p-3">
                         <p className="text-sm font-semibold text-white">{item}</p>
-                        <p className="mt-1 text-xs text-slate-400">verifiziert</p>
+                        <p className="mt-1 text-xs text-slate-400">Beispielansicht</p>
                       </div>
                     ))}
                   </div>

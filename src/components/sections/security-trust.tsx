@@ -3,9 +3,9 @@ import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const items = [
-  { icon: FileLock2, title: "Verschlüsselte QR-Logik", text: "QR-Sticker werden als sichere Produktkomponente vorbereitet." },
-  { icon: DatabaseZap, title: "Report-Integrität", text: "Digitale Reports können später versioniert und nachvollziehbar gemacht werden." },
-  { icon: UserRoundCheck, title: "Partneridentität", text: "Werkstattprofile schaffen später eine klare Herkunft für jede Prüfung." },
+  { icon: FileLock2, title: "Kontrollierter Reportzugriff", text: "Die FIN identifiziert das Fahrzeug, ist allein aber kein Berechtigungsnachweis für sensible Berichtsdaten." },
+  { icon: DatabaseZap, title: "Dokumentation der Befunde", text: "Ein Prüfbericht beschreibt die durchgeführten Kontrollen und ihre Ergebnisse nachvollziehbar." },
+  { icon: UserRoundCheck, title: "Verantwortliche Partner", text: "Geprüfte Werkstattprofile helfen, die Herkunft der jeweiligen Fahrzeugprüfung einzuordnen." },
 ];
 
 export function SecurityTrust() {
@@ -16,7 +16,7 @@ export function SecurityTrust() {
           <SectionHeading
             eyebrow="Sicherheit"
             title="Vertrauen entsteht durch prüfbare Signale."
-            description="Die Landing Page formuliert die Sicherheitsarchitektur als Produktversprechen, ohne schon Backend- oder Kryptofunktionen zu simulieren."
+            description="Klare Prüfmethoden, nachvollziehbare Dokumentation und ein bewusster Umgang mit Fahrzeug- und Kundendaten stärken Vertrauen."
             align="center"
           />
         </Reveal>
@@ -37,8 +37,7 @@ export function SecurityTrust() {
           <div className="mt-10 rounded-lg border border-pulse/25 bg-pulse/10 p-6 text-center">
             <ShieldCheck className="mx-auto h-10 w-10 text-pulse" />
             <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-slate-200">
-              LUVIPRO ist als vertrauensbildendes System für Werkstätten, private Verkäufer,
-              Händler und Käufer konzipiert.
+              Ein dokumentierter Prüfbericht kann Kaufentscheidungen unterstützen, garantiert jedoch keine vollständige Mängelfreiheit des Fahrzeugs.
             </p>
           </div>
         </Reveal>

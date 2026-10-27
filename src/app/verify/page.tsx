@@ -1,27 +1,70 @@
 import type { Metadata } from "next";
-import { PreparationPage } from "@/components/ui/preparation-page";
+import Link from "next/link";
+import { ArrowRight, ClipboardCheck, FileCheck2, Fingerprint, ShieldCheck } from "lucide-react";
+import { Navbar } from "@/components/sections/navbar";
+import { Footer } from "@/components/sections/footer";
+import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
+import { WorkshopFinder } from "@/components/sections/workshop-finder";
+import { ReportLookup } from "@/components/reports/report-lookup";
 
 export const metadata: Metadata = {
-  title: "Fahrzeug verifizieren | LUVIPRO",
-  description: "Die digitale Fahrzeugverifizierung über LUVIPRO befindet sich derzeit im Aufbau.",
+  title: "Fahrzeugprüfung & VIN-Berichte | LUVIPRO",
+  description: "So funktioniert eine LUVIPRO Fahrzeugprüfung: UV-Lackprüfung, Sichtkontrolle und digitaler Bericht mit Fahrzeugzuordnung über die FIN/VIN. Partnerwerkstatt suchen.",
+  alternates: { canonical: "https://luvipro.de/verify" },
 };
+
+const stages = [
+  { icon: ClipboardCheck, title: "Prüfung vor Ort", text: "Eine qualifizierte Werkstatt führt die vereinbarte Untersuchung des Fahrzeugs durch." },
+  { icon: Fingerprint, title: "Zuordnung per FIN/VIN", text: "Die Fahrzeug-Identifizierungsnummer verbindet das untersuchte Fahrzeug mit dem Bericht." },
+  { icon: FileCheck2, title: "Dokumentierter Bericht", text: "Der Bericht beschreibt Art, Umfang und Ergebnisse der durchgeführten Fahrzeugprüfung." },
+];
 
 export default function VerifyPage() {
   return (
-    <PreparationPage
-      eyebrow="Fahrzeug verifizieren"
-      headline="Fahrzeugverifizierung in Vorbereitung"
-      text="Die digitale Fahrzeugverifizierung über LUVIPRO befindet sich derzeit im Aufbau. Künftig können Fahrzeuge über VIN, UV-Prüfdaten, QR-Sticker und digitale Reports nachvollziehbar dokumentiert werden."
-      cards={[
-        { title: "Für Käufer", text: "Fahrzeughistorie transparenter prüfen" },
-        { title: "Für Verkäufer", text: "geprüfte Fahrzeuge besser präsentieren" },
-        { title: "Für Partnerwerkstätten", text: "Prüfungen digital dokumentieren" },
-        { title: "Für Marktplatz", text: "verifizierte Inserate vorbereiten" },
-      ]}
-      actions={[
-        { label: "Partnerwerkstatt werden", href: "/contact", variant: "primary" },
-        { label: "Mehr über Produkte erfahren", href: "/products" },
-      ]}
-    />
+    <main className="cinematic-page min-h-screen overflow-hidden bg-obsidian text-white">
+      <AnimatedAtmosphere />
+      <Navbar />
+      <section className="section-shell pb-20 pt-32 sm:pt-40">
+        <div className="max-w-4xl">
+          <p className="text-sm font-semibold uppercase tracking-widest text-pulse">LUVIPRO Fahrzeugverifizierung</p>
+          <h1 className="mt-5 font-[var(--font-space-grotesk)] text-4xl font-semibold leading-tight text-white sm:text-6xl">
+            Fahrzeug prüfen. Ergebnisse verstehen.
+          </h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
+            LUVIPRO verbindet UV-gestützte Fahrzeugprüfung, eine strukturierte Sichtkontrolle und einen digital dokumentierten Prüfbericht mit Zuordnung über die FIN/VIN.
+          </p>
+          <p className="mt-4 text-sm leading-7 text-slate-400">
+            Eine FIN allein genügt nicht als Nachweis der Berechtigung zum Einsehen personenbezogener Berichtsinhalte.
+          </p>
+          <Link href="#report-lookup" className="mt-7 inline-flex items-center gap-2 rounded-full bg-pulse px-6 py-3 font-semibold text-obsidian transition hover:bg-frost">
+            Prüfbericht suchen <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <div className="mt-14 grid gap-5 md:grid-cols-3">
+          {stages.map(({ icon: Icon, title, text }) => (
+            <div key={title} className="glass-panel rounded-2xl p-6">
+              <Icon className="h-8 w-8 text-pulse" />
+              <h2 className="mt-5 text-xl font-semibold text-white">{title}</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-300">{text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section id="report-lookup" className="scroll-mt-24 bg-obsidian pb-16 sm:pb-20">
+        <div className="section-shell max-w-5xl"><ReportLookup /></div>
+      </section>
+      <section id="partner-map" className="scroll-mt-24 bg-midnight py-20 sm:py-24">
+        <div className="section-shell">
+          <WorkshopFinder locale="de" />
+        </div>
+      </section>
+      <section className="section-shell pb-20 pt-12">
+        <p className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-5 text-sm leading-7 text-slate-300">
+          <ShieldCheck className="mt-1 h-5 w-5 shrink-0 text-pulse" />
+          Eine LUVIPRO Prüfung unterstützt fundierte Entscheidungen, ist jedoch keine Garantie für die Mängelfreiheit eines Fahrzeugs.
+        </p>
+      </section>
+      <Footer />
+    </main>
   );
 }

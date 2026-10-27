@@ -11,7 +11,7 @@ export function AppComingSoon() {
           <SectionHeading
             eyebrow="App"
             title="LUVIPRO App kommt als mobile Schaltzentrale."
-            description="Für QR-Scan, Fahrzeugstatus, Reportzugriff und Frühzugang ist die App bereits als Produktlinie sichtbar."
+            description="Für VIN-Suche, Berichtnummer, geschützten Reportzugriff und Partnerfunktionen ist die App als digitale Plattform vorgesehen."
           />
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <CtaLink href="/app">Frühzugang</CtaLink>
@@ -30,7 +30,7 @@ export function AppComingSoon() {
                   Fahrzeugpass
                 </p>
                 <p className="mt-2 text-sm leading-6 text-slate-300">
-                  QR-Scan, VIN-Prüfung und Reportstatus in einer mobilen Ansicht.
+                  VIN-/Berichtsnummer-Suche und Reportstatus in einer mobilen Ansicht.
                 </p>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-3">
