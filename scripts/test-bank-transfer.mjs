@@ -18,7 +18,11 @@ const requireDependency=(name)=>{
   };
 };
 vm.runInNewContext(compiled,{exports:mod.exports,module:mod,require:requireDependency,Intl,Date},{timeout:1000});
-const {bankPaymentRequest,bankPaymentReminder,assertBankOrder}=mod.exports;
+const {bankPaymentRequest,bankPaymentReminder,assertBankOrder,isValidGermanIban}=mod.exports;
+assert.equal(isValidGermanIban("DE02120300000000202051"),true);
+assert.equal(isValidGermanIban("DE89370400440532013000"),true);
+assert.equal(isValidGermanIban("DE02120300000000202052"),false);
+assert.equal(isValidGermanIban("DE00000000000000000000"),false);
 const mock={
   id:"00000000-0000-4000-8000-000000000001",request_key:"00000000-0000-4000-8000-000000000002",
   invoice_id:"00000000-0000-4000-8000-000000000003",invoice_number:"LUV-2026-0000001",
