@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { sendHostingerMail } from "@/lib/hostinger-smtp";
 import { configuredDeviceIssuer, renderInvoicePDF, type InvoiceData } from "@/lib/invoicing/document";
 import { calculateInvoicePricing } from "@/lib/invoicing/prices";
-import { bankPaymentReminder, bankPaymentRequest, assertBankOrder, type BankOrder, type BankDetails } from "./logic";
+import { bankPaymentReminder, bankPaymentRequest, assertBankOrder, isValidGermanIban, type BankOrder, type BankDetails } from "./logic";
 import type { ShopInquiry } from "@/lib/store";
 
 function base() {
@@ -31,7 +31,7 @@ export function bankDetails(): BankDetails {
   const iban = (process.env.BANK_TRANSFER_IBAN || "").replace(/\s/g, "").toUpperCase();
   const holder = process.env.BANK_TRANSFER_HOLDER || "";
   const bic = process.env.BANK_TRANSFER_BIC || "";
-  if (!/^DE\d{20}$/.test(iban) || holder.length < 3 || !configuredDeviceIssuer()) {
+  if (!isValidGermanIban(iban) || holder.length < 3 || !configuredDeviceIssuer()) {
     throw new Error("Bank recipient / registered legal invoice issuer incomplete");
   }
   return { iban, holder, bic };
