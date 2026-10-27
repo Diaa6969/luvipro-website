@@ -1,10 +1,9 @@
 import type { LegalSection } from "@/components/ui/legal-page";
 
 export const datenschutzIntro = [
-  "Stand: [Datum einfügen]",
-  "Diese Datenschutzerklärung informiert Nutzer, Fahrzeughalter, Käufer, Verkäufer, Partnerwerkstätten und Besucher darüber, welche personenbezogenen Daten im Zusammenhang mit der Nutzung der LUVIPRO Website, der LUVIPRO App, der Fahrzeugverifizierung, der VIN-/Berichtsnummer-Suche, der geschützten Bereitstellung digitaler Berichte und der Partnerwerkstatt-Funktionen und des LUVIPRO Marktplatzes verarbeitet werden.",
+  "Stand: 27. Oktober 2026",
+  "Diese Datenschutzerklärung informiert Nutzer, Fahrzeughalter, Käufer, Verkäufer, Partnerwerkstätten und Besucher darüber, welche personenbezogenen Daten im Zusammenhang mit der Nutzung der LUVIPRO Website, der LUVIPRO App, der Fahrzeugverifizierung, der VIN-/Berichtsnummer-Suche, der geschützten Bereitstellung digitaler Berichte und der Partnerwerkstatt-Funktionen verarbeitet werden.",
   "Diese Seite ist jederzeit ohne Registrierung über die Website erreichbar.",
-  "Hinweis: Diese Datenschutzerklärung ist ein Entwurf und muss vor produktiver Nutzung durch eine fachkundige Stelle rechtlich geprüft und vervollständigt werden.",
 ];
 
 export const datenschutzSections: LegalSection[] = [
@@ -12,12 +11,11 @@ export const datenschutzSections: LegalSection[] = [
     title: "Verantwortlicher",
     paragraphs: [
       "Verantwortlicher im Sinne der Datenschutz-Grundverordnung ist:",
-      "[Unternehmensname einfügen]\n[Rechtsform einfügen]\nStandort: Hannover, Deutschland\n[vollständige ladungsfähige Anschrift einfügen]",
+      "LUVIPRO – Diaa Alameen\nHannover, Deutschland",
       "Projektverantwortlicher / Ansprechpartner: Diaa Alameen",
       "Telefon: +49 177 7969259",
       "Allgemeine Informationen: info@luvipro.de",
       "Kundenservice, Beschwerden und Datenschutzanfragen: customerservice@luvipro.de",
-      "Falls ein Datenschutzbeauftragter bestellt wurde: [Kontaktdaten des Datenschutzbeauftragten einfügen]",
     ],
   },
   {
@@ -74,8 +72,8 @@ export const datenschutzSections: LegalSection[] = [
   {
     title: "Dokumenten-Scanning und Fahrzeugschein-OCR",
     paragraphs: [
-      "Wenn Nutzer oder Verkäufer im Rahmen des Marktplatzes oder einer Fahrzeugverifizierung ein offizielles Fahrzeugdokument, insbesondere den Fahrzeugschein, hochladen, kann LUVIPRO eine automatisierte Texterkennung, OCR, einsetzen.",
-      "Zweck der Verarbeitung ist insbesondere das Auslesen relevanter Fahrzeugdaten, der Abgleich der VIN mit dem Fahrzeugdokument, die Prüfung der Datenkonsistenz, die Vermeidung falscher oder manipulierter Fahrzeugangaben und der Schutz der Integrität des Marktplatzes.",
+      "Wenn Nutzer oder Verkäufer im Rahmen einer Fahrzeugverifizierung ein offizielles Fahrzeugdokument, insbesondere den Fahrzeugschein, hochladen, kann LUVIPRO eine automatisierte Texterkennung, OCR, einsetzen.",
+      "Zweck der Verarbeitung ist insbesondere das Auslesen relevanter Fahrzeugdaten, der Abgleich der VIN mit dem Fahrzeugdokument, die Prüfung der Datenkonsistenz, die Vermeidung falscher oder manipulierter Fahrzeugangaben und der Schutz der Integrität digitaler Fahrzeugberichte.",
       "Soweit technisch umgesetzt, wird die Originaldatei des hochgeladenen Dokuments nach erfolgreicher Prüfung und Abgleichung gelöscht oder durch eine datensparsame Prüfreferenz ersetzt. Gespeichert werden können insbesondere das Ergebnis des Abgleichs, Zeitstempel, Prüfstatus und technisch erforderliche Nachweise.",
       "Falls eine gesetzliche Pflicht, ein Sicherheitsinteresse oder ein Streitfall entgegensteht, kann eine längere Speicherung erforderlich sein. In diesem Fall wird die Speicherung auf das erforderliche Maß beschränkt.",
     ],
@@ -84,8 +82,8 @@ export const datenschutzSections: LegalSection[] = [
     title: "Zahlungsabwicklung",
     paragraphs: [
       "LUVIPRO speichert keine vollständigen Kreditkartendaten und keine vollständigen Bankverbindungsdaten auf eigenen Servern.",
-      "Zahlungen werden, soweit angeboten, über externe Zahlungsdienstleister abgewickelt, zum Beispiel Stripe, PayPal oder vergleichbare Anbieter. Diese Zahlungsdienstleister verarbeiten Zahlungsdaten in eigener Verantwortung oder im Rahmen der jeweiligen vertraglichen und datenschutzrechtlichen Vereinbarungen.",
-      "LUVIPRO erhält in der Regel nur transaktionsbezogene Informationen, beispielsweise Zahlungsstatus, Betrag, Rechnungsreferenz, Zeitpunkt und technische Zahlungsbestätigung.",
+      "Zahlungen können je nach tatsächlich angebotener Zahlungsart per Banküberweisung oder über den im Bezahlprozess ausgewiesenen Zahlungsdienstleister erfolgen. Bei einer Banküberweisung können Zahlungsbetrag, Zahlungsstatus, Buchungsdatum und Rechnungs- bzw. Verwendungszweck verarbeitet werden.",
+      "Bei der Zahlung über externe Zahlungsdienstleister erhält LUVIPRO nur die zur Abwicklung und Zuordnung benötigten Transaktionsinformationen, insbesondere Zahlungsstatus, Betrag, Referenz und Zeitpunkt.",
     ],
   },
   {
@@ -123,7 +121,7 @@ export const datenschutzSections: LegalSection[] = [
       "Die Website und technische Dienste können über externe Hosting- und Infrastruktur-Anbieter betrieben werden, beispielsweise Vercel oder vergleichbare Anbieter.",
       "Beim Aufruf der Website können technische Zugriffsdaten verarbeitet werden, insbesondere IP-Adresse, Datum und Uhrzeit des Zugriffs, aufgerufene Seiten, Browsertyp und Browserversion, Betriebssystem, Referrer-URL, technische Statuscodes und übertragene Datenmenge.",
       "Diese Verarbeitung dient der sicheren, stabilen und performanten Bereitstellung der Website, der Fehleranalyse, der Missbrauchsprävention und der IT-Sicherheit.",
-      "[Hosting- und Auftragsverarbeitungsdetails prüfen und ergänzen]",
+      "Für die technische Bereitstellung der Website wird Vercel eingesetzt. Für Datenbank- und Authentifizierungsfunktionen wird Supabase genutzt. Für die geschäftliche E-Mail-Kommunikation nutzt LUVIPRO seinen E-Mail-Anbieter. Art und Umfang der Verarbeitung richten sich nach der jeweils genutzten Funktion."
     ],
   },
   {
@@ -144,7 +142,6 @@ export const datenschutzSections: LegalSection[] = [
       "Berichtsuche anhand von FIN/VIN oder Berichtsnummer",
       "Fahrzeugschein-OCR und Dokumentenabgleich",
       "Partnerwerkstatt-Suche",
-      "Marktplatz-Funktionen",
       "Termin- und Prüfungsvermittlung",
       "Zahlungsabwicklung über externe Anbieter",
       "Qualitätssicherung, Betrugsprävention und Missbrauchserkennung",
@@ -168,7 +165,7 @@ export const datenschutzSections: LegalSection[] = [
       "Für technische Zugriffsdaten gelten kürzere Speicherfristen, soweit keine Sicherheitsvorfälle oder Rechtsstreitigkeiten entgegenstehen.",
       "Finalisierte Fahrzeugreports, technische Prüfnachweise, Audit-Logs und Berichtsnummer-Zuordnungen können länger gespeichert werden, soweit dies zur Integrität der Fahrzeughistorie, zur Betrugsprävention, zur Qualitätssicherung, zur Nachweisführung oder zur Wahrung berechtigter Interessen erforderlich ist.",
       "Dokumentenbilder, insbesondere Fahrzeugschein-Uploads, sollen nach erfolgreicher OCR-Prüfung und VIN-Abgleichung gelöscht oder auf datensparsame Prüfinformationen reduziert werden, soweit keine entgegenstehenden Gründe bestehen.",
-      "Konkrete Speicherfristen werden im produktiven Betrieb dokumentiert und regelmäßig überprüft.",
+      "Gesetzlich aufzubewahrende Geschäfts- und Steuerunterlagen werden entsprechend den anwendbaren Aufbewahrungsvorschriften gespeichert. Sonstige Daten werden nur so lange verarbeitet, wie dies für den jeweiligen Zweck oder zur Erfüllung gesetzlicher Pflichten erforderlich ist."
     ],
   },
   {
@@ -183,7 +180,6 @@ export const datenschutzSections: LegalSection[] = [
     paragraphs: [
       "Soweit Dienstleister außerhalb der Europäischen Union oder des Europäischen Wirtschaftsraums eingesetzt werden, erfolgt eine Übermittlung personenbezogener Daten nur, wenn die gesetzlichen Voraussetzungen erfüllt sind.",
       "Dies kann insbesondere auf Grundlage eines Angemessenheitsbeschlusses, geeigneter Garantien oder Standardvertragsklauseln erfolgen.",
-      "[Konkrete Dienstleister und Drittlandübermittlungen prüfen und ergänzen]",
     ],
   },
   {
@@ -198,7 +194,7 @@ export const datenschutzSections: LegalSection[] = [
     paragraphs: [
       "Betroffene Personen haben das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren.",
       "Sofern die Zuständigkeit gegeben ist, kann eine Beschwerde insbesondere bei der Landesbeauftragten für den Datenschutz Niedersachsen eingereicht werden.",
-      "Landesbeauftragte für den Datenschutz Niedersachsen: [Adresse und Kontaktinformationen prüfen und ergänzen]",
+      "Der Landesbeauftragte für den Datenschutz Niedersachsen, Prinzenstraße 5, 30159 Hannover. Telefon: +49 511 120-4500. E-Mail: poststelle@lfd.niedersachsen.de."
     ],
   },
   {
@@ -234,9 +230,8 @@ export const datenschutzSections: LegalSection[] = [
 ];
 
 export const agbIntro = [
-  "Stand: [Datum einfügen]",
-  "Diese Allgemeinen Geschäftsbedingungen regeln die Nutzung der LUVIPRO Website, der LUVIPRO App, der digitalen Fahrzeugreports, der VIN- und Berichtsnummer-basierten Reportabfrage, der Partnerwerkstatt-Funktionen, des Marktplatzes sowie weiterer digitaler Dienste von LUVIPRO.",
-  "Hinweis: Diese AGB sind ein Entwurf und müssen vor produktiver Nutzung rechtlich geprüft und an das konkrete Geschäftsmodell, die Verträge, Zahlungsprozesse und Verbraucherinformationen angepasst werden.",
+  "Stand: 27. Oktober 2026",
+  "Diese Allgemeinen Geschäftsbedingungen regeln die Nutzung der LUVIPRO Website, der LUVIPRO App, der digitalen Fahrzeugreports, der VIN- und Berichtsnummer-basierten Reportabfrage, der Partnerwerkstatt-Funktionen sowie weiterer angebotener digitaler Dienste von LUVIPRO.",
 ];
 
 export const agbSections: LegalSection[] = [
@@ -244,7 +239,7 @@ export const agbSections: LegalSection[] = [
     title: "Anbieter",
     paragraphs: [
       "Anbieter der LUVIPRO Dienste ist:",
-      "[Unternehmensname einfügen]\n[Rechtsform einfügen]\nStandort: Hannover, Deutschland\n[vollständige Anschrift einfügen]",
+      "LUVIPRO – Diaa Alameen\nHannover, Deutschland",
       "Projektverantwortlicher / Ansprechpartner: Diaa Alameen",
       "Telefon: +49 177 7969259",
       "Allgemeine Informationen: info@luvipro.de",
@@ -254,7 +249,7 @@ export const agbSections: LegalSection[] = [
   {
     title: "Geltungsbereich",
     paragraphs: [
-      "Diese AGB gelten für alle Nutzer der LUVIPRO Dienste, insbesondere für Besucher der Website, App-Nutzer, Fahrzeughalter, Verkäufer, Käufer, Partnerwerkstätten, Prüfer, Marktplatz-Nutzer sowie Empfänger oder Käufer digitaler Fahrzeugreports.",
+      "Diese AGB gelten für alle Nutzer der LUVIPRO Dienste, insbesondere für Besucher der Website, App-Nutzer, Fahrzeughalter, Verkäufer, Käufer, Partnerwerkstätten, Prüfer sowie Empfänger oder Käufer digitaler Fahrzeugreports.",
       "Für Partnerwerkstätten können ergänzende Partnerverträge, Leistungsbeschreibungen, technische Richtlinien und Preislisten gelten. Im Falle von Widersprüchen gehen ausdrücklich vereinbarte Partnerverträge diesen allgemeinen Bedingungen vor.",
     ],
   },
@@ -262,8 +257,8 @@ export const agbSections: LegalSection[] = [
     title: "Beschreibung der LUVIPRO Dienste",
     paragraphs: [
       "LUVIPRO ist ein Automobil-Verifizierungs-Ökosystem für den Gebrauchtwagenmarkt.",
-      "Die Dienste können insbesondere professionelle UV-Inspektionsgeräte, VIN-verknüpfte Fahrzeugreports, Suche nach FIN/VIN oder Berichtsnummer, VIN-Abgleich, digitale PDF-Reports, Partnerwerkstatt-Suche, Termin- und Prüfungsvermittlung, Marktplatz-Funktionen für geprüfte Fahrzeuge sowie App-basierte Fahrzeugverifizierung umfassen.",
-      "LUVIPRO entwickelt die Plattform laufend weiter. Einzelne Funktionen können sich ändern, erweitert, eingeschränkt oder vorübergehend deaktiviert werden.",
+      "Die Dienste können insbesondere professionelle UV-Inspektionsgeräte, VIN-verknüpfte Fahrzeugreports, Suche nach FIN/VIN oder Berichtsnummer, VIN-Abgleich, digitale PDF-Reports, Partnerwerkstatt-Suche, Termin- und Prüfungsvermittlung sowie App-basierte Fahrzeugverifizierung umfassen.",
+      "Maßgeblich für die jeweilige Bestellung oder Buchung sind die dort angegebenen Leistungen, Preise und Bedingungen."
     ],
   },
   {
@@ -321,7 +316,7 @@ export const agbSections: LegalSection[] = [
     title: "Anti-Betrugs-Klausel und Manipulationsverbot",
     paragraphs: [
       "Jede Manipulation, Fälschung, bewusste Falscheingabe, unzutreffende Prüfbestätigung, technische Umgehung oder missbräuchliche Nutzung der LUVIPRO Dienste ist streng untersagt.",
-      "Dies gilt insbesondere für gefälschte oder manipulierte Fahrzeugreports, vorsätzlich falsche Prüfdaten, manipulierte Bildnachweise, falsche VIN-Zuordnungen, unberechtigte Berichtsfreigaben, Abrufe oder Übertragungen von Berichten, bewusste Falschangaben im Marktplatz, kollusives Zusammenwirken und Nutzung der Plattform zur Täuschung von Käufern oder Dritten.",
+      "Dies gilt insbesondere für gefälschte oder manipulierte Fahrzeugreports, vorsätzlich falsche Prüfdaten, manipulierte Bildnachweise, falsche VIN-Zuordnungen, unberechtigte Berichtsfreigaben, Abrufe oder Übertragungen von Berichten, kollusives Zusammenwirken und Nutzung der Plattform zur Täuschung von Käufern oder Dritten.",
       "Bei begründetem Verdacht oder Nachweis einer Manipulation kann LUVIPRO den betroffenen Zugang sperren, Reports als ungültig markieren, Prüfungen oder Angebote stoppen, interne Prüfungen einleiten, rechtliche Schritte prüfen und zuständige Behörden oder Geschädigte informieren, soweit dies rechtlich zulässig oder erforderlich ist.",
     ],
   },
@@ -335,14 +330,6 @@ export const agbSections: LegalSection[] = [
     ],
   },
   {
-    title: "Marktplatz",
-    paragraphs: [
-      "Der LUVIPRO Marktplatz dient der Präsentation von Fahrzeugen mit strukturierten Fahrzeugdaten, VIN-Zuordnung und, soweit vorhanden, digitalen Reports.",
-      "Verkäufer sind für die Richtigkeit ihrer Angaben verantwortlich. LUVIPRO kann Angebote ablehnen, sperren, entfernen oder prüfen, wenn Anhaltspunkte für falsche Angaben, fehlende Berechtigung, manipulierte Daten oder sonstige Verstöße bestehen.",
-      "LUVIPRO ist nicht Partei eines Kaufvertrags zwischen Käufer und Verkäufer, sofern nicht ausdrücklich anders angegeben.",
-    ],
-  },
-  {
     title: "VIN-Suche und Werkstattvermittlung",
     paragraphs: [
       "Die VIN-Suche kann anzeigen, ob zu einer VIN ein LUVIPRO Report oder eine Fahrzeugverknüpfung vorhanden ist.",
@@ -353,7 +340,7 @@ export const agbSections: LegalSection[] = [
   {
     title: "Preise, Zahlungen und Gebühren",
     paragraphs: [
-      "Für bestimmte Funktionen können Gebühren anfallen, insbesondere für Fahrzeugprüfungen, PDF-Reports, Marktplatz-Inserate, Partner-Bundles, vermittelte Prüfungen und weitere digitale Dienste.",
+      "Für bestimmte Funktionen können Gebühren anfallen, insbesondere für Fahrzeugprüfungen, PDF-Reports, Partner-Bundles, vermittelte Prüfungen und weitere digitale Dienste.",
       "Konkrete Preise werden im jeweiligen Angebot, in der App, im Bezahlprozess oder in einer separaten Preisliste angezeigt.",
       "Zahlungen können über externe Zahlungsdienstleister erfolgen. LUVIPRO speichert keine vollständigen Kreditkartendaten oder vollständigen Bankdaten auf eigenen Servern.",
     ],
@@ -379,7 +366,7 @@ export const agbSections: LegalSection[] = [
   {
     title: "Kündigung und Sperrung",
     paragraphs: [
-      "LUVIPRO kann Nutzerkonten, Partnerzugänge oder Marktplatz-Angebote sperren oder kündigen, wenn ein Verstoß gegen diese AGB, Partnerverträge, technische Richtlinien, gesetzliche Vorschriften oder berechtigte Sicherheitsinteressen vorliegt.",
+      "LUVIPRO kann Nutzerkonten oder Partnerzugänge sperren oder kündigen, wenn ein Verstoß gegen diese AGB, Partnerverträge, technische Richtlinien, gesetzliche Vorschriften oder berechtigte Sicherheitsinteressen vorliegt.",
       "Bei schwerwiegenden Verstößen, insbesondere Manipulation, Betrug, falschen Prüfdaten oder Missbrauch von Berichts- oder Zugriffsreferenzen, kann eine sofortige Sperrung erfolgen.",
     ],
   },
@@ -418,60 +405,40 @@ export const agbSections: LegalSection[] = [
 ];
 
 export const impressumIntro = [
-  "Stand: [Datum einfügen]",
-  "Hinweis: Dieses Impressum ist ein Platzhalter. Die vollständigen Anbieterangaben werden vor dem offiziellen geschäftlichen Betrieb und nach Abschluss der Unternehmensregistrierung ergänzt. Diese Seite muss vor produktiver Nutzung rechtlich geprüft und vervollständigt werden.",
+  "Stand: 27. Oktober 2026",
 ];
 
 export const impressumSections: LegalSection[] = [
   {
     title: "Angaben gemäß § 5 DDG",
     paragraphs: [
-      "[Unternehmensname einfügen]",
-      "[Rechtsform einfügen]",
+      "LUVIPRO",
+      "Verantwortlich für diesen Webauftritt: Diaa Alameen",
       "Standort: Hannover, Deutschland",
-      "[vollständige ladungsfähige Anschrift einfügen]",
     ],
-  },
-  {
-    title: "Projektverantwortlicher / Ansprechpartner",
-    paragraphs: ["Diaa Alameen"],
   },
   {
     title: "Kontakt",
     paragraphs: [
       "Telefon: +49 177 7969259",
-      "Allgemeine Informationen: info@luvipro.de",
+      "Allgemeine Anfragen: info@luvipro.de",
       "Kundenservice, Beschwerden und Datenschutzanfragen: customerservice@luvipro.de",
     ],
   },
   {
-    title: "Umsatzsteuer-ID",
-    paragraphs: ["[USt-IdNr. einfügen, falls vorhanden]"],
-  },
-  {
-    title: "Registereintrag",
-    paragraphs: ["[Registergericht und Registernummer einfügen, falls vorhanden]"],
-  },
-  {
-    title: "Verantwortlich für den Inhalt",
-    paragraphs: ["Diaa Alameen", "[vollständige Anschrift einfügen]"],
-  },
-  {
-    title: "Rechtlicher Hinweis",
-    paragraphs: [
-      "LUVIPRO befindet sich in der Aufbauphase. Nach Abschluss der Unternehmensregistrierung werden die vollständigen Anbieterangaben, die Rechtsform und die vertretungsberechtigte Person ergänzt.",
-    ],
+    title: "Inhaltlich verantwortlich",
+    paragraphs: ["Diaa Alameen"],
   },
   {
     title: "Haftung für Inhalte",
     paragraphs: [
-      "Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden, soweit gesetzlich zulässig.",
+      "LUVIPRO ist für eigene Inhalte nach den geltenden gesetzlichen Vorschriften verantwortlich. Informationen auf dieser Website werden mit Sorgfalt erstellt und aktualisiert.",
     ],
   },
   {
-    title: "Haftung für Links",
+    title: "Externe Links",
     paragraphs: [
-      "Diese Website kann Links zu externen Websites Dritter enthalten. Auf deren Inhalte haben wir keinen Einfluss. Für die Inhalte verlinkter Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich.",
+      "Diese Website kann Verweise auf externe Angebote Dritter enthalten. Für deren Inhalte sind die jeweiligen Anbieter verantwortlich. LUVIPRO beachtet die gesetzlichen Prüf- und Handlungspflichten.",
     ],
   },
 ];
