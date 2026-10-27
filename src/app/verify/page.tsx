@@ -5,6 +5,7 @@ import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
 import { WorkshopFinder } from "@/components/sections/workshop-finder";
+import { ReportLookup } from "@/components/reports/report-lookup";
 
 export const metadata: Metadata = {
   title: "Fahrzeugprüfung & VIN-Berichte | LUVIPRO",
@@ -35,8 +36,8 @@ export default function VerifyPage() {
           <p className="mt-4 text-sm leading-7 text-slate-400">
             Eine FIN allein genügt nicht als Nachweis der Berechtigung zum Einsehen personenbezogener Berichtsinhalte.
           </p>
-          <Link href="#partner-map" className="mt-7 inline-flex items-center gap-2 rounded-full bg-pulse px-6 py-3 font-semibold text-obsidian transition hover:bg-frost">
-            Partnerwerkstatt suchen <ArrowRight className="h-4 w-4" />
+          <Link href="#report-lookup" className="mt-7 inline-flex items-center gap-2 rounded-full bg-pulse px-6 py-3 font-semibold text-obsidian transition hover:bg-frost">
+            Prüfbericht suchen <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
         <div className="mt-14 grid gap-5 md:grid-cols-3">
@@ -48,6 +49,9 @@ export default function VerifyPage() {
             </div>
           ))}
         </div>
+      </section>
+      <section id="report-lookup" className="scroll-mt-24 bg-obsidian pb-16 sm:pb-20">
+        <div className="section-shell max-w-5xl"><ReportLookup /></div>
       </section>
       <section id="partner-map" className="scroll-mt-24 bg-midnight py-20 sm:py-24">
         <div className="section-shell">
