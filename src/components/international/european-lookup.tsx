@@ -39,7 +39,7 @@ export function EuropeanLookup({ locale }: { locale: SiteLocale }) {
           maxLength={mode==="vin"?17:64} value={entry}
           onChange={e=>{setEntry(e.target.value);setConfirmed("");setError(false)}}
           className="w-full rounded-xl border border-white/20 bg-[#0a1122] px-4 py-3 font-mono text-base uppercase text-white outline-none focus:border-pulse"
-          placeholder={mode==="vin"?"WBA12345678901234":"LUV-2026-0000001"}
+          placeholder={mode==="vin"?"WBA12345678901234":"RPT-2026-000001"}
         />
         {error && <p className="text-sm text-amber-200" role="alert">{mode==="vin"?"VIN: 17 characters (A-H, J-N, P, R-Z, 0-9).":"Invalid report reference / ungültige Berichtsnummer."}</p>}
         <button type="submit" className="w-full rounded-full bg-pulse px-5 py-3 text-sm font-semibold text-obsidian hover:bg-frost">{t.search}</button>
