@@ -6,6 +6,7 @@ import { Footer } from "@/components/sections/footer";
 import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
 import { OrderForm } from "@/components/shop/order-form";
 import { isPreorderBackendReady, isStripeCheckoutReady } from "@/lib/store";
+import { isBankTransferReady } from "@/lib/bank-transfer/service";
 
 export const metadata: Metadata = {
   title: "Gerät anfragen oder kaufen | LUVIPRO LU3656060",
@@ -18,7 +19,7 @@ type SearchParams = Promise<{ mode?: string; cancelled?: string }>;
 
 export default async function OrderPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
-  const initialMode = params.mode === "buy" ? "buy" : "preorder";
+  const initialMode = params.mode === "bank" ? "bank" : params.mode === "buy" ? "buy" : "preorder";
   return (
     <main className="cinematic-page min-h-screen overflow-hidden bg-obsidian text-white">
       <AnimatedAtmosphere />
@@ -52,6 +53,7 @@ export default async function OrderPage({ searchParams }: { searchParams: Search
           initialMode={initialMode}
           paymentsReady={isStripeCheckoutReady()}
           preorderReady={isPreorderBackendReady()}
+          bankReady={isBankTransferReady()}
         />
       </section>
       <Footer />
