@@ -4,7 +4,8 @@ import { BrandLogo } from "@/components/ui/brand-logo";
 
 const links = [
   { label: "Partnerwerkstatt", href: "/partner-workshops" },
-  { label: "Fahrzeug verifizieren", href: "/verify" },
+  { label: "Prüfbericht per VIN / Nummer", href: "/reports" },
+  { label: "Fahrzeugprüfung", href: "/verify" },
   { label: "Gerät & Voranfrage", href: "/products" },
   { label: "Kontakt", href: "/contact" },
   { label: "Impressum", href: "/impressum" },
