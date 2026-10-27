@@ -55,7 +55,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                 <CtaLink href="/contact" className="gap-2">
                   {s.hero.partner} <ArrowRight className="h-4 w-4" />
                 </CtaLink>
-                <CtaLink href="/verify" variant="secondary">{s.hero.verify}</CtaLink>
+                <CtaLink href="/reports" variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
               </div>
             </div>
           </Reveal>
@@ -327,7 +327,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">{s.end.description}</p>
               <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
                 <CtaLink href="/contact" className="gap-2">{s.end.partner} <ArrowRight className="h-4 w-4" /></CtaLink>
-                <CtaLink href="/verify" variant="secondary">{s.end.verify}</CtaLink>
+                <CtaLink href="/reports" variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
                 <CtaLink href="/partner-workshops" variant="secondary">{s.end.app}</CtaLink>
               </div>
             </div>
@@ -344,7 +344,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {[
-                [t.site.workshops, "/partner-workshops"], [t.site.verify, "/verify"],
+                [t.site.workshops, "/partner-workshops"], [locale === "ar" ? "البحث عن تقرير" : "Find report", "/reports"],
                 [t.site.shop, "/products"], [t.site.contact, "/contact"],
                 [t.site.imprint, "/impressum"], [t.site.privacy, "/datenschutz"], [t.site.terms, "/agb"],
               ].map(([label, href]) => (
