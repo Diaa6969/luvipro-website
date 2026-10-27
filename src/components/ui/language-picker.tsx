@@ -69,7 +69,14 @@ export function LanguagePicker({
         className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-pulse/50 bg-[#101b32] px-3 py-2 text-sm font-semibold text-white shadow-md shadow-black/30 transition hover:border-pulse hover:bg-[#1b2b49] focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse sm:px-4"
       >
         <Globe2 className="size-5 shrink-0 text-pulse" aria-hidden="true" />
-        <span>{compact ? selected?.[1] ?? "Language" : `🌍 ${selected?.[1] ?? "Language"}`}</span>
+        {compact ? (
+          <>
+            <span className="sm:hidden">{current.toUpperCase()}</span>
+            <span className="hidden sm:inline">{selected?.[1] ?? "Language"}</span>
+          </>
+        ) : (
+          <span>{selected?.[1] ?? "Language"}</span>
+        )}
         <span className="text-pulse" aria-hidden="true">▾</span>
       </button>
       {mounted && isOpen && createPortal(
