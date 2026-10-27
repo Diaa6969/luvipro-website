@@ -2,7 +2,7 @@ import type { LegalSection } from "@/components/ui/legal-page";
 
 export const datenschutzIntro = [
   "Stand: [Datum einfügen]",
-  "Diese Datenschutzerklärung informiert Nutzer, Fahrzeughalter, Käufer, Verkäufer, Partnerwerkstätten und Besucher darüber, welche personenbezogenen Daten im Zusammenhang mit der Nutzung der LUVIPRO Website, der LUVIPRO App, der Fahrzeugverifizierung, der VIN-Suche, der QR-Reports, der Partnerwerkstatt-Funktionen und des LUVIPRO Marktplatzes verarbeitet werden.",
+  "Diese Datenschutzerklärung informiert Nutzer, Fahrzeughalter, Käufer, Verkäufer, Partnerwerkstätten und Besucher darüber, welche personenbezogenen Daten im Zusammenhang mit der Nutzung der LUVIPRO Website, der LUVIPRO App, der Fahrzeugverifizierung, der VIN-/Berichtsnummer-Suche, der geschützten Bereitstellung digitaler Berichte und der Partnerwerkstatt-Funktionen und des LUVIPRO Marktplatzes verarbeitet werden.",
   "Diese Seite ist jederzeit ohne Registrierung über die Website erreichbar.",
   "Hinweis: Diese Datenschutzerklärung ist ein Entwurf und muss vor produktiver Nutzung durch eine fachkundige Stelle rechtlich geprüft und vervollständigt werden.",
 ];
@@ -44,7 +44,7 @@ export const datenschutzSections: LegalSection[] = [
   {
     title: "Fahrzeugdaten und VIN",
     paragraphs: [
-      "Zur Erstellung einer digitalen Fahrzeugidentität und eines verifizierbaren Fahrzeugreports verarbeitet LUVIPRO insbesondere Fahrzeugidentifikationsnummern, Hersteller, Modell, Basisdaten, Datum und Uhrzeit der Prüfung, Prüfergebnis, technische Prüffelder, Bewertungs- und Zustandsinformationen, QR-Report-ID sowie Verknüpfungen zwischen Fahrzeug, QR-Sticker und digitalem Report.",
+      "Zur Erstellung einer digitalen Fahrzeugidentität und eines verifizierbaren Fahrzeugreports verarbeitet LUVIPRO insbesondere Fahrzeugidentifikationsnummern, Hersteller, Modell, Basisdaten, Datum und Uhrzeit der Prüfung, Prüfergebnis, technische Prüffelder, Bewertungs- und Zustandsinformationen, individuelle Berichtsnummer sowie Verknüpfungen zwischen Fahrzeug, VIN und digitalem Report.",
       "Die VIN kann personenbezogen sein, wenn sie direkt oder indirekt einer Person, einem Fahrzeughalter, Verkäufer oder Käufer zugeordnet werden kann. Daher behandelt LUVIPRO VIN-bezogene Daten mit erhöhter Sorgfalt.",
     ],
   },
@@ -95,7 +95,7 @@ export const datenschutzSections: LegalSection[] = [
       "Name und Kontaktdaten der Werkstatt",
       "Adresse und Standort der Werkstatt",
       "Partner-ID sowie Prüfer- oder Nutzerkonten",
-      "Prüfaktivitäten, erstellte Reports und QR-Sticker-Aktivierungen",
+      "Prüfaktivitäten, erstellte Reports und Berechtigungen zum Reportabruf",
       "Buchungen und vermittelte Prüfungen",
       "Abrechnungs- und Provisionsdaten",
       "Audit- und Sicherheitsprotokolle",
@@ -112,7 +112,7 @@ export const datenschutzSections: LegalSection[] = [
     title: "Betrugsprävention, Missbrauchserkennung und rechtliche Durchsetzung",
     paragraphs: [
       "LUVIPRO kann Daten verarbeiten, um Manipulationen, missbräuchliche Nutzung, gefälschte Reports, unzutreffende Prüfungen, technische Eingriffe, unberechtigte Zugriffe oder sonstige Sicherheitsvorfälle zu erkennen und zu verhindern.",
-      "Dazu können insbesondere Prüf- und Reportdaten, Bild- und UV-Prüfnachweise, VIN- und QR-Zuordnungen, Partner- und Prüfer-IDs, Zeitstempel, technische Logdaten, IP-Adressen, Geräte- und Sitzungsinformationen sowie Audit-Logs verarbeitet werden.",
+      "Dazu können insbesondere Prüf- und Reportdaten, Bild- und UV-Prüfnachweise, VIN- und Berichtsnummer-Zuordnungen, Partner- und Prüfer-IDs, Zeitstempel, technische Logdaten, IP-Adressen, Geräte- und Sitzungsinformationen sowie Audit-Logs verarbeitet werden.",
       "Bei begründetem Verdacht auf Manipulation oder missbräuchliche Nutzung kann LUVIPRO betroffene Partnerkonten sperren, Reports als ungültig markieren, weitere Prüfungen einschränken und interne Prüfmaßnahmen durchführen.",
       "Soweit ein Verdacht auf strafbares Verhalten, Betrug, Urkundenfälschung, gewerbsmäßige Täuschung oder sonstige rechtswidrige Handlungen besteht, können Daten im rechtlich zulässigen Umfang zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen sowie zur Zusammenarbeit mit zuständigen Behörden verwendet werden.",
     ],
@@ -141,7 +141,7 @@ export const datenschutzSections: LegalSection[] = [
       "Bereitstellung der Website und App",
       "Erstellung und Verwaltung digitaler Fahrzeugreports",
       "VIN-Suche und VIN-Abgleich",
-      "QR-Sticker-Verknüpfung",
+      "Berichtsuche anhand von FIN/VIN oder Berichtsnummer",
       "Fahrzeugschein-OCR und Dokumentenabgleich",
       "Partnerwerkstatt-Suche",
       "Marktplatz-Funktionen",
@@ -166,7 +166,7 @@ export const datenschutzSections: LegalSection[] = [
     paragraphs: [
       "Personenbezogene Daten werden nur so lange gespeichert, wie dies für die jeweiligen Zwecke erforderlich ist.",
       "Für technische Zugriffsdaten gelten kürzere Speicherfristen, soweit keine Sicherheitsvorfälle oder Rechtsstreitigkeiten entgegenstehen.",
-      "Finalisierte Fahrzeugreports, technische Prüfnachweise, Audit-Logs und QR-Verknüpfungen können länger gespeichert werden, soweit dies zur Integrität der Fahrzeughistorie, zur Betrugsprävention, zur Qualitätssicherung, zur Nachweisführung oder zur Wahrung berechtigter Interessen erforderlich ist.",
+      "Finalisierte Fahrzeugreports, technische Prüfnachweise, Audit-Logs und Berichtsnummer-Zuordnungen können länger gespeichert werden, soweit dies zur Integrität der Fahrzeughistorie, zur Betrugsprävention, zur Qualitätssicherung, zur Nachweisführung oder zur Wahrung berechtigter Interessen erforderlich ist.",
       "Dokumentenbilder, insbesondere Fahrzeugschein-Uploads, sollen nach erfolgreicher OCR-Prüfung und VIN-Abgleichung gelöscht oder auf datensparsame Prüfinformationen reduziert werden, soweit keine entgegenstehenden Gründe bestehen.",
       "Konkrete Speicherfristen werden im produktiven Betrieb dokumentiert und regelmäßig überprüft.",
     ],
@@ -235,7 +235,7 @@ export const datenschutzSections: LegalSection[] = [
 
 export const agbIntro = [
   "Stand: [Datum einfügen]",
-  "Diese Allgemeinen Geschäftsbedingungen regeln die Nutzung der LUVIPRO Website, der LUVIPRO App, der digitalen Fahrzeugreports, der QR-basierten Verifizierung, der Partnerwerkstatt-Funktionen, des Marktplatzes sowie weiterer digitaler Dienste von LUVIPRO.",
+  "Diese Allgemeinen Geschäftsbedingungen regeln die Nutzung der LUVIPRO Website, der LUVIPRO App, der digitalen Fahrzeugreports, der VIN- und Berichtsnummer-basierten Reportabfrage, der Partnerwerkstatt-Funktionen, des Marktplatzes sowie weiterer digitaler Dienste von LUVIPRO.",
   "Hinweis: Diese AGB sind ein Entwurf und müssen vor produktiver Nutzung rechtlich geprüft und an das konkrete Geschäftsmodell, die Verträge, Zahlungsprozesse und Verbraucherinformationen angepasst werden.",
 ];
 
@@ -262,7 +262,7 @@ export const agbSections: LegalSection[] = [
     title: "Beschreibung der LUVIPRO Dienste",
     paragraphs: [
       "LUVIPRO ist ein Automobil-Verifizierungs-Ökosystem für den Gebrauchtwagenmarkt.",
-      "Die Dienste können insbesondere professionelle UV-Inspektionsgeräte, QR-Sticker, QR-verknüpfte Fahrzeugreports, VIN-Suche, Fahrzeugschein-OCR, VIN-Abgleich, digitale PDF-Reports, Partnerwerkstatt-Suche, Termin- und Prüfungsvermittlung, Marktplatz-Funktionen für geprüfte Fahrzeuge sowie App-basierte Fahrzeugverifizierung umfassen.",
+      "Die Dienste können insbesondere professionelle UV-Inspektionsgeräte, VIN-verknüpfte Fahrzeugreports, Suche nach FIN/VIN oder Berichtsnummer, VIN-Abgleich, digitale PDF-Reports, Partnerwerkstatt-Suche, Termin- und Prüfungsvermittlung, Marktplatz-Funktionen für geprüfte Fahrzeuge sowie App-basierte Fahrzeugverifizierung umfassen.",
       "LUVIPRO entwickelt die Plattform laufend weiter. Einzelne Funktionen können sich ändern, erweitert, eingeschränkt oder vorübergehend deaktiviert werden.",
     ],
   },
@@ -283,7 +283,7 @@ export const agbSections: LegalSection[] = [
       "gefälschte Dokumente hochzuladen",
       "technische Schutzmaßnahmen zu umgehen",
       "Reports zu verändern, zu fälschen oder missbräuchlich weiterzugeben",
-      "QR-Sticker zu kopieren, zu manipulieren oder auf ein anderes Fahrzeug zu übertragen",
+      "fremde Berichtsnummern missbräuchlich zu verwenden oder unberechtigt auf Berichte zuzugreifen",
       "die Plattform für betrügerische Handlungen zu verwenden",
     ],
   },
@@ -298,16 +298,16 @@ export const agbSections: LegalSection[] = [
     title: "Partnerwerkstätten und Prüfpflichten",
     paragraphs: [
       "Partnerwerkstätten verpflichten sich, Prüfungen sorgfältig, sachgerecht und nach den von LUVIPRO bereitgestellten technischen Richtlinien durchzuführen.",
-      "Partnerwerkstätten und Prüfer dürfen insbesondere keine falschen Prüfergebnisse eingeben, keine nicht durchgeführten Prüfungen bestätigen, keine manipulierten Fotos oder Prüfdaten hochladen, keine QR-Sticker ohne tatsächliche Prüfung aktivieren, keine Reports für andere Fahrzeuge verwenden und keine Prüfergebnisse gegen Zahlung, Vorteil oder Absprache verfälschen.",
+      "Partnerwerkstätten und Prüfer dürfen insbesondere keine falschen Prüfergebnisse eingeben, keine nicht durchgeführten Prüfungen bestätigen, keine manipulierten Fotos oder Prüfdaten hochladen, keine Reports ohne tatsächliche Prüfung freigeben, keine Reports für andere Fahrzeuge verwenden und keine Prüfergebnisse gegen Zahlung, Vorteil oder Absprache verfälschen.",
       "Die Partnerwerkstatt ist für die sorgfältige Durchführung der tatsächlichen Fahrzeugprüfung und die Richtigkeit der von ihr eingegebenen Prüfdaten verantwortlich.",
     ],
   },
   {
-    title: "QR-Sticker und digitale Reports",
+    title: "VIN-/Berichtsnummer und digitale Reports",
     paragraphs: [
-      "QR-Sticker dienen der Verknüpfung eines Fahrzeugs mit einem digitalen LUVIPRO Report.",
-      "QR-Sticker dürfen nur auf das geprüfte Fahrzeug angebracht oder diesem zugeordnet werden. Eine Übertragung auf ein anderes Fahrzeug ist untersagt.",
-      "Digitale Reports können technische Prüfdaten, Bildnachweise, VIN-Informationen, Zeitstempel, QR-Verknüpfungen und weitere strukturierte Fahrzeugdaten enthalten.",
+      "Digitale Berichte werden einer FIN/VIN und einer individuellen Berichtsnummer zugeordnet.",
+      "Die Kenntnis einer FIN/VIN oder einer Berichtsnummer allein berechtigt nicht zum Download vertraulicher Berichte. Erforderlich sind eine gültige Zugriffsberechtigung und gegebenenfalls ein bestätigter Kauf.",
+      "Digitale Reports können technische Prüfdaten, Bildnachweise, VIN-Informationen, Zeitstempel, die eindeutige Berichtsnummer und weitere strukturierte Fahrzeugdaten enthalten.",
     ],
   },
   {
@@ -321,7 +321,7 @@ export const agbSections: LegalSection[] = [
     title: "Anti-Betrugs-Klausel und Manipulationsverbot",
     paragraphs: [
       "Jede Manipulation, Fälschung, bewusste Falscheingabe, unzutreffende Prüfbestätigung, technische Umgehung oder missbräuchliche Nutzung der LUVIPRO Dienste ist streng untersagt.",
-      "Dies gilt insbesondere für gefälschte oder manipulierte Fahrzeugreports, vorsätzlich falsche Prüfdaten, manipulierte Bildnachweise, falsche VIN-Zuordnungen, unberechtigte QR-Sticker-Aktivierungen, Übertragung eines QR-Stickers auf ein anderes Fahrzeug, bewusste Falschangaben im Marktplatz, kollusives Zusammenwirken und Nutzung der Plattform zur Täuschung von Käufern oder Dritten.",
+      "Dies gilt insbesondere für gefälschte oder manipulierte Fahrzeugreports, vorsätzlich falsche Prüfdaten, manipulierte Bildnachweise, falsche VIN-Zuordnungen, unberechtigte Berichtsfreigaben, Abrufe oder Übertragungen von Berichten, bewusste Falschangaben im Marktplatz, kollusives Zusammenwirken und Nutzung der Plattform zur Täuschung von Käufern oder Dritten.",
       "Bei begründetem Verdacht oder Nachweis einer Manipulation kann LUVIPRO den betroffenen Zugang sperren, Reports als ungültig markieren, Prüfungen oder Angebote stoppen, interne Prüfungen einleiten, rechtliche Schritte prüfen und zuständige Behörden oder Geschädigte informieren, soweit dies rechtlich zulässig oder erforderlich ist.",
     ],
   },
@@ -337,7 +337,7 @@ export const agbSections: LegalSection[] = [
   {
     title: "Marktplatz",
     paragraphs: [
-      "Der LUVIPRO Marktplatz dient der Präsentation von Fahrzeugen mit strukturierten Fahrzeugdaten, QR-Verknüpfung und, soweit vorhanden, digitalen Reports.",
+      "Der LUVIPRO Marktplatz dient der Präsentation von Fahrzeugen mit strukturierten Fahrzeugdaten, VIN-Zuordnung und, soweit vorhanden, digitalen Reports.",
       "Verkäufer sind für die Richtigkeit ihrer Angaben verantwortlich. LUVIPRO kann Angebote ablehnen, sperren, entfernen oder prüfen, wenn Anhaltspunkte für falsche Angaben, fehlende Berechtigung, manipulierte Daten oder sonstige Verstöße bestehen.",
       "LUVIPRO ist nicht Partei eines Kaufvertrags zwischen Käufer und Verkäufer, sofern nicht ausdrücklich anders angegeben.",
     ],
@@ -353,7 +353,7 @@ export const agbSections: LegalSection[] = [
   {
     title: "Preise, Zahlungen und Gebühren",
     paragraphs: [
-      "Für bestimmte Funktionen können Gebühren anfallen, insbesondere für Fahrzeugprüfungen, PDF-Reports, Marktplatz-Inserate, QR-Sticker, Partner-Bundles, vermittelte Prüfungen und weitere digitale Dienste.",
+      "Für bestimmte Funktionen können Gebühren anfallen, insbesondere für Fahrzeugprüfungen, PDF-Reports, Marktplatz-Inserate, Partner-Bundles, vermittelte Prüfungen und weitere digitale Dienste.",
       "Konkrete Preise werden im jeweiligen Angebot, in der App, im Bezahlprozess oder in einer separaten Preisliste angezeigt.",
       "Zahlungen können über externe Zahlungsdienstleister erfolgen. LUVIPRO speichert keine vollständigen Kreditkartendaten oder vollständigen Bankdaten auf eigenen Servern.",
     ],
@@ -380,7 +380,7 @@ export const agbSections: LegalSection[] = [
     title: "Kündigung und Sperrung",
     paragraphs: [
       "LUVIPRO kann Nutzerkonten, Partnerzugänge oder Marktplatz-Angebote sperren oder kündigen, wenn ein Verstoß gegen diese AGB, Partnerverträge, technische Richtlinien, gesetzliche Vorschriften oder berechtigte Sicherheitsinteressen vorliegt.",
-      "Bei schwerwiegenden Verstößen, insbesondere Manipulation, Betrug, falschen Prüfdaten oder Missbrauch von QR-Stickern, kann eine sofortige Sperrung erfolgen.",
+      "Bei schwerwiegenden Verstößen, insbesondere Manipulation, Betrug, falschen Prüfdaten oder Missbrauch von Berichts- oder Zugriffsreferenzen, kann eine sofortige Sperrung erfolgen.",
     ],
   },
   {
