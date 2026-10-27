@@ -71,7 +71,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
   const mobileMenu = isMounted && isOpen
     ? createPortal(
         <div
-          className="fixed inset-0 z-[99999] overflow-y-auto bg-[#020617]/95 text-white backdrop-blur-xl lg:hidden"
+          className="fixed inset-0 z-[99999] overflow-y-auto bg-[#030815] text-white xl:hidden"
           onClick={closeMenu}
           dir={locale === "ar" ? "rtl" : "ltr"}
         >
@@ -132,33 +132,24 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-obsidian/72 backdrop-blur-xl">
+      <header className="luvipro-fixed-header fixed inset-x-0 top-0 z-50 border-b border-[#243450] bg-[#050d1c]">
         <nav className="section-shell flex h-16 min-w-0 items-center justify-between gap-3 sm:h-20" aria-label={t.site.navigation}>
           <BrandLogo homeHref={`/${locale}`} />
-          <div className="hidden items-center gap-5 xl:flex">
+          <div className="hidden items-center gap-4 xl:flex">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className="text-sm font-medium text-slate-300 transition hover:text-white">
                 {item.label}
               </Link>
             ))}
           </div>
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 2xl:flex">
             <CtaLink href={`/${locale}/reports`} variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
             <CtaLink href={`/${locale}/contact`}>{t.site.partner}</CtaLink>
           </div>
-          <div className="hidden lg:block">
-            <details className="group relative">
-              <summary className="cursor-pointer rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse">
-                {t.site.languages} ▾
-              </summary>
-              <div className="absolute end-0 top-full z-[60] mt-2 min-w-52 rounded-lg border border-white/15 bg-[#080e1d] p-3 shadow-2xl">
-                <LanguagePicker current={locale} compact />
-              </div>
-            </details>
-          </div>
+          <div className="ms-auto shrink-0 xl:ms-0"><LanguagePicker current={locale} compact /></div>
           <button
             type="button"
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white sm:h-11 sm:w-11 lg:hidden"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-[#101b32] text-white sm:h-11 sm:w-11 xl:hidden"
             aria-label={t.site.openMenu}
             aria-controls={menuId}
             aria-expanded={isOpen}
