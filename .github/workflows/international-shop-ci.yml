@@ -5,6 +5,7 @@ on:
     branches:
       - feature/international-home-en-ar
       - feature/european-locales
+      - feature/language-menu-solid-header
   workflow_dispatch:
 
 permissions:
@@ -34,6 +35,8 @@ jobs:
         run: npm run test:reports
       - name: Validate 31 supported website locales and all translations
         run: npm run test:locales
+      - name: Validate homepage language menu visibility and opaque dropdown
+        run: npm run test:language-navigation
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'
