@@ -55,7 +55,7 @@ export function BankTransferPanel() {
     const date=String(fd.get("paidAt")||"");
     if (!reference || !date || fd.get("confirmed")!=="on") {setError("Zahlung erst nach Abgleich mit Kontoauszug bestätigen.");return;}
     if (!window.confirm("Ist diese Zahlung mit dem tatsächlichen Bankkontoauszug abgeglichen? Dieser Schritt wird protokolliert."))return;
-    await action(id,"confirm", {bankReference:reference,paidAt:new Date(date+"T12:00:00").toISOString(),acknowledgedBankMatch:true});
+    await action(id,"confirm", {bankReference:reference,paidAt:new Date(date+"T00:00:00").toISOString(),acknowledgedBankMatch:true});
   }
   const unpaid=orders.filter(x=>x.payment_status==="pending");
   const paidOrders=orders.filter(x=>x.payment_status==="paid");
@@ -140,7 +140,22 @@ export function BankTransferPanel() {
                 <td className="p-3">{o.customer_company}</td>
                 <td className="p-3">{euro(o.gross_cents)}</td>
                 <td className="p-3">{o.paid_at ? new Date(o.paid_at).toLocaleDateString("de-DE") : "–"}</td>
-                <td className="p-3"><span className="text-xs text-amber-200">Nach Lieferung ausstellen</span></td>
+                <td className="min-w-[240px] p-3">
+                  <form onSubmit={event => {
+                    event.preventDefault();
+                    const fd = new FormData(event.currentTarget);
+                    const deliveredAt = String(fd.get("deliveredAt") || "");
+                    if (!deliveredAt) return;
+                    if (window.confirm("Ist die Lieferung tatsächlich erfolgt? Die endgültige Rechnung wird jetzt erstellt und versandt.")) void action(o.id, "deliver", {deliveredAt});
+                  }} className="flex flex-wrap items-end gap-2">
+                    <label className="text-xs text-slate-300">Tatsächliches Lieferdatum
+                      <input type="date" name="deliveredAt" max={new Date().toISOString().slice(0,10)} required className="mt-1 block rounded-lg border border-white/20 bg-[#0b1324] px-2 py-2 text-white" />
+                    </label>
+                    <button type="submit" disabled={busy !== null} className="rounded-lg border border-pulse/40 px-3 py-2 text-xs font-semibold text-pulse disabled:opacity-40">
+                      Lieferung &amp; Rechnung
+                    </button>
+                  </form>
+                </td>
               </tr>
             ))}</tbody>
           </table>
