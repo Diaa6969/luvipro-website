@@ -11,7 +11,7 @@ const panel = "rounded-2xl border border-white/10 bg-white/[0.045] p-6 transitio
 const primary = "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-pulse px-6 py-3 font-semibold text-obsidian transition hover:bg-frost";
 const secondary = "inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-pulse/40 bg-pulse/10 px-6 py-3 font-semibold text-white transition hover:border-pulse";
 
-export function EuropeanHeader({ locale }: { locale: SiteLocale }) {
+export function EuropeanHeader({ locale, section }: { locale: SiteLocale; section?: "products" | "reports" | "workshops" | "contact" | "app" }) {
   const t = siteTranslation(locale);
   const items = [
     [t.navHome, localeHome(locale)],
@@ -28,7 +28,7 @@ export function EuropeanHeader({ locale }: { locale: SiteLocale }) {
           {items.map(([text,href]) => <Link href={href} key={href} className="text-sm text-slate-200 transition hover:text-pulse">{text}</Link>)}
         </nav>
         <div className="flex shrink-0 items-center gap-3">
-          <LanguagePicker current={locale} compact />
+          <LanguagePicker current={locale} section={section} compact />
           <details className="relative xl:hidden">
             <summary className="cursor-pointer list-none rounded-xl border border-white/20 bg-white/10 px-3 py-3 text-sm text-white [&::-webkit-details-marker]:hidden" aria-label="Open menu">
               ☰
@@ -119,9 +119,9 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
           <h2 className="text-3xl font-semibold sm:text-4xl">{t.prices}</h2>
           <div className="mt-9 grid gap-5 md:grid-cols-3">
             {[
-              ["Standard","59,99 €","19% USt. inkl."],
-              ["Premium","119,99 €","19% USt. inkl."],
-              ["LUVIPRO LU3656060","3.000,00 €","netto · B2B"],
+              ["Standard","59,99 €","19% VAT"],
+              ["Premium","119,99 €","19% VAT"],
+              ["LUVIPRO LU3656060","3.000,00 €","B2B"],
             ].map(([label,amount,tax])=>
               <div key={label} className={panel}>
                 <p className="text-xl font-semibold">{label}</p>
@@ -164,7 +164,7 @@ export function EuropeanInner({ locale, section }: { locale: SiteLocale; section
   return (
     <main lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} className="cinematic-page min-h-screen bg-obsidian text-white">
       <DocumentLanguage locale={locale} />
-      <EuropeanHeader locale={locale} />
+      <EuropeanHeader locale={locale} section={section} />
       <section className="section-shell min-h-[65vh] pb-20 pt-16 sm:pt-24">
         <Link href={localeHome(locale)} className="text-sm text-pulse hover:text-white">← {t.back}</Link>
         <p className="mt-12 text-xs font-semibold uppercase tracking-widest text-pulse">LUVIPRO</p>
