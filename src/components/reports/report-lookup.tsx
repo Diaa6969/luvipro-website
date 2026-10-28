@@ -57,7 +57,7 @@ export function ReportLookup() {
       </h2>
       <p className="mt-3 text-sm leading-7 text-slate-300">
         Wählen Sie Ihre Fahrzeug-Identifizierungsnummer (FIN/VIN) oder die individuelle Berichtsnummer.
-        Den vollständigen Bericht erhalten nur berechtigte Nutzer nach Prüfung des Zugriffs und, falls erforderlich, nach dem Kauf.
+        Den vollständigen Bericht erhalten ausschließlich berechtigte Nutzer nach Prüfung des Zugriffs. Neue Berichtskäufe sind in V1 deaktiviert. Bestehende Zugriffsberechtigungen bleiben erhalten.
       </p>
       <div className="mt-6 grid gap-3 sm:grid-cols-2" role="group" aria-label="Bericht suchen nach">
         <button type="button" aria-pressed={mode === "vin"} onClick={() => { setMode("vin"); setInput(""); setSubmitted(null); setError(""); }}

@@ -43,4 +43,6 @@ assert.doesNotMatch(legacy,/get_public_inspection_preview|public_token/);
 const refPage=readFileSync("src/components/reports/report-lookup.tsx","utf8");
 assert.doesNotMatch(refPage,/public_token|storage\/v1|pdf_base64|report_url/);
 assert.match(refPage,/keine vertraulichen Berichte ohne Anmeldung/);
+assert.match(refPage,/Neue Berichtskäufe sind in V1 deaktiviert/);
+assert.doesNotMatch(refPage,/falls erforderlich, nach dem Kauf/);
 console.log("Report lookup identifiers, no public QR flow, privacy-gated download UX: PASS (synthetic)");
