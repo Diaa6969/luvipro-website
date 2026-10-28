@@ -1,5 +1,6 @@
 "use client";
 
+import { WebAppEntry } from "@/components/ui/web-app-entry";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
@@ -107,6 +108,7 @@ export function Navbar() {
                   </Link>
                 ))}
 
+                <WebAppEntry />
               </nav>
 
               <div className="mt-8 max-w-xs"><LanguagePicker current="de" /></div>
@@ -159,6 +161,7 @@ export function Navbar() {
             <CtaLink href="/contact">Partner werden</CtaLink>
           </div>
 
+          <div className="hidden shrink-0 md:block"><WebAppEntry /></div>
           <div className="ms-auto shrink-0 xl:ms-0"><LanguagePicker current="de" compact /></div>
 
           <button

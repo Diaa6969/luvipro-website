@@ -1,5 +1,6 @@
 "use client";
 
+import { WebAppEntry } from "@/components/ui/web-app-entry";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
@@ -107,6 +108,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
                 </Link>
               ))}
 
+              <WebAppEntry />
             </nav>
             <div className="mt-7">
               <p className="mb-3 text-xs font-semibold uppercase text-pulse">{t.site.languages}</p>
@@ -146,6 +148,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
             <CtaLink href={`/${locale}/reports`} variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
             <CtaLink href={`/${locale}/contact`}>{t.site.partner}</CtaLink>
           </div>
+          <div className="hidden shrink-0 md:block"><WebAppEntry /></div>
           <div className="ms-auto shrink-0 xl:ms-0"><LanguagePicker current={locale} compact /></div>
           <button
             type="button"
