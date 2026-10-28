@@ -7,7 +7,7 @@ import { ReportLookup } from "@/components/reports/report-lookup";
 
 export const metadata: Metadata = {
   title: "Fahrzeugbericht über VIN oder Berichtsnummer | LUVIPRO",
-  description: "LUVIPRO Fahrzeugbericht mit FIN/VIN oder individueller Berichtsnummer suchen. Geschützter Zugriff für berechtigte Nutzer nach Freigabe und Kauf.",
+  description: "LUVIPRO Fahrzeugbericht mit FIN/VIN oder individueller Berichtsnummer suchen. Vollständige Berichte bleiben ausschließlich für berechtigte Nutzer zugänglich; Berichtskäufe sind in V1 deaktiviert.",
   alternates: { canonical: "https://luvipro.de/reports" },
   robots: { index: true, follow: true },
 };

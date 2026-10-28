@@ -10,6 +10,7 @@ const links = [
   { label: "Kontakt", href: "/contact" },
   { label: "Impressum", href: "/impressum" },
   { label: "Datenschutz", href: "/datenschutz" },
+  { label: "Konto löschen", href: "/konto-loeschen" },
   { label: "AGB", href: "/agb" },
 ];
 

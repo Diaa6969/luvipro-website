@@ -346,7 +346,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               {[
                 [t.site.workshops, `/${locale}/workshops`], [locale === "ar" ? "البحث عن تقرير" : "Find report", `/${locale}/reports`],
                 [t.site.shop, `/${locale}/products`], [t.site.contact, `/${locale}/contact`],
-                [t.site.imprint, "/impressum"], [t.site.privacy, "/datenschutz"], [t.site.terms, "/agb"],
+                [t.site.imprint, "/impressum"], [t.site.privacy, "/datenschutz"], ["Konto löschen (DE)", "/konto-loeschen"], [t.site.terms, "/agb"],
               ].map(([label, href]) => (
                 <Link
                   key={href}
