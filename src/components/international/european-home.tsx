@@ -58,6 +58,7 @@ export function EuropeanFooter({ locale }: { locale: SiteLocale }) {
           <nav className="flex flex-wrap gap-4 text-sm text-slate-200">
             <Link href="/impressum" className="hover:text-pulse">Impressum (DE)</Link>
             <Link href="/datenschutz" className="hover:text-pulse">Datenschutz (DE)</Link>
+            <Link href="/konto-loeschen" className="hover:text-pulse">Konto löschen (DE)</Link>
             <Link href="/agb" className="hover:text-pulse">AGB (DE)</Link>
           </nav>
         </div>
