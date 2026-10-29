@@ -7,7 +7,7 @@ export const runtime="nodejs";
 export const dynamic="force-dynamic";
 type Document={
  id:string;affiliate_id:string;payout_id:string;document_number:string;issued_at:string;
- service_month:string;supplier_legal_name:string;supplier_address:string;supplier_tax_number:string;
+ service_month:string;service_from:string;service_until:string;supplier_legal_name:string;supplier_address:string;supplier_tax_number:string;
  issuer_legal_name:string;issuer_address:string;vat_mode:"de_19"|"de_kleinunternehmer";
  vat_rate:number;net_cents:number;vat_cents:number;gross_cents:number;agreement_ref:string;
 };
@@ -56,7 +56,8 @@ export async function GET(req:NextRequest){
   line("");line("Belegart: Gutschrift / Selbstabrechnung",true);
   line("Gutschrift-Nr.: "+d.document_number);
   line("Ausstellungsdatum: "+d.issued_at.slice(0,10));
-  line("Leistungszeitraum: "+d.service_month.slice(0,7)+" (Kalendermonat)");
+  line("Abrechnungsmonat: "+d.service_month.slice(0,7));
+  line("Zeitraum der vergüteten Vermittlungen: "+d.service_from+" bis "+d.service_until);
   line("Leistung: Marketing / Vermittlung von LUVIPRO Produktkaeufen");
   line("Leistungsumfang: nach gepruefter Provisionsaufstellung fuer diesen Monat");
   line("Vereinbarung zur Gutschrift: "+d.agreement_ref);
@@ -66,7 +67,7 @@ export async function GET(req:NextRequest){
    line("Umsatzsteuer 19 %: "+euro(d.vat_cents));
   }else{
    line("Umsatzsteuer: 0,00 EUR");
-   line("Steuerfrei nach Paragraph 19 UStG (Kleinunternehmerregelung).");
+   line("Keine Umsatzsteuer nach Paragraph 19 UStG (Kleinunternehmerregelung).");
   }
   line("Gesamtbetrag: "+euro(d.gross_cents),true);
   y-=20;
