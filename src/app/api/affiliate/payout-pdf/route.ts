@@ -4,7 +4,8 @@ import { affiliateCurrentSession,claimExistingAffiliate } from "@/lib/affiliate/
 import { affiliateDb } from "@/lib/affiliate/server";
 export const runtime="nodejs";
 export async function GET(req:NextRequest){
- const token=await affiliateCurrentSession();
+ const bearer=req.headers.get("authorization")||"";
+ const token=/^Bearer [A-Za-z0-9_.-]{40,4000}$/.test(bearer)?bearer.slice(7):await affiliateCurrentSession();
  if(!token)return NextResponse.json({error:"Unauthorized"},{status:401});
  const id=req.nextUrl.searchParams.get("id")||"";
  if(!/^[0-9a-f-]{36}$/.test(id))return NextResponse.json({error:"Invalid reference"},{status:400});
