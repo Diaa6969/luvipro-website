@@ -95,6 +95,7 @@ create table if not exists public.luvipro_affiliate_commissions (
  commission_cents bigint not null check (commission_cents >= 0),
  verified_paid_at timestamptz,
  delivered_at timestamptz,
+ return_deadline_at timestamptz, -- actual longer legal/contractual return deadline, if applicable
  refunded_at timestamptz,
  cancelled_at timestamptz,
  payout_id uuid references public.luvipro_affiliate_payouts(id) on delete restrict,
@@ -121,7 +122,7 @@ declare p public.luvipro_affiliate_payouts%rowtype;
 begin
  if new.status in ('eligible','paid') then
   if new.verified_paid_at is null or new.delivered_at is null
-     or now() < new.delivered_at + interval '15 days'
+     or now() < greatest(new.delivered_at + interval '15 days',coalesce(new.return_deadline_at,new.delivered_at + interval '15 days'))
      or new.refunded_at is not null or new.cancelled_at is not null then
     raise exception 'Verified payment, delivery, and completed 14-day return buffer required';
   end if;
@@ -212,7 +213,7 @@ begin
    and c.status in ('eligible','paid')
    and c.verified_paid_at is not null and c.delivered_at is not null
    and c.refunded_at is null and c.cancelled_at is null
-   and now() >= c.delivered_at + interval '15 days';
+   and now() >= greatest(c.delivered_at + interval '15 days',coalesce(c.return_deadline_at,c.delivered_at + interval '15 days'));
   if v_count=0 or v_sum<>new.amount_cents or new.amount_cents<=0 then
    raise exception 'Unverified payout amount or no eligible purchases';
   end if;
