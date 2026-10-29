@@ -49,7 +49,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
     <div className="flex flex-wrap items-center justify-between gap-3"><p className="font-bold">{a.company_name} · {a.contact_name}</p><span className="rounded bg-white/10 px-3 py-1 text-xs">{a.status}</span></div>
     <p className="mt-2 break-words text-sm text-slate-300">{a.email} · {a.country} · {a.business_address}</p>
     <p className="mt-2 break-words text-sm text-slate-400">{a.website} {a.marketing_plan}</p>
-    <a className="mt-3 inline-block text-sm text-pulse underline" href={`/api/accounting/affiliate/document?id=${a.id}`}>Gewerbenachweis geschützt ansehen / herunterladen</a>
+    <a className="mt-3 inline-block text-sm text-pulse underline" href={`/api/accounting/affiliate/document?id=${a.id}&format=pdf`}>Gewerbenachweis geschützt ansehen / herunterladen</a>
     {a.status==="pending"&&<form action="/api/accounting/affiliate" method="POST" className="mt-5 flex flex-wrap items-center gap-3">
      <input type="hidden" name="affiliate_id" value={a.id}/>
      <input className="rounded-lg border border-white/20 bg-transparent px-4 py-2 text-sm" name="review_notes" maxLength={500} placeholder="Prüfvermerk / Ablehnungsgrund" aria-label="Prüfvermerk"/>
