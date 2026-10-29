@@ -16,6 +16,10 @@ class _AffiliateAccountState extends State<LuviproAffiliateAccountPage> {
  bool loading=true;String? error;
  Map<String,dynamic>? partner;
  List<Map<String,dynamic>> codes=[],commissions=[],payouts=[];
+ int get pendingCents=>commissions.where((v)=>v['status']=='pending').fold<int>(0,(t,v)=>t+(v['commission_cents'] as num).toInt());
+ int get eligibleCents=>commissions.where((v)=>v['status']=='eligible').fold<int>(0,(t,v)=>t+(v['commission_cents'] as num).toInt());
+ int get paidCents=>payouts.where((v)=>v['status']=='paid').fold<int>(0,(t,v)=>t+(v['amount_cents'] as num).toInt());
+ String euro(int cents)=>'${(cents/100).toStringAsFixed(2)} EUR';
  @override void initState(){super.initState();load();}
  Future<void> load()async{
   setState((){loading=true;error=null;});
@@ -46,6 +50,13 @@ class _AffiliateAccountState extends State<LuviproAffiliateAccountPage> {
       error!=null?Padding(padding:const EdgeInsets.all(24),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(error!),const SizedBox(height:16),FilledButton(onPressed:load,child:const Text('Erneut prüfen'))])):
       ListView(padding:const EdgeInsets.all(16),children:[
        Text('${partner!['company_name']}',style:Theme.of(context).textTheme.headlineSmall),
+       const SizedBox(height:8),const Text('Affiliate-Funktion im bestehenden LUVIPRO Kunden-/Werkstattkonto. Keine zusätzliche Anmeldung oder Änderung der ursprünglichen Rolle.'),
+       const SizedBox(height:16),
+       Wrap(spacing:10,runSpacing:10,children:[
+         Card(child:Padding(padding:const EdgeInsets.all(16),child:Column(children:[const Text('Offene Provisionen'),Text(euro(pendingCents),style:Theme.of(context).textTheme.titleLarge)]))),
+         Card(child:Padding(padding:const EdgeInsets.all(16),child:Column(children:[const Text('Freigegeben'),Text(euro(eligibleCents),style:Theme.of(context).textTheme.titleLarge)]))),
+         Card(child:Padding(padding:const EdgeInsets.all(16),child:Column(children:[const Text('Ausgezahlt'),Text(euro(paidCents),style:Theme.of(context).textTheme.titleLarge)]))),
+       ]),
        const SizedBox(height:8),const Text('Rabattcodes und Provisionen werden ausschließlich von LUVIPRO verwaltet.'),
        const SizedBox(height:22),Text('Meine Rabattcodes',style:Theme.of(context).textTheme.titleLarge),
        if(codes.isEmpty)const ListTile(title:Text('Noch keine Rabattcodes zugewiesen.')),
