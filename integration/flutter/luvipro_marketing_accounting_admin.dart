@@ -119,7 +119,7 @@ class LuviproBackofficeApi {
     await assertAdmin();
     final token = client.auth.currentSession?.accessToken;
     if (token == null) throw StateError('Login abgelaufen');
-    final r = await http.get(Uri.parse('$site/api/accounting/affiliate/document?id=$applicationId'),
+    final r = await http.get(Uri.parse('$site/api/accounting/affiliate/document?id=$applicationId&format=pdf'),
       headers: {'Authorization':'Bearer $token'});
     if (r.statusCode!=200) throw StateError('Nachweis nicht abrufbar');
     return r.bodyBytes;
