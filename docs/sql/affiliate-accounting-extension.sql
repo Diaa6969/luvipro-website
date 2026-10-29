@@ -161,3 +161,34 @@ grant select, insert on public.luvipro_affiliate_audit to authenticated;
 grant select, insert on public.luvipro_affiliate_audit to service_role;
 create policy affiliate_audit_admin_read on public.luvipro_affiliate_audit for select to authenticated using ((select public.is_admin()));
 create policy affiliate_audit_admin_insert on public.luvipro_affiliate_audit for insert to authenticated with check ((select public.is_admin()));
+
+-- Supplementary cash journal for transactions NOT already represented by an invoice
+-- or supplier bill. Original invoices remain in their existing respective tables.
+-- Append-only to prevent retroactive silent changes; corrections are new entries.
+create table if not exists public.luvipro_billing_cash_events (
+ id uuid primary key default gen_random_uuid(),
+ event_date date not null,
+ direction text not null check (direction in ('in','out')),
+ category text not null check (category in (
+  'other_sales','other_operating_cost','bank_fee','tax','refund',
+  'capital','loan','loan_repayment','asset','affiliate','transfer','other'
+ )),
+ description text not null check (length(btrim(description)) between 3 and 500),
+ counterparty text not null default '',
+ payment_reference text not null default '',
+ gross_cents bigint not null check (gross_cents >= 0),
+ net_cents bigint not null check (net_cents >= 0),
+ vat_cents bigint not null check (vat_cents >= 0),
+ vat_rate smallint not null check (vat_rate in (0,7,19)),
+ document_path text unique,
+ created_at timestamptz not null default now(),
+ constraint cash_event_tax_balance check (net_cents + vat_cents = gross_cents)
+);
+create index if not exists luvipro_billing_cash_events_date on public.luvipro_billing_cash_events(event_date,created_at desc);
+alter table public.luvipro_billing_cash_events enable row level security;
+revoke all on public.luvipro_billing_cash_events from public,anon,authenticated;
+grant select,insert on public.luvipro_billing_cash_events to authenticated;
+grant select,insert on public.luvipro_billing_cash_events to service_role;
+create policy cash_events_admin_read on public.luvipro_billing_cash_events for select to authenticated using ((select public.is_admin()));
+create policy cash_events_admin_insert on public.luvipro_billing_cash_events for insert to authenticated with check ((select public.is_admin()));
+-- No authenticated UPDATE or DELETE: append a reversal entry instead.
