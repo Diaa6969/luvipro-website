@@ -23,9 +23,11 @@ export async function GET(req:NextRequest){
   if(!d)return NextResponse.json({error:"Not found"},{status:404});
   const admin=await isAuthorizedFinanceAdmin(req);
   if(!admin){
+    const bearer=req.headers.get("authorization")||"";
     const cookie=await affiliateCurrentSession();
-    if(!cookie)return NextResponse.json({error:"Unauthorized"},{status:401});
-    const partner=await claimExistingAffiliate(cookie);
+    const token=/^Bearer [A-Za-z0-9_.-]{40,4000}$/.test(bearer)?bearer.slice(7):cookie;
+    if(!token)return NextResponse.json({error:"Unauthorized"},{status:401});
+    const partner=await claimExistingAffiliate(token);
     if(partner.id!==d.affiliate_id)return NextResponse.json({error:"Unauthorized"},{status:403});
   }
   const pdf=await PDFDocument.create();pdf.setTitle("Gutschrift "+d.document_number);pdf.setSubject("LUVIPRO Werbeleistungen / Vermittlungsprovision");
