@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAccountingRequestAuthorized } from "@/lib/accounting/admin-auth";
+import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
 import { affiliateDb, affiliateConfigured } from "@/lib/affiliate/server";
 export const runtime="nodejs";
 export async function GET(req:NextRequest) {
- if(!isAccountingRequestAuthorized(req)) return NextResponse.json({error:"Unauthorized"},{status:401});
+ if(!(await isAuthorizedFinanceAdmin(req))) return NextResponse.json({error:"Unauthorized"},{status:401});
  const id=req.nextUrl.searchParams.get("id")||"";
  if(!affiliateConfigured()||!/^[0-9a-f-]{36}$/.test(id)) return NextResponse.json({error:"Not found"},{status:404});
  try{
