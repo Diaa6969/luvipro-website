@@ -192,3 +192,34 @@ grant select,insert on public.luvipro_billing_cash_events to service_role;
 create policy cash_events_admin_read on public.luvipro_billing_cash_events for select to authenticated using ((select public.is_admin()));
 create policy cash_events_admin_insert on public.luvipro_billing_cash_events for insert to authenticated with check ((select public.is_admin()));
 -- No authenticated UPDATE or DELETE: append a reversal entry instead.
+
+-- Guard monthly settlement against invented/duplicate amounts and prevent
+-- a payout being marked paid before the verified eligible commissions exist.
+create or replace function public.luvipro_affiliate_validate_payout() returns trigger
+language plpgsql set search_path = pg_catalog, public, pg_temp as $$
+declare v_sum bigint; v_count integer;
+begin
+ if tg_op='UPDATE' and old.status='paid' and
+    (new.status<>old.status or new.amount_cents<>old.amount_cents
+     or new.payment_reference is distinct from old.payment_reference
+     or new.paid_at is distinct from old.paid_at) then
+  raise exception 'Paid payout batches are immutable; use compensating entries';
+ end if;
+ if new.status='paid' then
+  select count(*),coalesce(sum(c.commission_cents),0) into v_count,v_sum
+   from public.luvipro_affiliate_commissions c
+   where c.payout_id=new.id and c.affiliate_id=new.affiliate_id
+   and c.status in ('eligible','paid')
+   and c.verified_paid_at is not null and c.delivered_at is not null
+   and c.refunded_at is null and c.cancelled_at is null
+   and now() >= c.delivered_at + interval '15 days';
+  if v_count=0 or v_sum<>new.amount_cents or new.amount_cents<=0 then
+   raise exception 'Unverified payout amount or no eligible purchases';
+  end if;
+ end if;
+ return new;
+end; $$;
+create trigger luvipro_affiliate_validate_payout_before
+ before insert or update on public.luvipro_affiliate_payouts
+ for each row execute function public.luvipro_affiliate_validate_payout();
+revoke execute on function public.luvipro_affiliate_validate_payout() from public,anon,authenticated;
