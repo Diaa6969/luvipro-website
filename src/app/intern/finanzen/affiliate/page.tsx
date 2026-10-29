@@ -7,7 +7,7 @@ export const dynamic="force-dynamic";
 export const metadata: Metadata={title:"Affiliate Verwaltung | LUVIPRO",robots:{index:false,follow:false,nocache:true}};
 type Applicant={id:string;company_name:string;contact_name:string;email:string;country:string;business_address:string;website:string;marketing_plan:string;status:string;created_at:string;registration_path:string};
 type Discount={id:string;code:string;affiliate_id:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean;version:number};
-export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string}>}) {
+export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string;error?:string}>}) {
  if(!accountingEnabled() || !(await isAccountingAdmin())) redirect("/intern/finanzen/login");
  const params=await searchParams;
  let apps:Applicant[]=[],codes:Discount[]=[],payouts:{id:string;affiliate_id:string;payout_month:string;status:string;amount_cents:number}[]=[],error="";
