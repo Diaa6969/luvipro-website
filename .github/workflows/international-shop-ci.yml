@@ -8,6 +8,7 @@ on:
       - feature/language-menu-solid-header
       - feature/legal-published-copy-cleanup
       - fix/vehicle-check-workshop-first
+      - feature/affiliate-accounting-20261029
   workflow_dispatch:
 
 permissions:
