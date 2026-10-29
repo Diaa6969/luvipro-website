@@ -22,6 +22,13 @@ export async function GET(req: NextRequest) {
       const receipt = await readPrivateExpenseFile(rows[0].file_path);
       body = receipt.content;
       type = receipt.type;
+    } else if (kind === "cash") {
+      const r = await dbRequest("luvipro_billing_cash_events?select=document_path&id=eq." + encodeURIComponent(id) + "&limit=1");
+      const rows = await r.json() as { document_path?: string }[];
+      if (!rows[0]?.document_path) throw new Error("No cash receipt");
+      const receipt = await readPrivateExpenseFile(rows[0].document_path);
+      body = receipt.content;
+      type = receipt.type;
     } else {
       return NextResponse.json({ error: "Invalid document kind" }, { status: 400 });
     }
