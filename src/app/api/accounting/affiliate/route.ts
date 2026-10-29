@@ -6,7 +6,7 @@ import { affiliateDb } from "@/lib/affiliate/server";
 import { monthOf } from "@/lib/accounting/monthly";
 export const runtime="nodejs";
 function str(f:FormData,k:string,max:number) {const v=f.get(k);if(typeof v!=="string"||v.length>max||/[\r\n]/.test(v)) throw new Error("Invalid "+k);return v.trim();}
-function optionalStr(f:FormData,k:string,max:number) {const v=f.get(k);if(v===null)return "";if(typeof v!=="string"||v.length>max||/[\\r\\n]/.test(v))throw new Error("Invalid "+k);return v.trim();}
+function optionalStr(f:FormData,k:string,max:number) {const v=f.get(k);if(v===null)return "";if(typeof v!=="string"||v.length>max||/[\r\n]/.test(v))throw new Error("Invalid "+k);return v.trim();}
 function pct(s:string) {if(!/^\d{1,3}(?:\.\d{1,2})?$/.test(s)) throw new Error("Percent");const v=Math.round(Number(s)*100);if(v>10000) throw new Error("Percent");return v;}
 function date(s:string) {if(monthOf(s)==="") throw new Error("Date");return s;}
 function uuid(s:string) {if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)) throw new Error("UUID");return s;}
