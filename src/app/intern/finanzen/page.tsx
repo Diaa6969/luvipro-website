@@ -61,6 +61,8 @@ export default async function AccountingDashboard({ searchParams }: {
             <Link href={`/intern/finanzen?year=${year - 1}`} className="rounded-xl border border-white/20 px-3 py-2 hover:bg-white/10" aria-label="Vorjahr">←</Link>
             <span className="rounded-xl border border-white/15 bg-white/10 px-4 py-2 font-semibold">{year}</span>
             <Link href={`/intern/finanzen?year=${year + 1}`} className="rounded-xl border border-white/20 px-3 py-2 hover:bg-white/10" aria-label="Folgejahr">→</Link>
+            <Link href="/intern/finanzen/affiliate" className="rounded-xl border border-pulse/40 px-4 py-2 text-sm font-semibold text-pulse hover:bg-pulse/10">Affiliate & Rabattcodes</Link>
+            <a href={`/api/accounting/monthly-pdf?month=${year}-${String(new Date().getMonth()+1).padStart(2,"0")}`} className="rounded-xl border border-pulse/40 px-4 py-2 text-sm font-semibold text-pulse hover:bg-pulse/10">Monatsabrechnung PDF</a>
             <form action="/api/accounting/session" method="GET" className="hidden" />
             <a href={`/api/accounting/export?year=${year}`} className="inline-flex items-center gap-2 rounded-xl border border-pulse/40 px-4 py-2 text-sm font-semibold text-pulse hover:bg-pulse/10"><ArrowDownToLine className="h-4 w-4" /> CSV / Excel</a>
           </div>
@@ -95,7 +97,7 @@ export default async function AccountingDashboard({ searchParams }: {
                   <tbody>
                     {[...months,totals!].map((row,i) => (
                       <tr key={row.month} className={`border-t border-white/10 ${i === 12 ? "bg-pulse/10 font-bold text-white" : "text-slate-200 hover:bg-white/[0.025]"}`}>
-                        <td className="whitespace-nowrap px-4 py-4 font-semibold">{i === 12 ? "Gesamt" : new Intl.DateTimeFormat("de-DE",{month:"long"}).format(new Date(Date.UTC(year,i,1)))}</td>
+                        <td className="whitespace-nowrap px-4 py-4 font-semibold">{i === 12 ? "Gesamt" : <a className="underline decoration-pulse/50 underline-offset-4" href={`/api/accounting/monthly-pdf?month=${row.month}`} title="Monatsabrechnung als PDF herunterladen">{new Intl.DateTimeFormat("de-DE",{month:"long"}).format(new Date(Date.UTC(year,i,1)))} ↓ PDF</a>}</td>
                         <td className="px-4 py-4">{row.outgoingCount} / {row.incomingCount}</td>
                         <td className="whitespace-nowrap px-4 py-4">{eur(row.revenueNet)}</td>
                         <td className="whitespace-nowrap px-4 py-4">{eur(row.revenueVat)}</td>
