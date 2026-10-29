@@ -29,6 +29,8 @@ jobs:
         run: npm ci
       - name: Run invoice VAT tests (synthetic)
         run: npm run test:invoices
+      - name: Run affiliate coupon lifecycle tests (synthetic)
+        run: npm run test:affiliate
       - name: Run monthly accounting tests (synthetic)
         run: npm run test:accounting
       - name: Run bank transfer scenario tests (synthetic)
