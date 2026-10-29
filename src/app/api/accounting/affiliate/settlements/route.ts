@@ -69,6 +69,15 @@ export async function POST(req:NextRequest){
    if(legal.length<5||address.length<10||!process.env.INVOICE_SELLER_TAX_ID)throw Error("Registered company invoice data missing");
    await affiliateDb("rpc/luvipro_affiliate_issue_selfbilling",{method:"POST",
     body:JSON.stringify({p_payout:payout,p_issuer_name:legal,p_issuer_address:address,p_operator:admin})});
+  }else if(action==="set_reminder"){
+   const payout=id(val(f,"payout_id",36));
+   const date=val(f,"remind_on",10);
+   const note=val(f,"note",300);
+   if(!DATE.test(date)||Number.isNaN(Date.parse(date+"T00:00:00Z"))||
+      new Date(date+"T00:00:00Z").toISOString().slice(0,10)!==date)
+     throw Error("Invalid reminder calendar date");
+   await affiliateDb("rpc/luvipro_affiliate_set_payment_reminder",{method:"POST",
+    body:JSON.stringify({p_payout:payout,p_date:date,p_note:note,p_actor:admin})});
   }else if(action==="mark_manual_paid"){
    if(f.get("bank_transfer_done")!=="on"||f.get("evidence_checked")!=="on")
     throw Error("Manual bank evidence required");
