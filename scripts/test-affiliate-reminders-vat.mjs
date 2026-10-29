@@ -25,7 +25,7 @@ const reminders=readFileSync("docs/sql/affiliate-payment-reminders.sql","utf8");
 assert.match(reminders,/on conflict\(payout_id\) do update/);
 assert.match(reminders,/v_status<>'prepared'/);
 assert.match(reminders,/create trigger luvipro_affiliate_reminder_paid/);
-assert.match(reminders,/luv ipro_affiliate_clear_payment_reminder/.replace(/ /g,""));
+assert.match(reminders,/luvipro_affiliate_clear_payment_reminder/);
 assert.doesNotMatch(reminders,/stripe\.transfers\.create|paypal\.payouts|sepa.*initiate/i);
 const ui=readFileSync("src/app/intern/finanzen/affiliate/page.tsx","utf8");
 assert.match(ui,/Zahlungserinnerung speichern/);
