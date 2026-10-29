@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { PDFDocument } from "pdf-lib";
 import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
 import { affiliateDb, affiliateConfigured } from "@/lib/affiliate/server";
 export const runtime="nodejs";
@@ -14,8 +15,17 @@ export async function GET(req:NextRequest) {
   const base=process.env.SUPABASE_URL!,key=process.env.SUPABASE_SERVICE_ROLE_KEY!;
   const file=await fetch(base+"/storage/v1/object/authenticated/luvipro-affiliate-docs/"+path,{headers:{apikey:key,Authorization:"Bearer "+key},cache:"no-store",signal:AbortSignal.timeout(15000)});
   if(!file.ok) throw new Error("Unavailable");
-  const body=Buffer.from(await file.arrayBuffer());if(body.length>5*1024*1024) throw new Error("Too large");
-  const type=path.endsWith(".pdf")?"application/pdf":path.endsWith(".png")?"image/png":"image/jpeg";
-  return new NextResponse(new Uint8Array(body),{headers:{"Content-Type":type,"Content-Disposition":`attachment; filename="Gewerbenachweis-${id}.${path.split(".").pop()}"`,"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff","X-Robots-Tag":"noindex"}});
+  let body=Buffer.from(await file.arrayBuffer());if(body.length>5*1024*1024) throw new Error("Too large");
+  let type=path.endsWith(".pdf")?"application/pdf":path.endsWith(".png")?"image/png":"image/jpeg";
+  if(req.nextUrl.searchParams.get("format")==="pdf" && type!=="application/pdf"){
+   const pdf=await PDFDocument.create();
+   const img=type==="image/png"?await pdf.embedPng(new Uint8Array(body)):await pdf.embedJpg(new Uint8Array(body));
+   const page=pdf.addPage([595.28,841.89]);
+   const k=Math.min(520/img.width,760/img.height);
+   const w=img.width*k,h=img.height*k;
+   page.drawImage(img,{x:(595.28-w)/2,y:(841.89-h)/2,width:w,height:h});
+   body=Buffer.from(await pdf.save());type="application/pdf";
+  }
+  return new NextResponse(new Uint8Array(body),{headers:{"Content-Type":type,"Content-Disposition":`attachment; filename="Gewerbenachweis-${id}.${type==="application/pdf"?"pdf":path.split(".").pop()}"`,"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff","X-Robots-Tag":"noindex"}});
  }catch{return NextResponse.json({error:"Dokument nicht verfügbar"},{status:404});}
 }
