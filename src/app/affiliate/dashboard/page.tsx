@@ -13,7 +13,7 @@ export default async function Dashboard(){
  let summary:Awaited<ReturnType<typeof affiliateAccountSummary>>;
  try{summary=await affiliateAccountSummary(session);}
  catch{redirect("/affiliate/login?error=1");}
- const {owner,codes,commissions,payouts,totals}=summary;
+ const {owner,codes,commissions,payouts,documents,totals}=summary;
  return <main className="min-h-screen bg-obsidian pb-24 pt-12 text-white"><div className="section-shell max-w-6xl">
   <header className="flex flex-wrap items-start justify-between gap-5">
    <div><Link href="/affiliate" className="text-sm text-pulse">← Affiliate-Programm</Link><p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-pulse">LUVIPRO · Partnerkonto</p><h1 className="mt-2 text-4xl font-bold">Meine Affiliate-Einnahmen</h1><p className="mt-3 text-slate-300">{owner.company_name} · {owner.email}</p></div>
@@ -30,7 +30,7 @@ export default async function Dashboard(){
    <div className="mt-5 overflow-x-auto"><table className="w-full min-w-[580px] text-left text-sm"><thead><tr className="border-b border-white/20"><th className="p-3">Datum</th><th className="p-3">Provision</th><th className="p-3">Status</th></tr></thead><tbody>{commissions.map(c=><tr key={c.id} className="border-b border-white/10"><td className="p-3">{c.created_at.slice(0,10)}</td><td className="p-3">{eur(c.commission_cents)}</td><td className="p-3">{c.status}</td></tr>)}</tbody></table>{!commissions.length&&<p className="p-4 text-slate-400">Noch keine Verkäufe zugeordnet.</p>}</div>
   </section>
   <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] p-6"><h2 className="text-2xl font-bold">Monatliche Auszahlungen</h2>
-   <div className="mt-5 space-y-3">{payouts.map(p=><div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 py-3 text-sm" key={p.id}><span>{p.payout_month}</span><span>{eur(p.amount_cents)}</span><span>{p.status==="paid"?"Ausgezahlt":"In Bearbeitung"}</span>{p.status==="paid"&&<a href={`/api/affiliate/payout-pdf?id=${p.id}`} className="text-pulse underline">Abrechnung PDF ↓</a>}</div>)}{!payouts.length&&<p className="text-slate-400">Noch keine Monatsauszahlungen.</p>}</div>
+   <div className="mt-5 space-y-3">{payouts.map(p=><div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 py-3 text-sm" key={p.id}><span>{p.payout_month}</span><span>{eur(p.amount_cents)}</span><span>{p.status==="paid"?"Ausgezahlt":"In Bearbeitung"}</span>{documents.filter(d=>d.payout_id===p.id).map(d=><a key={d.id} className="text-pulse underline" href={`/api/affiliate/gutschrift?id=${d.id}`}>Gutschrift ${d.document_number} · USt ${eur(d.vat_cents)} · Brutto ${eur(d.gross_cents)} (PDF) ↓</a>)}{p.status==="paid"&&<a href={`/api/affiliate/payout-pdf?id=${p.id}`} className="text-pulse underline">Zahlungsbeleg PDF ↓</a>}</div>)}{!payouts.length&&<p className="text-slate-400">Noch keine Monatsauszahlungen.</p>}</div>
    <p className="mt-5 text-xs leading-6 text-slate-400">Monatliche Auszahlung ausschließlich bei nachweislich bezahltem und geliefertem Kauf nach Ablauf der relevanten Rückgabe-/Widerrufsfrist. Auszahlung erfolgt durch LUVIPRO; keine selbstständige Überweisung.</p>
   </section>
  </div></main>;
