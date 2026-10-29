@@ -1,3 +1,4 @@
+-- CONTRACT SETTING: Affiliate commission is a fixed gross payout including VAT when due; the Affiliate pays own income tax. The contract must say this explicitly.
 -- LUVIPRO manual-only Affiliate settlements.
 -- STAGED ONLY. NOT executed in production by this commit.
 -- Dependencies (in order):
@@ -15,13 +16,14 @@ create table if not exists public.luvipro_affiliate_tax_profiles (
  tax_number_or_vat_id text not null check (char_length(trim(tax_number_or_vat_id)) between 6 and 50),
  vat_mode text not null check (vat_mode in ('de_19','de_kleinunternehmer')),
  selfbilling_agreed boolean not null default false,
+ commission_gross_inclusive_agreed boolean not null default false, -- commission % of customer's net purchase price sets TOTAL payout including any applicable VAT
  selfbilling_agreement_reference text not null default '',
  verified_by_uid uuid references auth.users(id),
  verified_at timestamptz,
  created_at timestamptz not null default now(),
  updated_at timestamptz not null default now(),
  constraint luvipro_affiliate_agreement_ready check
-  (not selfbilling_agreed or (verified_at is not null and verified_by_uid is not null
+  (not selfbilling_agreed or (commission_gross_inclusive_agreed and verified_at is not null and verified_by_uid is not null
    and length(trim(selfbilling_agreement_reference)) >= 4))
 );
 alter table public.luvipro_affiliate_tax_profiles enable row level security;
@@ -65,7 +67,7 @@ create table if not exists public.luvipro_affiliate_settlement_documents (
  created_at timestamptz not null default now(),
  constraint luvipro_affiliate_settlement_calc check
   (gross_cents = net_cents + vat_cents and
-   vat_cents = case when vat_rate=19 then (net_cents*19+50)/100 else 0 end),
+   net_cents = case when vat_rate=19 then (gross_cents*100+59)/119 else gross_cents end),
  constraint luvipro_affiliate_settlement_vatmode check
   ((vat_mode='de_19' and vat_rate=19) or
    (vat_mode='de_kleinunternehmer' and vat_rate=0))
@@ -157,7 +159,7 @@ begin
  return v_id;
 end; $$;
 revoke execute on function public.luvipro_affiliate_prepare_manual_payout(uuid,date,uuid) from public,anon,authenticated;
-grant execute on function public.luvipro_affiliate_prepare_manual_payout(uuid,date) to service_role;
+grant execute on function public.luvipro_affiliate_prepare_manual_payout(uuid,date,uuid) to service_role;
 
 create or replace function public.luvipro_affiliate_issue_selfbilling(
  p_payout uuid,p_issuer_name text,p_issuer_address text,p_operator uuid
@@ -171,7 +173,8 @@ begin
  then raise exception 'Tax document already issued'; end if;
  select * into t from public.luvipro_affiliate_tax_profiles where affiliate_id=p.affiliate_id;
  if not found or t.country<>'DE' or not t.selfbilling_agreed or t.verified_at is null
-   or t.tax_number_or_vat_id='' or length(trim(t.selfbilling_agreement_reference))<4 then
+   or t.tax_number_or_vat_id='' or not t.commission_gross_inclusive_agreed
+   or length(trim(t.selfbilling_agreement_reference))<4 then
   raise exception 'Reviewed German tax profile + written selfbilling agreement required';
  end if;
  if nullif(trim(p_issuer_name),'') is null or nullif(trim(p_issuer_address),'') is null
@@ -181,7 +184,10 @@ begin
  where payout_id=p_payout and affiliate_id=p.affiliate_id and status='eligible';
  if v_vat<>p.amount_cents or v_first is null or v_last is null then raise exception 'Commission sum mismatch'; end if;
  v_rate:=case when t.vat_mode='de_19' then 19 else 0 end;
- v_vat:=case when v_rate=19 then (p.amount_cents*19+50)/100 else 0 end;
+ -- Contractual agreement: commission is a VAT-inclusive GROSS cap,
+ -- calculated from the net selling price. Do NOT add VAT on top.
+ -- Example 270,00 EUR commission incl. 19% VAT => net 226,89 + VAT 43,11.
+ v_vat:=case when v_rate=19 then p.amount_cents - (p.amount_cents*100+59)/119 else 0 end;
  v_num:='GS-'||to_char(current_date,'YYYY')||'-'||lpad(nextval('public.luvipro_affiliate_gutschrift_sequence')::text,8,'0');
  insert into public.luvipro_affiliate_settlement_documents(
   payout_id,affiliate_id,document_number,document_type,service_month,service_from,service_until,
@@ -190,10 +196,10 @@ begin
  )values(
   p.id,p.affiliate_id,v_num,'gutschrift',p.payout_month,v_first,v_last,
   t.legal_name,t.postal_address,t.tax_number_or_vat_id,
-  p_issuer_name,p_issuer_address,t.vat_mode,v_rate,p.amount_cents,v_vat,p.amount_cents+v_vat,t.selfbilling_agreement_reference
+  p_issuer_name,p_issuer_address,t.vat_mode,v_rate,p.amount_cents-v_vat,v_vat,p.amount_cents,t.selfbilling_agreement_reference
  ) returning id into v_id;
  insert into public.luvipro_affiliate_audit(action,entity_id,actor_uid,details)
- values('selfbilling_issued',v_id,p_operator,jsonb_build_object('payout_id',p.id,'number',v_num,'net',p.amount_cents,'vat',v_vat));
+ values('selfbilling_issued',v_id,p_operator,jsonb_build_object('payout_id',p.id,'number',v_num,'net',p.amount_cents-v_vat,'vat',v_vat,'gross_total',p.amount_cents));
  return v_id;
 end; $$;
 revoke execute on function public.luvipro_affiliate_issue_selfbilling(uuid,text,text,uuid) from public,anon,authenticated;
@@ -210,7 +216,7 @@ begin
  select * into p from public.luvipro_affiliate_payouts where id=p_payout for update;
  if not found or p.status<>'prepared' or p.paid_at is not null then raise exception 'Not an unpaid prepared payout'; end if;
  select * into d from public.luvipro_affiliate_settlement_documents where payout_id=p.id;
- if not found or d.affiliate_id<>p.affiliate_id or d.net_cents<>p.amount_cents then
+ if not found or d.affiliate_id<>p.affiliate_id or d.gross_cents<>p.amount_cents then
   raise exception 'Valid issued tax document required before payout'; end if;
  if p_transferred_on<d.issued_at::date then raise exception 'Payment before issued document'; end if;
  if exists(select 1 from public.luvipro_affiliate_manual_transfers where payout_id=p.id)

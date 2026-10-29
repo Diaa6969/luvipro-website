@@ -9,7 +9,11 @@ export default function SettlementDemo(){
  const [bankRef,setBankRef]=useState("");
  const [actualTransfer,setActualTransfer]=useState(false);
  const [message,setMessage]=useState("");
- const net=27000, tax=vat==="19"?Math.round(net*.19):0,gross=net+tax;
+ const [remindDate,setRemindDate]=useState("");
+ const [reminderSaved,setReminderSaved]=useState(false);
+ const gross=27000; // Fixed, VAT-inclusive 10% of 2,700 € net device sale
+ const net=vat==="19"?Math.round(gross/1.19):gross;
+ const tax=gross-net;
  async function pdf(){
   const doc=await PDFDocument.create(),page=doc.addPage([595,842]);
   const bold=await doc.embedFont(StandardFonts.HelveticaBold),font=await doc.embedFont(StandardFonts.Helvetica);
@@ -31,16 +35,16 @@ export default function SettlementDemo(){
  }
  function pay(){
   if(!actualTransfer||bankRef.trim().length<5){setMessage("Zuerst externe Banküberweisung wirklich durchführen und Belegnummer eingeben. In dieser Demo werden keine Gelder bewegt.");return;}
-  setStage("paid");setMessage("Banküberweisung nur in der Demo als abgeschlossen markiert. Kein echtes Geld und kein Datenbankeintrag.");
+  setStage("paid");setReminderSaved(false);setMessage("Banküberweisung nur in der Demo als abgeschlossen markiert. Die Zahlungserinnerung ist erledigt. Kein echtes Geld und kein Datenbankeintrag.");
  }
  return <main className="min-h-screen bg-obsidian pb-24 pt-12 text-white"><div className="section-shell max-w-4xl">
   <Link href="/demo/marketing" className="text-sm text-pulse">← Zurück zu Marketing Demo</Link>
   <div className="mt-8 rounded-xl border border-amber-300/30 bg-amber-400/10 p-5 text-sm text-amber-100"><b>DEMO – SYNTHETISCHE DATEN.</b> Keine echte Firma, keine Steuerrechnung, keine Bankverbindung und keine Auszahlung.</div>
   <p className="mt-10 text-xs font-bold uppercase tracking-widest text-pulse">LUVIPRO · Buchhaltung Vorschau</p>
   <h1 className="mt-2 text-4xl font-bold">Monatliche Affiliate-Auszahlung</h1>
-  <p className="mt-4 leading-7 text-slate-300">Der Admin bereitet die Provision vor, prüft die steuerlichen Angaben und eine schriftliche Gutschriftvereinbarung, erzeugt den Beleg, überweist persönlich über sein Bankkonto und dokumentiert erst danach den Vorgang. Es gibt keine automatischen Überweisungen.</p>
+  <p className="mt-4 leading-7 text-slate-300">Der Affiliate erhält insgesamt 10 % des Nettoverkaufspreises als Brutto-Provision inklusive gegebenenfalls anfallender Umsatzsteuer (nur bei ausdrücklicher Vertragsvereinbarung). In diesem Beispiel sind es immer 270,00 € Gesamtauszahlung: bei 19 % USt sind 226,89 € netto und 43,11 € Umsatzsteuer enthalten. Der Admin erstellt eine Gutschrift, überweist ausschließlich selbst per Bank und bestätigt erst danach den Zahlungsausgang.</p>
   <div className="mt-8 grid gap-4 sm:grid-cols-3">
-   {[["Provision netto",net],["Umsatzsteuer",tax],["Bankauszahlung brutto",gross]].map(([label,amount])=><div className="rounded-xl border border-white/10 bg-white/[.04] p-5" key={String(label)}><p className="text-sm text-slate-300">{label}</p><p className="mt-3 text-2xl font-bold">{euro(Number(amount))}</p></div>)}
+   {[["Provision netto (nach USt-Aufteilung)",net],["Umsatzsteuer im Betrag enthalten",tax],["Bankauszahlung gesamt",gross]].map(([label,amount])=><div className="rounded-xl border border-white/10 bg-white/[.04] p-5" key={String(label)}><p className="text-sm text-slate-300">{label}</p><p className="mt-3 text-2xl font-bold">{euro(Number(amount))}</p></div>)}
   </div>
   <section className="mt-8 rounded-2xl border border-white/10 p-6">
    <div className="flex flex-wrap justify-between gap-4"><h2 className="text-xl font-bold">Abrechnungsstatus</h2><strong className="rounded-lg bg-white/10 px-4 py-2 text-sm">{stage}</strong></div>
@@ -53,16 +57,23 @@ export default function SettlementDemo(){
     <button disabled={stage!=="prepared"} onClick={()=>setStage("document")} className="rounded-xl bg-violet-600 px-5 py-3 font-semibold disabled:opacity-40">2. Gutschrift ausstellen</button>
     <button disabled={stage==="eligible"||stage==="prepared"} onClick={pdf} className="rounded-xl border border-white/20 px-5 py-3 font-semibold disabled:opacity-40">Demo-Gutschrift PDF ↓</button>
    </div>
+   {(stage==="prepared"||stage==="document")&&<div className="mt-7 rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
+    <h3 className="font-bold text-amber-100">🔔 Zahlungserinnerung (nur Demo)</h3>
+    <p className="mt-2 text-sm text-slate-300">Erinnerungsdatum für den Admin speichern. Das löst keine Banküberweisung aus. Im echten Admin erscheint am Fälligkeitstag ein roter Hinweis.</p>
+    <label className="mt-4 block text-sm">Erinnern am<input type="date" value={remindDate} onChange={e=>{setRemindDate(e.target.value);setReminderSaved(false);}} className="mt-2 block w-full rounded-lg border border-white/15 bg-[#151d31] p-3" /></label>
+    <button onClick={()=>{if(!remindDate){setMessage("Bitte Erinnerungsdatum auswählen.");return;}setReminderSaved(true);setMessage("Erinnerung für den Admin gespeichert (nur Demo).");}} className="mt-3 rounded-lg bg-amber-600 px-5 py-3 font-semibold">🔔 Erinnerung speichern</button>
+    {reminderSaved&&<p role="status" className="mt-3 text-sm text-amber-100">Erinnerung am {remindDate} · Status: Zahlung noch offen.</p>}
+   </div>}
    {stage==="document"&&<div className="mt-7 grid gap-5 rounded-xl border border-white/10 p-5">
     <h3 className="font-bold">3. Externe manuelle Überweisung nachweisen</h3>
     <p className="text-sm leading-6 text-amber-100">LUVIPRO löst hier KEINE Überweisung aus. Admin muss den Bruttobetrag {euro(gross)} bei seiner Bank selbst überweisen.</p>
     <label className="text-sm">Bankreferenz / Verwendungszweck<input value={bankRef} onChange={e=>setBankRef(e.target.value)} className="mt-2 block w-full rounded-xl border border-white/20 bg-[#151d31] p-3" placeholder="DEMO-TRANSFER-0001"/></label>
     <label className="flex gap-3 text-sm"><input type="checkbox" checked={actualTransfer} onChange={e=>setActualTransfer(e.target.checked)}/>Externe Bankzahlung vom Admin bestätigt (in dieser Demo rein hypothetisch).</label>
-    <button onClick={pay} className="rounded-xl bg-emerald-700 px-5 py-3 font-semibold">Nur Nachweis dokumentieren</button>
+    <button onClick={pay} className="rounded-xl bg-emerald-700 px-5 py-3 font-semibold">✓ Admin bestätigt: Überweisung ist erfolgt</button>
    </div>}
    {stage==="paid"&&<div className="mt-7 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-4">Auszahlung dokumentiert (nur Demo). Bankreferenz: {bankRef}. Originale Rechnungen, Gutschriften und Buchungssätze müssen im Live-System unveränderbar archiviert werden.</div>}
    {message&&<p role="status" className="mt-5 text-sm text-amber-100">{message}</p>}
-   <button onClick={()=>{setStage("eligible");setBankRef("");setActualTransfer(false);setMessage("");}} className="mt-6 text-sm text-slate-300 underline">Demo zurücksetzen</button>
+   <button onClick={()=>{setStage("eligible");setBankRef("");setActualTransfer(false);setMessage("");setRemindDate("");setReminderSaved(false);}} className="mt-6 text-sm text-slate-300 underline">Demo zurücksetzen</button>
   </section>
  </div></main>;
 }

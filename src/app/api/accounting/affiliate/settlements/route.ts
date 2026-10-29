@@ -38,13 +38,14 @@ export async function POST(req:NextRequest){
    const legal=val(f,"legal_name",180),address=val(f,"postal_address",400),tax=val(f,"tax_number_or_vat_id",50);
    const agreement=val(f,"agreement_ref",160);
    if(legal.length<3||address.length<6||tax.length<6||agreement.length<4
-      ||f.get("reviewed")!=="on"||f.get("selfbilling_agreed")!=="on")throw Error("Written and checked agreement required");
+      ||f.get("reviewed")!=="on"||f.get("selfbilling_agreed")!=="on"
+      ||f.get("gross_inclusive_agreed")!=="on")throw Error("Written and checked agreement required");
    const app=await affiliateDb("luvipro_affiliate_applications?id=eq."+affiliate+"&status=eq.approved&select=id,country&limit=1");
    const partner=(await app.json() as {id:string;country:string}[])[0];
    if(!partner||partner.country!=="DE")throw Error("Manual domestic tax review required");
    const profile={
     affiliate_id:affiliate,legal_name:legal,postal_address:address,country:"DE",
-    tax_number_or_vat_id:tax,vat_mode:mode,selfbilling_agreed:true,
+    tax_number_or_vat_id:tax,vat_mode:mode,selfbilling_agreed:true,commission_gross_inclusive_agreed:true,
     selfbilling_agreement_reference:agreement,verified_by_uid:admin,
     verified_at:new Date().toISOString(),updated_at:new Date().toISOString()
    };
@@ -54,7 +55,7 @@ export async function POST(req:NextRequest){
    });
    await affiliateDb("luvipro_affiliate_audit",{method:"POST",body:JSON.stringify({
     action:"tax_profile_verified",entity_id:affiliate,actor_uid:admin,
-    details:{vat_mode:mode,agreement_ref:agreement}
+    details:{vat_mode:mode,agreement_ref:agreement,commission_vat_included:true}
    })});
   }else if(action==="prepare"){
    const affiliate=id(val(f,"affiliate_id",36)),month=val(f,"month",10);
@@ -69,6 +70,15 @@ export async function POST(req:NextRequest){
    if(legal.length<5||address.length<10||!process.env.INVOICE_SELLER_TAX_ID)throw Error("Registered company invoice data missing");
    await affiliateDb("rpc/luvipro_affiliate_issue_selfbilling",{method:"POST",
     body:JSON.stringify({p_payout:payout,p_issuer_name:legal,p_issuer_address:address,p_operator:admin})});
+  }else if(action==="set_reminder"){
+   const payout=id(val(f,"payout_id",36));
+   const date=val(f,"remind_on",10);
+   const note=val(f,"note",300);
+   if(!DATE.test(date)||Number.isNaN(Date.parse(date+"T00:00:00Z"))||
+      new Date(date+"T00:00:00Z").toISOString().slice(0,10)!==date)
+     throw Error("Invalid reminder calendar date");
+   await affiliateDb("rpc/luvipro_affiliate_set_payment_reminder",{method:"POST",
+    body:JSON.stringify({p_payout:payout,p_date:date,p_note:note,p_actor:admin})});
   }else if(action==="mark_manual_paid"){
    if(f.get("bank_transfer_done")!=="on"||f.get("evidence_checked")!=="on")
     throw Error("Manual bank evidence required");
