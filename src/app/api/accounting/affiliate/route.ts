@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAccountingRequestAuthorized, isSameOrigin } from "@/lib/accounting/admin-auth";
+import { isSameOrigin } from "@/lib/accounting/admin-auth";
+import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
+import {describeCodeChange,type DiscountCodeRow} from "@/lib/affiliate/code-controls";
 import { affiliateDb } from "@/lib/affiliate/server";
 import { monthOf } from "@/lib/accounting/monthly";
 export const runtime="nodejs";
@@ -8,8 +10,10 @@ function pct(s:string) {if(!/^\d{1,3}(?:\.\d{1,2})?$/.test(s)) throw new Error("
 function date(s:string) {if(monthOf(s)==="") throw new Error("Date");return s;}
 function uuid(s:string) {if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)) throw new Error("UUID");return s;}
 export async function POST(req:NextRequest) {
- if(!isAccountingRequestAuthorized(req)) return NextResponse.json({error:"Unauthorized"},{status:401});
- if(!isSameOrigin(req)||Number(req.headers.get("content-length")||"0")>7000) return NextResponse.json({error:"Forbidden"},{status:403});
+ if(!isSameOrigin(req)&&!req.headers.has("authorization")) return NextResponse.json({error:"Forbidden origin"},{status:403});
+ if(!(await isAuthorizedFinanceAdmin(req))) return NextResponse.json({error:"Unauthorized"},{status:401});
+ const size=Number(req.headers.get("content-length")||"0");
+ if(!Number.isSafeInteger(size)||size<=0||size>7000) return NextResponse.json({error:"Invalid request size"},{status:403});
  try {
   const f=await req.formData(),action=str(f,"action",30);
   if(action==="approve"||action==="reject") {
@@ -35,6 +39,32 @@ export async function POST(req:NextRequest) {
    const r=await affiliateDb("luvipro_discount_codes?select=id",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify(body)});
    const out=await r.json() as {id:string}[];
    await affiliateDb("luvipro_affiliate_audit",{method:"POST",body:JSON.stringify({action:"code_created",entity_id:out[0]?.id,details:{code,valid_from,valid_until,affiliate_id}})});
+  }else if(["pause_code","resume_code","renew_code","edit_code"].includes(action)){
+   const codeId=uuid(str(f,"code_id",36));
+   const expectedVersion=Number(str(f,"expected_version",10));
+   if(!Number.isSafeInteger(expectedVersion)||expectedVersion<1)throw new Error("Invalid version");
+   const currentResult=await affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active,version&id=eq."+codeId+"&limit=1");
+   const current=(await currentResult.json() as DiscountCodeRow[])[0];
+   if(!current||current.version!==expectedVersion)throw new Error("Stale code version");
+   const app=await affiliateDb("luvipro_affiliate_applications?select=status&id=eq."+current.affiliate_id+"&limit=1");
+   const status=(await app.json() as {status:string}[])[0]?.status;
+   if(status!=="approved" && action==="resume_code")throw new Error("Partner not approved");
+   const hasPast=await affiliateDb("luvipro_affiliate_commissions?select=id&code_id=eq."+codeId+"&limit=1");
+   const previousSales=(await hasPast.json() as {id:string}[]).length>0;
+   const input={
+    code:str(f,"code",32),discount:str(f,"discount",8),commission:str(f,"commission",8),
+    valid_from:str(f,"valid_from",10),valid_until:str(f,"valid_until",10),
+    usage_limit:str(f,"usage_limit",12)
+   };
+   const now=new Date().toISOString().slice(0,10);
+   const changes=describeCodeChange(action,input,current,previousSales,
+     process.env.AFFILIATE_COUPON_REDEMPTION_ENABLED==="true",now);
+   const patch=await affiliateDb("luvipro_discount_codes?select=id&id=eq."+codeId+"&version=eq."+expectedVersion,{
+    method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify(changes)
+   });
+   const updated=await patch.json() as {id:string}[];
+   if(updated.length!==1)throw new Error("Code changed concurrently");
+   // Database trigger writes immutable before/after audit in the same transaction.
   } else throw new Error("Unsupported action");
   return NextResponse.redirect(new URL("/intern/finanzen/affiliate?ok=1",req.url),303);
  }catch{
