@@ -1,7 +1,7 @@
 import "server-only";
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHmac } from "node:crypto";
 export function affiliateConfigured() {
- return process.env.AFFILIATE_APPLICATIONS_ENABLED === "true" && !!process.env.SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+ return process.env.AFFILIATE_APPLICATIONS_ENABLED === "true" && !!process.env.SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY && (process.env.AFFILIATE_RATE_SECRET?.length || 0)>=32;
 }
 function env() {
  const host = process.env.SUPABASE_URL || "";
@@ -15,6 +15,13 @@ export async function affiliateDb(path:string, init:RequestInit={}) {
  if(!r.ok) throw new Error("Affiliate database failed: "+r.status);
  return r;
 }
+export async function acceptAffiliateSubmissionRate(ip:string) {
+ const secret=process.env.AFFILIATE_RATE_SECRET;
+ if(!secret||secret.length<32)throw new Error("Rate control disabled");
+ const key=createHmac("sha256",secret).update(ip.trim().slice(0,110)).digest("hex");
+ const response=await affiliateDb("rpc/luvipro_affiliate_take_rate",{method:"POST",body:JSON.stringify({p_key:key,p_limit:5})});
+ return (await response.json())===true;
+}
 export function registrationFileName(ext:"pdf"|"png"|"jpg") {return randomUUID()+"."+ext;}
 export async function uploadRegistration(path:string,data:Buffer,mime:string) {
  const {host,key}=env();
@@ -23,5 +30,5 @@ export async function uploadRegistration(path:string,data:Buffer,mime:string) {
 }
 export async function deleteRegistration(path:string) {
  const {host,key}=env();
- await fetch(host+"/storage/v1/object/luvipro-affiliate-docs",{method:"DELETE",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({prefixes:[path]}),signal:AbortSignal.timeout(12000)}).catch(()=>{});
+ await fetch(host+"/storage/v1/object/luvipro-affiliate-docs/"+path,{method:"DELETE",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json"},signal:AbortSignal.timeout(12000)}).catch(()=>{});
 }
