@@ -28,6 +28,12 @@ export async function verifyAffiliateToken(token:string):Promise<AuthUser>{
  */
 export async function claimExistingAffiliate(token:string):Promise<AffiliateOwner>{
  const user=await verifyAffiliateToken(token);
+ // First prefer a verified admin-linked account. The customer/workshop and
+ // business email addresses do not have to match after manual verification.
+ const ownerResult=await affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,status&status=eq.approved&owner_uid=eq."+user.id+"&limit=2");
+ const owned=await ownerResult.json() as AffiliateOwner[];
+ if(owned.length===1)return owned[0];
+ if(owned.length>1)throw new Error("Ambiguous affiliate ownership");
  const matches=await affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,status&status=eq.approved&email=eq."+encodeURIComponent(user.email)+"&limit=2");
  const rows=await matches.json() as AffiliateOwner[];
  if(rows.length!==1)throw new Error("No single approved application for this email");
