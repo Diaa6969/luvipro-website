@@ -17,12 +17,17 @@ export async function GET(req:NextRequest) {
   const sales=outgoing.filter(x=>x.invoice_date?.startsWith(month)&&x.delivery_state!=="reserved");
   const costs=incoming.filter(x=>x.invoice_date.startsWith(month));
   let paidAffiliate:{amount_cents:number;affiliate_id:string}[]=[];
+  let journal:{event_date:string;direction:"in"|"out";category:string;description:string;gross_cents:number;payment_reference:string}[]=[];
   // Affiliate payouts are shown separately, NOT automatically counted a second time
   // as operating expenses, until commission invoice reconciliation is implemented.
   try{
    const r=await dbRequest("luvipro_affiliate_payouts?select=amount_cents,affiliate_id&status=eq.paid&payout_month=eq."+month+"-01&limit=500");
    paidAffiliate=await r.json() as typeof paidAffiliate;
   }catch{ /* Optional table is not installed on legacy installations. */ }
+  try{
+   const r=await dbRequest("luvipro_billing_cash_events?select=event_date,direction,category,description,gross_cents,payment_reference&event_date=gte."+month+"-01&event_date=lt."+ (month.endsWith("-12")?String(Number(month.slice(0,4))+1)+"-01-01":month.slice(0,5)+String(Number(month.slice(5,7))+1).padStart(2,"0")+"-01") +"&order=event_date.asc&limit=500");
+   journal=await r.json() as typeof journal;
+  }catch{ /* Optional journal table is not installed on legacy installations. */ }
   const doc=await PDFDocument.create();
   doc.setTitle("LUVIPRO Monatsuebersicht "+month);
   doc.setAuthor("LUVIPRO");
@@ -59,6 +64,10 @@ export async function GET(req:NextRequest) {
   txt("Indikativer USt-Saldo: "+euro(row.vatBalance));
   txt("Vereinfachte Netto-Differenz: "+euro(row.netDifference));
   txt("Affiliate-Auszahlungen (separat): "+euro(paidAffiliate.reduce((s,x)=>s+x.amount_cents,0)));
+  title("Weitere Geldbewegungen (separates Journal)");
+  txt("Zugang brutto: "+euro(journal.filter(x=>x.direction==="in").reduce((s,x)=>s+x.gross_cents,0))+"  |  Abgang brutto: "+euro(journal.filter(x=>x.direction==="out").reduce((s,x)=>s+x.gross_cents,0)));
+  if(!journal.length) txt("Keine separaten Geldbewegungen.");
+  else for(const event of journal){txt([event.event_date,event.direction==="in"?"+":"-",event.category,euro(event.gross_cents),event.description].join("  |  "),9);}
   title("Ausgangsrechnungen");
   if(!sales.length) txt("Keine ausgestellten Rechnungen in diesem Monat.");
   else for(const inv of sales){txt([inv.invoice_date||"",inv.invoice_number,euro(inv.gross_cents||0),inv.delivery_state].join("  |  "),9);}
