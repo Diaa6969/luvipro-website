@@ -29,8 +29,8 @@ export function Hero() {
               <CtaLink href="/contact" className="gap-2">
                 Partnerwerkstatt werden <ArrowRight className="h-4 w-4" />
               </CtaLink>
-              <CtaLink href="/verify" variant="secondary">
-                Fahrzeug verifizieren
+              <CtaLink href="/verify#partner-map" variant="secondary">
+                Fahrzeug checken lassen
               </CtaLink>
             </div>
           </div>

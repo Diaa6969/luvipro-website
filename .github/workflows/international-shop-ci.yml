@@ -7,6 +7,7 @@ on:
       - feature/european-locales
       - feature/language-menu-solid-header
       - feature/legal-published-copy-cleanup
+      - fix/vehicle-check-workshop-first
   workflow_dispatch:
 
 permissions:
@@ -40,6 +41,8 @@ jobs:
         run: npm run test:language-navigation
       - name: Verify published legal text has no placeholder/draft copy
         run: npm run test:legal-published
+      - name: Check customer vehicle-inspection navigation and workshop search
+        run: npm run test:vehicle-check
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'

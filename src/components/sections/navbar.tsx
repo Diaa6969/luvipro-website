@@ -22,7 +22,7 @@ const mobileLinks = [
   { label: "Gerät LU3656060", href: "/products" },
   { label: "Preise", href: "/products#preise" },
   { label: "Prüfbericht suchen", href: "/reports" },
-  { label: "Fahrzeugprüfung", href: "/verify" },
+  { label: "Fahrzeug checken lassen", href: "/verify#partner-map" },
   { label: "Partnerwerkstätten", href: "/partner-workshops" },
   { label: "Kontakt", href: "/contact" },
 ];
