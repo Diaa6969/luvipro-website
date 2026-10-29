@@ -16,14 +16,20 @@ export async function GET(req:NextRequest) {
   if(!row) throw new Error("Missing month");
   const sales=outgoing.filter(x=>x.invoice_date?.startsWith(month)&&x.delivery_state!=="reserved");
   const costs=incoming.filter(x=>x.invoice_date.startsWith(month));
-  let paidAffiliate:{amount_cents:number;affiliate_id:string}[]=[];
+  let transfers:{gross_cents:number;bank_reference:string;transferred_on:string;affiliate_id:string;settlement_document_id:string}[]=[];
+  let creditNotes:{id:string;net_cents:number;vat_cents:number;gross_cents:number;document_number:string}[]=[];
   let journal:{event_date:string;direction:"in"|"out";category:string;description:string;gross_cents:number;payment_reference:string}[]=[];
   // Affiliate payouts are shown separately, NOT automatically counted a second time
   // as operating expenses, until commission invoice reconciliation is implemented.
   try{
-   const r=await dbRequest("luvipro_affiliate_payouts?select=amount_cents,affiliate_id&status=eq.paid&payout_month=eq."+month+"-01&limit=500");
-   paidAffiliate=await r.json() as typeof paidAffiliate;
-  }catch{ /* Optional table is not installed on legacy installations. */ }
+   const nextMonth=month.endsWith("-12")?String(Number(month.slice(0,4))+1)+"-01":month.slice(0,5)+String(Number(month.slice(5,7))+1).padStart(2,"0");
+   const [r,c]=await Promise.all([
+     dbRequest("luvipro_affiliate_manual_transfers?select=gross_cents,bank_reference,transferred_on,affiliate_id,settlement_document_id&transferred_on=gte."+month+"-01&transferred_on=lt."+nextMonth+"-01&limit=500"),
+     dbRequest("luvipro_affiliate_settlement_documents?select=id,net_cents,vat_cents,gross_cents,document_number&limit=1000")
+   ]);
+   transfers=await r.json() as typeof transfers;
+   creditNotes=await c.json() as typeof creditNotes;
+  }catch{ /* Optional affiliate finance schema not installed; no false totals. */ }
   try{
    const r=await dbRequest("luvipro_billing_cash_events?select=event_date,direction,category,description,gross_cents,payment_reference&event_date=gte."+month+"-01&event_date=lt."+ (month.endsWith("-12")?String(Number(month.slice(0,4))+1)+"-01-01":month.slice(0,5)+String(Number(month.slice(5,7))+1).padStart(2,"0")+"-01") +"&order=event_date.asc&limit=500");
    journal=await r.json() as typeof journal;
@@ -63,7 +69,15 @@ export async function GET(req:NextRequest) {
   txt("Vorsteuer manuell bestaetigt: "+euro(row.inputVatConfirmed));
   txt("Indikativer USt-Saldo: "+euro(row.vatBalance));
   txt("Vereinfachte Netto-Differenz: "+euro(row.netDifference));
-  txt("Affiliate-Auszahlungen (separat): "+euro(paidAffiliate.reduce((s,x)=>s+x.amount_cents,0)));
+  txt("Affiliate Bankauszahlungen brutto (separat): "+euro(transfers.reduce((s,x)=>s+x.gross_cents,0)));
+  txt("Affiliate: Vorsteuer NUR NACH Steuerberaterpruefung.");
+  title("Nachgewiesene manuelle Affiliate-Ueberweisungen");
+  if(!transfers.length)txt("Keine erfassten Bankueberweisungen.");
+  else for(const t of transfers){
+    const d=creditNotes.find(x=>x.id===t.settlement_document_id);
+    txt([t.transferred_on,d?.document_number||"Beleg fehlt","Netto "+euro(d?.net_cents||0),
+      "USt "+euro(d?.vat_cents||0),"Brutto "+euro(t.gross_cents)].join("  |  "),9);
+  }
   title("Weitere Geldbewegungen (separates Journal)");
   txt("Zugang brutto: "+euro(journal.filter(x=>x.direction==="in").reduce((s,x)=>s+x.gross_cents,0))+"  |  Abgang brutto: "+euro(journal.filter(x=>x.direction==="out").reduce((s,x)=>s+x.gross_cents,0)));
   if(!journal.length) txt("Keine separaten Geldbewegungen.");
