@@ -9,6 +9,7 @@ on:
       - feature/legal-published-copy-cleanup
       - fix/vehicle-check-workshop-first
       - feature/affiliate-accounting-20261029
+      - feature/affiliate-code-controls-accounts
   workflow_dispatch:
 
 permissions:
