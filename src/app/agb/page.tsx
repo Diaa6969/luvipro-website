@@ -8,11 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function AgbPage() {
-  return (
-    <LegalPage
-      title="Allgemeine Geschäftsbedingungen"
-      intro={agbIntro}
-      sections={agbSections}
-    />
-  );
+  return <LegalPage title="Allgemeine Geschäftsbedingungen" intro={agbIntro} sections={agbSections} />;
 }

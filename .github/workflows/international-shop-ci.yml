@@ -12,6 +12,7 @@ on:
       - feature/affiliate-manual-payout-tax-ledger
       - feature/affiliate-code-controls-accounts
       - feature/affiliate-transfer-confirmation-reminders
+      - feature/affiliate-agb-20261029
   workflow_dispatch:
 
 permissions:
@@ -35,6 +36,8 @@ jobs:
         run: npm run test:affiliate
       - name: Verify Affiliate reminders and VAT-inclusive payouts (synthetic)
         run: npm run test:affiliate-payout
+      - name: Validate dedicated Affiliate AGB and consent (synthetic)
+        run: npm run test:affiliate-agb
       - name: Run monthly accounting tests (synthetic)
         run: npm run test:accounting
       - name: Run bank transfer scenario tests (synthetic)

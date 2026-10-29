@@ -18,7 +18,7 @@ export default async function AffiliateLogin({searchParams}:{searchParams:Promis
     <label className="block text-sm">Passwort<input required disabled={!enabled} autoComplete="current-password" type="password" name="password" maxLength={256} className="mt-2 block w-full rounded-xl border border-white/15 bg-[#10182a] p-3 text-white"/></label>
     <button disabled={!enabled} className="w-full rounded-xl bg-violet-600 p-4 font-bold disabled:cursor-not-allowed disabled:opacity-40">Mein Affiliate-Konto öffnen</button>
    </form>
-   <p className="mt-5 text-xs text-slate-400">Noch nicht für Affiliate freigegeben? <Link href="/affiliate" className="text-pulse underline">Gewerbe-Nachweis einreichen.</Link> Bestehende Nutzer- und Werkstattfunktionen bleiben unverändert.</p>
+   <p className="mt-5 text-xs text-slate-400">Bitte beachten Sie die <Link href="/affiliate/agb" className="text-pulse underline">Affiliate-Teilnahmebedingungen</Link>. Noch nicht für Affiliate freigegeben? <Link href="/affiliate" className="text-pulse underline">Gewerbe-Nachweis einreichen.</Link> Bestehende Nutzer- und Werkstattfunktionen bleiben unverändert.</p>
   </div>
  </div></main>;
 }

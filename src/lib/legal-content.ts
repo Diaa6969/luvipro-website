@@ -240,7 +240,7 @@ export const datenschutzSections: LegalSection[] = [
 ];
 
 export const agbIntro = [
-  "Stand: 27. Oktober 2026",
+  "Stand: 29. Oktober 2026",
   "Diese Allgemeinen Geschäftsbedingungen regeln die Nutzung der LUVIPRO Website, der LUVIPRO App, der digitalen Fahrzeugreports, der VIN- und Berichtsnummer-basierten Reportabfrage, der Partnerwerkstatt-Funktionen sowie weiterer angebotener digitaler Dienste von LUVIPRO.",
 ];
 
@@ -269,6 +269,13 @@ export const agbSections: LegalSection[] = [
       "LUVIPRO ist ein Automobil-Verifizierungs-Ökosystem für den Gebrauchtwagenmarkt.",
       "Die Dienste können insbesondere professionelle UV-Inspektionsgeräte, VIN-verknüpfte Fahrzeugreports, Suche nach FIN/VIN oder Berichtsnummer, VIN-Abgleich, digitale PDF-Reports, Partnerwerkstatt-Suche, Termin- und Prüfungsvermittlung sowie App-basierte Fahrzeugverifizierung umfassen.",
       "Maßgeblich für die jeweilige Bestellung oder Buchung sind die dort angegebenen Leistungen, Preise und Bedingungen."
+    ],
+  },
+  {
+    title: "Ergänzende AGB für gewerbliche Affiliate-Partner",
+    paragraphs: [
+      "Für gewerbliche Werbe- und Affiliate-Partner gelten ergänzend die gesondert veröffentlichten Affiliate-Teilnahmebedingungen unter /affiliate/agb. Dort werden insbesondere Bewerbung und Gewerbenachweis, Werbekennzeichnung, Rabattcodes, individuelle Provisionsvereinbarungen, die mögliche Umsatzsteuer innerhalb der vereinbarten Bruttovergütung, monatliche Abrechnung, manuelle Auszahlung und Gutschriften geregelt.",
+      "Die Bewerbung allein erzeugt keine entgeltliche Zusammenarbeit. Die vorab nachweisbar einbezogene Affiliate-AGB-Fassung und eine gesonderte schriftlich angenommene Konditionenvereinbarung sind maßgeblich. Zwingende handelsvertreter-, steuer- und datenschutzrechtliche Regelungen bleiben unberührt.",
     ],
   },
   {

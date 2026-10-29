@@ -17,7 +17,7 @@ export default async function Dashboard(){
  return <main className="min-h-screen bg-obsidian pb-24 pt-12 text-white"><div className="section-shell max-w-6xl">
   <header className="flex flex-wrap items-start justify-between gap-5">
    <div><Link href="/affiliate" className="text-sm text-pulse">← Affiliate-Programm</Link><p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-pulse">LUVIPRO · Partnerkonto</p><h1 className="mt-2 text-4xl font-bold">Meine Affiliate-Einnahmen</h1><p className="mt-3 text-slate-300">{owner.company_name} · {owner.email}</p></div>
-   <AffiliateLogoutButton/>
+   <div className="flex flex-wrap items-center gap-3"><Link href="/affiliate/agb" className="rounded-xl border border-white/20 px-4 py-3 text-sm text-slate-200 hover:bg-white/10">Affiliate AGB</Link><AffiliateLogoutButton/></div>
   </header>
   <div className="mt-8 rounded-xl border border-emerald-400/20 bg-emerald-500/10 p-4 text-sm text-emerald-100">Gewerbe geprüft · Affiliate-Funktion mit Ihrem bestehenden LUVIPRO-Konto verbunden. Keine Änderung Ihrer Rolle als Kunde oder Partnerwerkstatt.</div>
   <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

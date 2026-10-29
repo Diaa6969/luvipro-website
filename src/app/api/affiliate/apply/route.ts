@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { affiliateTermsVersion } from "@/lib/affiliate/terms";
 import { affiliateConfigured, affiliateDb, acceptAffiliateSubmissionRate, deleteRegistration, registrationFileName, uploadRegistration } from "@/lib/affiliate/server";
 import { isSameOrigin } from "@/lib/accounting/admin-auth";
 export const runtime="nodejs";
@@ -16,7 +17,7 @@ export async function POST(req:NextRequest) {
   if(!(await acceptAffiliateSubmissionRate(ip)))return NextResponse.json({error:"Zu viele Bewerbungen. Bitte später erneut versuchen."},{status:429});
   const f=await req.formData();
   if(get(f,"website_check",200)) throw new Error("Invalid request");
-  if(f.get("privacy")!=="on"||f.get("terms")!=="on") throw new Error("Consent required");
+  if(f.get("privacy")!=="on"||f.get("terms")!=="on"||f.get("terms_version")!==affiliateTermsVersion) throw new Error("Current Affiliate AGB must be acknowledged");
   const company_name=get(f,"company",160,true),contact_name=get(f,"contact",160,true);
   const email=get(f,"email",200,true).toLowerCase();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Invalid email");
@@ -34,7 +35,7 @@ export async function POST(req:NextRequest) {
   const ext=pdf?"pdf":png?"png":"jpg", mime=pdf?"application/pdf":png?"image/png":"image/jpeg";
   path=registrationFileName(ext);
   await uploadRegistration(path,bytes,mime);
-  await affiliateDb("luvipro_affiliate_applications",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({company_name,contact_name,email,phone,country,business_address,website,marketing_plan,registration_path:path})});
+  await affiliateDb("luvipro_affiliate_applications",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({company_name,contact_name,email,phone,country,business_address,website,marketing_plan,registration_path:path,legal_agb_version:affiliateTermsVersion,legal_agb_accepted_at:new Date().toISOString()})});
   return NextResponse.redirect(new URL("/affiliate?submitted=1",req.url),303);
  } catch {
   if(path) await deleteRegistration(path);
