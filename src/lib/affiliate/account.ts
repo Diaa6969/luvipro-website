@@ -63,14 +63,23 @@ export async function affiliateCurrentSession(){
 export async function affiliateAccountSummary(token:string){
  const owner=await claimExistingAffiliate(token);
  const id=owner.id;
- const [c,comm,p]=await Promise.all([
-  affiliateDb("luvipro_discount_codes?affiliate_id=eq."+id+"&select=id,code,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active&order=valid_from.desc&limit=100"),
-  affiliateDb("luvipro_affiliate_commissions?affiliate_id=eq."+id+"&select=id,status,commission_cents,created_at,verified_paid_at,delivered_at&order=created_at.desc&limit=500"),
-  affiliateDb("luvipro_affiliate_payouts?affiliate_id=eq."+id+"&select=id,payout_month,status,amount_cents,paid_at&order=payout_month.desc&limit=100")
+ async function readOwned<T>(table:string,columns:string,order:string):Promise<T[]>{
+   const pageSize=500,max=10000,result:T[]=[];
+   for(let offset=0;offset<max;offset+=pageSize){
+     const response=await affiliateDb(table+"?affiliate_id=eq."+id+"&select="+columns+
+       "&order="+order+"&limit="+pageSize+"&offset="+offset);
+     const part=await response.json() as T[];
+     if(!Array.isArray(part))throw new Error("Malformed Affiliate ledger");
+     result.push(...part);
+     if(part.length<pageSize)return result;
+   }
+   throw new Error("Too many accounting entries for safe display; paginated export required");
+ }
+ const [codes,commissions,payouts]=await Promise.all([
+  readOwned<{id:string;code:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean}>("luvipro_discount_codes","id,code,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active","valid_from.desc"),
+  readOwned<{id:string;status:string;commission_cents:number;created_at:string;verified_paid_at:string|null;delivered_at:string|null}>("luvipro_affiliate_commissions","id,status,commission_cents,created_at,verified_paid_at,delivered_at","created_at.desc"),
+  readOwned<{id:string;payout_month:string;status:string;amount_cents:number;paid_at:string|null}>("luvipro_affiliate_payouts","id,payout_month,status,amount_cents,paid_at","payout_month.desc")
  ]);
- const codes=await c.json() as {id:string;code:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean}[];
- const commissions=await comm.json() as {id:string;status:string;commission_cents:number;created_at:string;verified_paid_at:string|null;delivered_at:string|null}[];
- const payouts=await p.json() as {id:string;payout_month:string;status:string;amount_cents:number;paid_at:string|null}[];
  const sum=(status:string)=>commissions.filter(c=>c.status===status).reduce((total,c)=>total+c.commission_cents,0);
  return {owner,codes,commissions,payouts,
   totals:{pending:sum("pending"),eligible:sum("eligible"),paid:sum("paid"),payoutsPaid:payouts.filter(p=>p.status==="paid").reduce((t,p)=>t+p.amount_cents,0)}
