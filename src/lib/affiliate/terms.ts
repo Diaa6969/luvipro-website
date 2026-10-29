@@ -81,7 +81,7 @@ export const affiliateAgbSections: LegalSection[] = [
   {
     title: "9. Vergütung einschließlich Umsatzsteuer und Steuerverantwortung",
     paragraphs: [
-      "Die individuell schriftlich vereinbarte Provisionsquote wird aus dem maßgeblichen Nettoverkaufspreis errechnet. Der sich so ergebende Eurobetrag ist – ausschließlich bei entsprechend klar vereinbarter Bruttopreisabrede – die gesamte Vergütung einschließlich einer gegebenenfalls auf die Affiliate-Leistung anfallenden Umsatzsteuer. Eine Umsatzsteuer wird in diesem Fall nicht zusätzlich auf den vereinbarten Gesamtbetrag aufgeschlagen.",
+      "Die individuell schriftlich vereinbarte Provisionsquote wird aus dem maßgeblichen Nettoverkaufspreis errechnet. Der sich so ergebende Eurobetrag ist – ausschließlich bei entsprechend klar vereinbarter Bruttopreisabrede – die gesamte Bruttovergütung einschließlich einer gegebenenfalls auf die Affiliate-Leistung anfallenden Umsatzsteuer. Eine Umsatzsteuer wird in diesem Fall nicht zusätzlich auf den vereinbarten Gesamtbetrag aufgeschlagen.",
       "Rechenbeispiel (nur zur Erläuterung, kein zugesagter Provisionssatz): Kaufpreis 2.700,00 EUR netto nach Kundenrabatt × individuell vereinbarte 10 % = 270,00 EUR Gesamtvergütung. Bei regulärer inländischer Umsatzsteuer von 19 % sind darin 226,89 EUR Nettoentgelt und 43,11 EUR Umsatzsteuer enthalten. Bei wirksam angewendeter Kleinunternehmerregelung gemäß § 19 UStG werden keine 19 % Umsatzsteuer ausgewiesen; die Gesamtvergütung beträgt ebenfalls 270,00 EUR.",
       "Der Affiliate ist für die ordnungsgemäße Anmeldung seiner Tätigkeit, Einkommen- bzw. Körperschaftsteuer, gegebenenfalls Gewerbesteuer, Sozialversicherung sowie für seine eigenen steuerlichen Erklärungen und Pflichten verantwortlich. LUVIPRO übernimmt nicht pauschal die Steuerschulden des Affiliates.",
       "Die Umsatzsteuer muss dennoch nach der für den konkreten Umsatz maßgeblichen Rechtslage korrekt behandelt, auf zulässigen Belegen ausgewiesen und von der jeweils gesetzlich verpflichteten Person abgeführt werden. Eine bloße Klausel, dass „alle Steuern der Affiliate zahlt“, ändert gesetzliche Steuerpflichten, mögliche Steuerschuldnerschaft des Leistungsempfängers oder Rechnungsanforderungen nicht. Auslandsfälle oder Reverse-Charge-Sachverhalte bedürfen einer gesonderten steuerlichen Prüfung und schriftlichen Vereinbarung.",
@@ -122,7 +122,7 @@ export const affiliateAgbSections: LegalSection[] = [
   {
     title: "14. Datenschutz, Nachweise und Vertraulichkeit",
     paragraphs: [
-      "Die Verarbeitung von Gewerbenachweisen, Kontaktdaten, gegebenenfalls Steuerdaten, zugeordneten Bestellungen, Provisionsinformationen und Zahlungsbelegen richtet sich nach der LUVIPRO Datenschutzerklärung unter /datenschutz.",
+      "Die Verarbeitung von Gewerbenachweisen, Kontaktdaten, gegebenenfalls Steuerdaten, zugeordneten Bestellungen, Provisionsinformationen und Zahlungsbelegen richtet sich nach der DSGVO und der LUVIPRO Datenschutzerklärung unter /datenschutz.",
       "Der Affiliate erhält nur die Daten, die für seine eigene Tätigkeit und die nachvollziehbare Abrechnung erforderlich sind. Personenbezogene Daten von Käufern dürfen nicht ohne tragfähige Rechtsgrundlage offengelegt, weiterverkauft oder für eigene, fremde Zwecke genutzt werden.",
       "Vertrauliche nicht öffentliche Konditionen, Sicherheitsinformationen und geschäftliche Unterlagen sind während der Zusammenarbeit und nach deren Ende vertraulich zu behandeln, soweit keine gesetzlichen Offenlegungsrechte oder Auskunftspflichten entgegenstehen.",
     ],
