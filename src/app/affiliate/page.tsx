@@ -17,7 +17,7 @@ export default async function AffiliatePage({searchParams}:{searchParams:Promise
    <label className="text-sm">Geschäftliche E-Mail *<input type="email" name="email" required maxLength={200} className={input}/></label>
    <label className="text-sm">Telefon<input name="phone" maxLength={60} className={input}/></label>
    <label className="text-sm sm:col-span-2">Geschäftsanschrift *<input name="address" required maxLength={300} className={input}/></label>
-   <label className="text-sm">Land *<select name="country" required className={input}><option value="DE">Deutschland</option><option value="AT">Österreich</option><option value="CH">Schweiz</option><option value="NL">Niederlande</option><option value="FR">Frankreich</option><option value="PL">Polen</option><option value="OTHER">Anderes Land (bitte anfragen)</option></select></label>
+   <label className="text-sm">Land *<select name="country" required className={input}><option value="DE">Deutschland</option><option value="AT">Österreich</option><option value="CH">Schweiz</option><option value="NL">Niederlande</option><option value="FR">Frankreich</option><option value="PL">Polen</option></select></label>
    <label className="text-sm">Website / Social Media<input name="social" maxLength={300} className={input}/></label>
    <label className="text-sm sm:col-span-2">Wie möchten Sie LUVIPRO bewerben?<textarea name="marketing" maxLength={1600} rows={4} className={input}/></label>
    <label className="text-sm sm:col-span-2">Gewerbeanmeldung / Handelsregister- oder gleichwertiger Gewerbenachweis * (PDF, JPG, PNG; max. 5 MB)<input type="file" name="registration" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" required className="mt-3 block w-full text-sm text-slate-300"/></label>
