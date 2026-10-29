@@ -6,7 +6,7 @@ const legalPages = ["src/app/impressum/page.tsx", "src/app/datenschutz/page.tsx"
 assert.match(source,/export const datenschutzIntro/);
 assert.match(source,/export const agbIntro/);
 assert.match(source,/export const impressumIntro/);
-const dates = source.match(/Stand: (?:[1-9]|[12][0-9]|3[01])\\. (?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember) 20\\d{2}/g) || [];
+const dates = source.match(/Stand: (?:[1-9]|[12][0-9]|3[01])\. (?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember) 20\d{2}/g) || [];
 assert.equal(dates.length,3,"All three legal pages must have a published update date");
 for(const word of ["Entwurf","Platzhalter","Aufbauphase","[Datum einfügen]",
   "[Unternehmensname einfügen]","[Rechtsform einfügen]","[vollständige Anschrift einfügen]",
