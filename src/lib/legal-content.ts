@@ -1,7 +1,7 @@
 import type { LegalSection } from "@/components/ui/legal-page";
 
 export const datenschutzIntro = [
-  "Stand: 27. Oktober 2026",
+  "Stand: 29. Oktober 2026",
   "Diese Datenschutzerklärung informiert Nutzer, Fahrzeughalter, Käufer, Verkäufer, Partnerwerkstätten und Besucher darüber, welche personenbezogenen Daten im Zusammenhang mit der Nutzung der LUVIPRO Website, der LUVIPRO App, der Fahrzeugverifizierung, der VIN-/Berichtsnummer-Suche, der geschützten Bereitstellung digitaler Berichte und der Partnerwerkstatt-Funktionen verarbeitet werden.",
   "Diese Seite ist jederzeit ohne Registrierung über die Website erreichbar.",
 ];
@@ -97,6 +97,16 @@ export const datenschutzSections: LegalSection[] = [
       "Buchungen und vermittelte Prüfungen",
       "Abrechnungs- und Provisionsdaten",
       "Audit- und Sicherheitsprotokolle",
+    ],
+  },
+  {
+    title: "Affiliate-Partnerprogramm und Gewerbenachweise",
+    paragraphs: [
+      "Wenn Sie sich für das Affiliate-Partnerprogramm bewerben, verarbeiten wir Unternehmensname, Ansprechpartner, geschäftliche Anschrift, E-Mail-Adresse, Telefonnummer, Land, Website oder Social-Media-Profil, Angaben zur Vermarktungsstrategie und den eingereichten Nachweis einer gewerblichen Registrierung.",
+      "Die Angaben und der Gewerbenachweis dienen ausschließlich der Prüfung einer gewerblichen Zusammenarbeit, der Kontaktaufnahme, der Betrugsprävention und gegebenenfalls der anschließenden Vertrags- und Provisionsverwaltung. Eine Bewerbung führt nicht automatisch zur Aufnahme oder Vergabe von Rabattcodes.",
+      "Gewerbenachweise werden in einer nicht öffentlichen Dokumentenablage gespeichert und nur berechtigten Verwaltungsmitarbeitern zur Prüfung zugänglich gemacht. Für bestätigte Partner können später rabattcodebezogene Bestellungen, Zahlungsvermerke, Lieferdatum, Provisionshöhe, Stornierungen und Auszahlungen dokumentiert werden.",
+      "Rechtsgrundlagen sind Art. 6 Abs. 1 lit. b DSGVO für vorvertragliche Maßnahmen und die spätere Vertragsdurchführung sowie gegebenenfalls Art. 6 Abs. 1 lit. f DSGVO für Prüfung und Missbrauchsprävention und Art. 6 Abs. 1 lit. c DSGVO für gesetzliche Buchführungs- und Aufbewahrungspflichten.",
+      "Nicht mehr erforderliche Bewerbungsunterlagen werden nach Abschluss der jeweiligen Prüfung und Ablauf etwaiger erforderlicher Nachweis- oder Aufbewahrungsfristen gelöscht. Zahlungs- und Steuerunterlagen unterliegen gesonderten gesetzlichen Aufbewahrungspflichten. Betroffene können unter den angegebenen Kontaktdaten Auskunft, Berichtigung oder Löschung verlangen, soweit keine gesetzlichen Pflichten entgegenstehen.",
     ],
   },
   {
