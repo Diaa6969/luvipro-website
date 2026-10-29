@@ -68,6 +68,7 @@ export async function POST(req:NextRequest) {
   } else throw new Error("Unsupported action");
   return NextResponse.redirect(new URL("/intern/finanzen/affiliate?ok=1",req.url),303);
  }catch{
+  if(!req.headers.has("authorization"))return NextResponse.redirect(new URL("/intern/finanzen/affiliate?error=1",req.url),303);
   return NextResponse.json({error:"Aktion fehlgeschlagen. Bitte Daten, Berechtigungen und möglichen Dubletten prüfen."},{status:422,headers:{"Cache-Control":"no-store"}});
  }
 }
