@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { affiliateConfigured } from "@/lib/affiliate/server";
 export const metadata: Metadata = { title: "Affiliate-Partner werden | LUVIPRO", description: "LUVIPRO Partnerprogramm für registrierte Unternehmen und Gewerbetreibende." };
 export default async function AffiliatePage({searchParams}:{searchParams:Promise<{submitted?:string}>}) {
  const { submitted }=await searchParams;
@@ -9,7 +10,7 @@ export default async function AffiliatePage({searchParams}:{searchParams:Promise
   <p className="mt-10 text-xs font-bold uppercase tracking-widest text-pulse">LUVIPRO · Partnerprogramm</p>
   <h1 className="mt-3 text-4xl font-bold">Affiliate-Partner werden</h1>
   <p className="mt-5 max-w-2xl leading-8 text-slate-300">Bewerben Sie sich als registriertes Unternehmen oder Gewerbetreibender. Jede Bewerbung und jede Rabattaktion wird persönlich geprüft und freigegeben. Provisionen werden nur für verifizierte Käufe nach Ablauf der maßgeblichen Widerrufs- bzw. Rückgabefrist monatlich abgerechnet.</p>
-  {submitted==="1" ? <div role="status" className="mt-10 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-6">Vielen Dank. Ihre Bewerbung wurde zur Prüfung aufgenommen. Eine Freigabe oder ein Rabattcode erfolgt nicht automatisch.</div> : 
+  {submitted==="1" ? <div role="status" className="mt-10 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-6">Vielen Dank. Ihre Bewerbung wurde zur Prüfung aufgenommen. Eine Freigabe oder ein Rabattcode erfolgt nicht automatisch.</div> : !affiliateConfigured() ? <div className="mt-10 rounded-2xl border border-amber-300/30 bg-amber-300/10 p-6 text-amber-100">Die Bewerbung ist derzeit noch nicht freigeschaltet. Für eine Anfrage schreiben Sie bitte an info@luvipro.de.</div> : 
   <form action="/api/affiliate/apply" method="POST" encType="multipart/form-data" className="mt-10 grid gap-5 rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:grid-cols-2 sm:p-8">
    <input type="text" name="website_check" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
    <label className="text-sm">Firma / Gewerbe *<input name="company" required maxLength={160} className={input}/></label>
