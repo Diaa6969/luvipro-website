@@ -75,13 +75,14 @@ export async function affiliateAccountSummary(token:string){
    }
    throw new Error("Too many accounting entries for safe display; paginated export required");
  }
- const [codes,commissions,payouts]=await Promise.all([
+ const [codes,commissions,payouts,documents]=await Promise.all([
   readOwned<{id:string;code:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean}>("luvipro_discount_codes","id,code,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active","valid_from.desc"),
   readOwned<{id:string;status:string;commission_cents:number;created_at:string;verified_paid_at:string|null;delivered_at:string|null}>("luvipro_affiliate_commissions","id,status,commission_cents,created_at,verified_paid_at,delivered_at","created_at.desc"),
-  readOwned<{id:string;payout_month:string;status:string;amount_cents:number;paid_at:string|null}>("luvipro_affiliate_payouts","id,payout_month,status,amount_cents,paid_at","payout_month.desc")
+  readOwned<{id:string;payout_month:string;status:string;amount_cents:number;paid_at:string|null}>("luvipro_affiliate_payouts","id,payout_month,status,amount_cents,paid_at","payout_month.desc"),
+  readOwned<{id:string;payout_id:string;document_number:string;service_month:string;net_cents:number;vat_cents:number;gross_cents:number}>("luvipro_affiliate_settlement_documents","id,payout_id,document_number,service_month,net_cents,vat_cents,gross_cents","issued_at.desc")
  ]);
  const sum=(status:string)=>commissions.filter(c=>c.status===status).reduce((total,c)=>total+c.commission_cents,0);
- return {owner,codes,commissions,payouts,
+ return {owner,codes,commissions,payouts,documents,
   totals:{pending:sum("pending"),eligible:sum("eligible"),paid:sum("paid"),payoutsPaid:payouts.filter(p=>p.status==="paid").reduce((t,p)=>t+p.amount_cents,0)}
  };
 }
