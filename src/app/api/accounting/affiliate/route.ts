@@ -6,6 +6,7 @@ import { affiliateDb } from "@/lib/affiliate/server";
 import { monthOf } from "@/lib/accounting/monthly";
 export const runtime="nodejs";
 function str(f:FormData,k:string,max:number) {const v=f.get(k);if(typeof v!=="string"||v.length>max||/[\r\n]/.test(v)) throw new Error("Invalid "+k);return v.trim();}
+function optionalStr(f:FormData,k:string,max:number) {const v=f.get(k);if(v===null)return "";if(typeof v!=="string"||v.length>max||/[\\r\\n]/.test(v))throw new Error("Invalid "+k);return v.trim();}
 function pct(s:string) {if(!/^\d{1,3}(?:\.\d{1,2})?$/.test(s)) throw new Error("Percent");const v=Math.round(Number(s)*100);if(v>10000) throw new Error("Percent");return v;}
 function date(s:string) {if(monthOf(s)==="") throw new Error("Date");return s;}
 function uuid(s:string) {if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)) throw new Error("UUID");return s;}
@@ -52,9 +53,9 @@ export async function POST(req:NextRequest) {
    const hasPast=await affiliateDb("luvipro_affiliate_commissions?select=id&code_id=eq."+codeId+"&limit=1");
    const previousSales=(await hasPast.json() as {id:string}[]).length>0;
    const input={
-    code:str(f,"code",32),discount:str(f,"discount",8),commission:str(f,"commission",8),
-    valid_from:str(f,"valid_from",10),valid_until:str(f,"valid_until",10),
-    usage_limit:str(f,"usage_limit",12)
+    code:optionalStr(f,"code",32),discount:optionalStr(f,"discount",8),commission:optionalStr(f,"commission",8),
+    valid_from:optionalStr(f,"valid_from",10),valid_until:optionalStr(f,"valid_until",10),
+    usage_limit:optionalStr(f,"usage_limit",12)
    };
    const now=new Date().toISOString().slice(0,10);
    const changes=describeCodeChange(action,input,current,previousSales,
