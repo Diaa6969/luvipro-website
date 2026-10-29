@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { affiliateConfigured, affiliateDb, deleteRegistration, registrationFileName, uploadRegistration } from "@/lib/affiliate/server";
+import { affiliateConfigured, affiliateDb, acceptAffiliateSubmissionRate, deleteRegistration, registrationFileName, uploadRegistration } from "@/lib/affiliate/server";
 import { isSameOrigin } from "@/lib/accounting/admin-auth";
 export const runtime="nodejs";
 const max=5*1024*1024;
@@ -12,6 +12,8 @@ export async function POST(req:NextRequest) {
  if(!isSameOrigin(req)||!req.headers.get("content-type")?.startsWith("multipart/form-data")||!Number.isFinite(length)||length<=0||length>max+100000) return NextResponse.json({error:"Ungültige Anfrage."},{status:403});
  let path="";
  try {
+  const ip = req.headers.get("x-vercel-forwarded-for") || req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
+  if(!(await acceptAffiliateSubmissionRate(ip)))return NextResponse.json({error:"Zu viele Bewerbungen. Bitte später erneut versuchen."},{status:429});
   const f=await req.formData();
   if(get(f,"website_check",200)) throw new Error("Invalid request");
   if(f.get("privacy")!=="on"||f.get("terms")!=="on") throw new Error("Consent required");
