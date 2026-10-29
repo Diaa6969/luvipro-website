@@ -10,15 +10,22 @@ type Discount={id:string;code:string;affiliate_id:string;discount_bps:number;com
 export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string;error?:string}>}) {
  if(!accountingEnabled() || !(await isAccountingAdmin())) redirect("/intern/finanzen/login");
  const params=await searchParams;
- let apps:Applicant[]=[],codes:Discount[]=[],payouts:{id:string;affiliate_id:string;payout_month:string;status:string;amount_cents:number}[]=[],error="";
+ type Payout={id:string;affiliate_id:string;payout_month:string;status:string;amount_cents:number};
+ type TaxProfile={affiliate_id:string;vat_mode:string;tax_number_or_vat_id:string;selfbilling_agreed:boolean;verified_at:string|null;legal_name:string;postal_address:string;selfbilling_agreement_reference:string};
+ type TaxDoc={id:string;payout_id:string;affiliate_id:string;document_number:string;net_cents:number;vat_cents:number;gross_cents:number};
+ type Transfer={payout_id:string;gross_cents:number;bank_reference:string;transferred_on:string};
+ let apps:Applicant[]=[],codes:Discount[]=[],payouts:Payout[]=[],profiles:TaxProfile[]=[],docs:TaxDoc[]=[],transfers:Transfer[]=[],error="";
  if(!affiliateConfigured()) error="Das Affiliate-Modul ist noch nicht aktiviert (AFFILIATE_APPLICATIONS_ENABLED).";
  else try {
-  const [a,c,p]=await Promise.all([
+  const [a,c,p,tx,dt,tr]=await Promise.all([
    affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active,version&order=created_at.desc&limit=100"),
-   affiliateDb("luvipro_affiliate_payouts?select=id,affiliate_id,payout_month,status,amount_cents&order=created_at.desc&limit=100")
+   affiliateDb("luvipro_affiliate_payouts?select=id,affiliate_id,payout_month,status,amount_cents&order=created_at.desc&limit=100"),
+   affiliateDb("luvipro_affiliate_tax_profiles?select=affiliate_id,vat_mode,tax_number_or_vat_id,selfbilling_agreed,verified_at,legal_name,postal_address,selfbilling_agreement_reference&limit=100"),
+   affiliateDb("luvipro_affiliate_settlement_documents?select=id,payout_id,affiliate_id,document_number,net_cents,vat_cents,gross_cents&limit=100"),
+   affiliateDb("luvipro_affiliate_manual_transfers?select=payout_id,gross_cents,bank_reference,transferred_on&limit=100")
   ]);
-  apps=await a.json() as Applicant[]; codes=await c.json() as Discount[];payouts=await p.json() as typeof payouts;
+  apps=await a.json() as Applicant[]; codes=await c.json() as Discount[];payouts=await p.json() as Payout[];profiles=await tx.json() as TaxProfile[];docs=await dt.json() as TaxDoc[];transfers=await tr.json() as Transfer[];
  }catch{error="Die geschützten Affiliate-Tabellen sind noch nicht erreichbar. Migration und Rechte prüfen.";}
  const input="w-full rounded-lg border border-white/15 bg-[#10182a] p-3 text-white";
  const approved=apps.filter(a=>a.status==="approved");
@@ -112,12 +119,69 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
    </article>)}{!codes.length&&<p className="text-slate-400">Keine Rabattcodes vorhanden.</p>}</div>
   </section>
   <section className="mt-12 rounded-2xl border border-white/10 p-6">
+   <h2 className="text-2xl font-bold">Steuerprofil & Gutschriftvereinbarung</h2>
+   <p className="mt-3 text-sm leading-7 text-amber-100">Nur nach echter Gewerbeprüfung und vorheriger schriftlicher Vereinbarung über das Gutschriftverfahren (§ 14 UStG). Für EU-/Auslandsfälle, § 13b und ungeklärte Steuerfälle gesperrt. Steuersatz 19 % oder § 19 UStG erst nach Prüfung festlegen. Das Dokument ist keine gewöhnliche Rechnung über eine Auszahlung, sondern eine Selbstabrechnung für die Werbeleistung des Affiliate.</p>
+   <div className="mt-6 grid gap-6 lg:grid-cols-2">{approved.map(a=>{
+    const profile=profiles.find(p=>p.affiliate_id===a.id);
+    return <form key={a.id} action="/api/accounting/affiliate/settlements" method="POST" className="grid gap-3 rounded-xl border border-white/10 bg-white/[.03] p-5 sm:grid-cols-2">
+     <input type="hidden" name="action" value="save_tax"/>
+     <input type="hidden" name="affiliate_id" value={a.id}/>
+     <h3 className="font-semibold sm:col-span-2">{a.company_name}</h3>
+     <label className="text-xs sm:col-span-2">Rechtlicher Name des leistenden Unternehmers<input name="legal_name" defaultValue={profile?.legal_name||a.company_name} required maxLength={180} className={input}/></label>
+     <label className="text-xs sm:col-span-2">Vollständige Geschäftsanschrift<input name="postal_address" defaultValue={profile?.postal_address||a.business_address} required maxLength={400} className={input}/></label>
+     <label className="text-xs sm:col-span-2">Steuernummer oder USt-IdNr. des Affiliates<input name="tax_number_or_vat_id" defaultValue={profile?.tax_number_or_vat_id||""} required maxLength={50} className={input}/></label>
+     <label className="text-xs sm:col-span-2">Überprüfte Umsatzsteuer-Eigenschaft<select name="vat_mode" defaultValue={profile?.vat_mode||"de_19"} className={input}>
+       <option value="de_19">DE regulär – 19 % USt auf Provision</option>
+       <option value="de_kleinunternehmer">DE Kleinunternehmer (§ 19 UStG) – 0 %</option>
+      </select></label>
+     <label className="text-xs sm:col-span-2">Schriftliche Gutschriftvereinbarung (Dokument-Referenz)<input name="agreement_ref" required maxLength={160} className={input} defaultValue={profile?.selfbilling_agreement_reference||""} placeholder="Vertrag / datierte Vereinbarung"/></label>
+     <label className="flex gap-2 text-xs leading-5 sm:col-span-2"><input type="checkbox" name="selfbilling_agreed" required className="mt-1"/>Der Affiliate hat VOR Ausstellung der Gutschrift der Selbstabrechnung nachweislich zugestimmt.</label>
+     <label className="flex gap-2 text-xs leading-5 sm:col-span-2"><input type="checkbox" name="reviewed" required className="mt-1"/>Identität, Gewerbe, steuerliche Behandlung und Vereinbarung persönlich verifiziert.</label>
+     <button className="rounded-lg bg-violet-600 px-4 py-3 text-sm font-semibold sm:col-span-2">Steuerprofil geprüft speichern</button>
+     {profile&&<p className="text-xs text-emerald-100 sm:col-span-2">Verifiziert: {profile.verified_at?.slice(0,10)||"—"} · {profile.vat_mode}</p>}
+    </form>;
+   })}</div>
+  </section>
+  <section className="mt-12 rounded-2xl border border-white/10 p-6">
+   <h2 className="text-2xl font-bold">Manuelle Auszahlung – keine automatische Überweisung</h2>
+   <p className="mt-3 text-sm leading-7 text-slate-300">1. Nur verifizierte/abgelaufene Provisionen zum Monatsabschluss vorbereiten. 2. Rechtssichere Gutschrift nach geprüftem Steuerprofil ausstellen. 3. Banküberweisung AUSSERHALB der Anwendung persönlich ausführen. 4. Erst danach Referenz und Datum erfassen. Alle Schritte erhalten einen unveränderbaren Prüfpfad. Kein Stripe-/PayPal-/Bank-Payout wird durch einen Klick hier ausgelöst.</p>
+   <form action="/api/accounting/affiliate/settlements" method="POST" className="mt-6 flex flex-wrap items-end gap-4 rounded-xl border border-white/10 p-4">
+    <input type="hidden" name="action" value="prepare"/>
+    <label className="text-xs">Freigegebener Affiliate<select name="affiliate_id" required className={input}><option value="">Partner wählen</option>{approved.map(a=><option key={a.id} value={a.id}>{a.company_name}</option>)}</select></label>
+    <label className="text-xs">Abrechnungsmonat (1. des Monats)<input type="date" name="month" required className={input} defaultValue={new Date().toISOString().slice(0,7)+"-01"}/></label>
+    <button className="rounded-lg bg-violet-600 px-4 py-3 text-sm font-semibold">Monatsabschluss vorbereiten</button>
+   </form>
+   <p className="mt-3 text-xs text-amber-100">Ein Abrechnungsmonat pro Affiliate ist einzigartig; bereits zugeordnete Provisionen können nicht ein zweites Mal abgerechnet werden.</p>
+  </section>
+  <section className="mt-12 rounded-2xl border border-white/10 p-6">
    <h2 className="text-2xl font-bold">Monatliche Affiliate-Abrechnungen</h2>
    <p className="mt-3 text-sm text-slate-400">Nur dokumentierte Auszahlungsperioden; die PDF-Abrechnung ist ein Nachweis und ersetzt keine ordnungsgemäße Provisionsrechnung.</p>
    <div className="mt-4 space-y-3">{payouts.map(p=><div key={p.id} className="flex flex-wrap justify-between gap-3 border-b border-white/10 py-3 text-sm">
     <span>{apps.find(a=>a.id===p.affiliate_id)?.company_name || p.affiliate_id} · {p.payout_month}</span>
-    <span>{new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(p.amount_cents/100)} · {p.status}</span>
-    <a className="text-pulse underline" href={`/api/accounting/affiliate/payout-pdf?id=${p.id}`}>Abrechnung PDF ↓</a>
+    <span>Provision netto: {new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(p.amount_cents/100)} · {p.status}</span>
+    <a className="text-pulse underline" href={`/api/accounting/affiliate/payout-pdf?id=${p.id}`}>Interne Abrechnung PDF ↓</a>
+    {docs.find(d=>d.payout_id===p.id)?<div className="w-full rounded-lg border border-emerald-400/20 bg-emerald-500/5 p-4">
+      {docs.filter(d=>d.payout_id===p.id).map(d=><div key={d.id} className="flex flex-wrap justify-between gap-3">
+       <span>Gutschrift {d.document_number} · Netto {new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(d.net_cents/100)} + USt {new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(d.vat_cents/100)} = Brutto {new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(d.gross_cents/100)}</span>
+       <a className="text-pulse underline" href={`/api/affiliate/gutschrift?id=${d.id}`}>Gutschrift PDF ↓</a>
+      </div>)}
+      {transfers.find(t=>t.payout_id===p.id)?
+       <p className="mt-3 text-xs text-emerald-100">Banküberweisung nachgewiesen: {transfers.find(t=>t.payout_id===p.id)?.transferred_on} · Referenz {transfers.find(t=>t.payout_id===p.id)?.bank_reference}</p>:
+       <form action="/api/accounting/affiliate/settlements" method="POST" className="mt-5 grid gap-3 sm:grid-cols-2">
+        <input type="hidden" name="action" value="mark_manual_paid"/>
+        <input type="hidden" name="payout_id" value={p.id}/>
+        <label className="text-xs">Banküberweisung tatsächlich erfolgt am<input className={input} type="date" name="paid_on" required/></label>
+        <label className="text-xs">Eindeutige Bankreferenz / Transaktions-ID<input className={input} name="payment_reference" minLength={5} maxLength={200} required/></label>
+        <label className="text-xs sm:col-span-2 flex items-start gap-2"><input type="checkbox" name="bank_transfer_done" required className="mt-1"/>Ich habe die Überweisung persönlich außerhalb von LUVIPRO ausgeführt.</label>
+        <label className="text-xs sm:col-span-2 flex items-start gap-2"><input type="checkbox" name="evidence_checked" required className="mt-1"/>Bankbeleg, Betrag inklusive Umsatzsteuer und Gutschrift geprüft.</label>
+        <button className="rounded-lg bg-emerald-700 px-4 py-3 text-sm font-semibold sm:col-span-2">Manuelle Zahlung als ausgeführt dokumentieren</button>
+       </form>}
+     </div>:
+     <form className="flex w-full flex-wrap items-center gap-3 rounded-lg border border-amber-500/20 p-4" action="/api/accounting/affiliate/settlements" method="POST">
+      <input type="hidden" name="action" value="issue_gutschrift"/><input type="hidden" name="payout_id" value={p.id}/>
+      <label className="flex items-center gap-2 text-xs"><input type="checkbox" name="terms_approved" required/>Steuerprofil und Gutschriftvereinbarung überprüft</label>
+      <button disabled={p.status!=="prepared"} className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold disabled:opacity-40">Gutschrift mit USt erstellen</button>
+     </form>}
    </div>)}
    {!payouts.length&&<p className="text-sm text-slate-400">Noch keine Monatsabrechnungen.</p>}</div>
   </section>
