@@ -38,3 +38,10 @@ create trigger luvipro_discount_code_update_audit before update
 revoke execute on function public.luvipro_discount_code_change_audit() from public,anon,authenticated;
 -- Any commission already attributed retains its original, immutable commission_cents.
 -- Never retroactively rewrite historical attributed sales, payouts or invoices.
+
+-- An affiliate has one verified application per business email.
+-- Existing customer/workshop Auth UID is not replaced.
+create unique index if not exists luvipro_affiliate_approved_email_unique
+  on public.luvipro_affiliate_applications (lower(email))
+  where status='approved';
+-- Deny ambiguous approved submissions before ownership linking.
