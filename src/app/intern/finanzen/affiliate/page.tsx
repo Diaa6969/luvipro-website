@@ -10,14 +10,15 @@ type Discount={id:string;code:string;affiliate_id:string;discount_bps:number;com
 export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string}>}) {
  if(!accountingEnabled() || !(await isAccountingAdmin())) redirect("/intern/finanzen/login");
  const params=await searchParams;
- let apps:Applicant[]=[],codes:Discount[]=[],error="";
+ let apps:Applicant[]=[],codes:Discount[]=[],payouts:{id:string;affiliate_id:string;payout_month:string;status:string;amount_cents:number}[]=[],error="";
  if(!affiliateConfigured()) error="Das Affiliate-Modul ist noch nicht aktiviert (AFFILIATE_APPLICATIONS_ENABLED).";
  else try {
-  const [a,c]=await Promise.all([
+  const [a,c,p]=await Promise.all([
    affiliateDb("luvipro_affiliate_applications?select=id,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path&order=created_at.desc&limit=100"),
-   affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active&order=created_at.desc&limit=100")
+   affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active&order=created_at.desc&limit=100"),
+   affiliateDb("luvipro_affiliate_payouts?select=id,affiliate_id,payout_month,status,amount_cents&order=created_at.desc&limit=100")
   ]);
-  apps=await a.json() as Applicant[]; codes=await c.json() as Discount[];
+  apps=await a.json() as Applicant[]; codes=await c.json() as Discount[];payouts=await p.json() as typeof payouts;
  }catch{error="Die geschützten Affiliate-Tabellen sind noch nicht erreichbar. Migration und Rechte prüfen.";}
  const input="w-full rounded-lg border border-white/15 bg-[#10182a] p-3 text-white";
  const approved=apps.filter(a=>a.status==="approved");
@@ -63,6 +64,16 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
    <tbody>{codes.map(c=><tr className="border-b border-white/10" key={c.id}>
     <td className="p-3 font-semibold">{c.code}</td><td className="p-3">{c.discount_bps/100}%</td><td className="p-3">{c.commission_bps/100}%</td><td className="p-3">{c.valid_from} – {c.valid_until}</td><td className="p-3">{c.redemption_count}/{c.usage_limit??"∞"}</td><td className="p-3">{c.active?"Aktiv":"Nicht aktiviert"}</td>
    </tr>)}</tbody></table></div>
+  </section>
+  <section className="mt-12 rounded-2xl border border-white/10 p-6">
+   <h2 className="text-2xl font-bold">Monatliche Affiliate-Abrechnungen</h2>
+   <p className="mt-3 text-sm text-slate-400">Nur dokumentierte Auszahlungsperioden; die PDF-Abrechnung ist ein Nachweis und ersetzt keine ordnungsgemäße Provisionsrechnung.</p>
+   <div className="mt-4 space-y-3">{payouts.map(p=><div key={p.id} className="flex flex-wrap justify-between gap-3 border-b border-white/10 py-3 text-sm">
+    <span>{apps.find(a=>a.id===p.affiliate_id)?.company_name || p.affiliate_id} · {p.payout_month}</span>
+    <span>{new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(p.amount_cents/100)} · {p.status}</span>
+    <a className="text-pulse underline" href={`/api/accounting/affiliate/payout-pdf?id=${p.id}`}>Abrechnung PDF ↓</a>
+   </div>)}
+   {!payouts.length&&<p className="text-sm text-slate-400">Noch keine Monatsabrechnungen.</p>}</div>
   </section>
  </div></main>;
 }
