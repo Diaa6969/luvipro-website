@@ -40,6 +40,31 @@ export async function POST(req:NextRequest) {
    const r=await affiliateDb("luvipro_discount_codes?select=id",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify(body)});
    const out=await r.json() as {id:string}[];
    await affiliateDb("luvipro_affiliate_audit",{method:"POST",body:JSON.stringify({action:"code_created",entity_id:out[0]?.id,details:{code,valid_from,valid_until,affiliate_id}})});
+  }else if(action==="link_existing_account"){
+   const affiliate_id=uuid(str(f,"affiliate_id",36));
+   const owner_uid=uuid(str(f,"owner_uid",36));
+   if(f.get("identity_verified")!=="on")throw new Error("Identity verification required");
+   const host=process.env.SUPABASE_URL||"";
+   const service=process.env.SUPABASE_SERVICE_ROLE_KEY||"";
+   if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(host)||!service)throw new Error("Backend unavailable");
+   // Lookup uses server-side Admin API and never exposes service key to browser/app.
+   const u=await fetch(host+"/auth/v1/admin/users/"+owner_uid,{
+     headers:{apikey:service,Authorization:"Bearer "+service},
+     cache:"no-store",signal:AbortSignal.timeout(7000)
+   });
+   if(!u.ok)throw new Error("Existing account not found");
+   const person=await u.json() as {id?:string;email_confirmed_at?:string|null};
+   if(person.id!==owner_uid||!person.email_confirmed_at)throw new Error("Verified login required");
+   const patch=await affiliateDb("luvipro_affiliate_applications?id=eq."+affiliate_id+"&status=eq.approved&owner_uid=is.null&select=id",{
+     method:"PATCH",headers:{Prefer:"return=representation"},
+     body:JSON.stringify({owner_uid,updated_at:new Date().toISOString()})
+   });
+   const changed=await patch.json() as {id:string}[];
+   if(changed.length!==1)throw new Error("Account already linked or not approved");
+   await affiliateDb("luvipro_affiliate_audit",{method:"POST",body:JSON.stringify({
+     action:"admin_verified_existing_auth_link",entity_id:affiliate_id,
+     details:{owner_uid,identity_confirmed_by_admin:true}
+   })});
   }else if(["pause_code","resume_code","renew_code","edit_code"].includes(action)){
    const codeId=uuid(str(f,"code_id",36));
    const expectedVersion=Number(str(f,"expected_version",10));
