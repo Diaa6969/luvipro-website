@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit",
     "test:invoices": "node scripts/test-invoice-pricing.mjs",
     "test:accounting": "node scripts/test-accounting-monthly.mjs",
+    "test:affiliate": "node scripts/test-affiliate-code-controls.mjs",
     "test:bank-orders": "node scripts/test-bank-transfer.mjs",
     "test:bank-admin-edge": "node scripts/test-bank-admin-edge.mjs",
     "test:reports": "node scripts/test-report-search.mjs",
