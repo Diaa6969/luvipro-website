@@ -30,7 +30,7 @@ class LuviproBackofficeApi {
   Future<List<Map<String,dynamic>>> codes() async {
     await assertAdmin();
     final result = await client.from('luvipro_discount_codes')
-        .select('id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,redemption_count,usage_limit,active')
+        .select('id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,redemption_count,usage_limit,active,version')
         .order('created_at', ascending:false).limit(200);
     return List<Map<String,dynamic>>.from(result);
   }
@@ -51,6 +51,43 @@ class LuviproBackofficeApi {
     return List<Map<String,dynamic>>.from(result);
   }
 
+
+  /// Same secured endpoint as website Admin, with verified Supabase JWT.
+  Future<void> manageCode(Map<String,dynamic> c,String action,{DateTime? expiry}) async {
+    await assertAdmin();
+    final token=client.auth.currentSession?.accessToken;
+    if(token==null)throw StateError('Login abgelaufen');
+    final fields=<String,String>{
+      'action':action,
+      'code_id':'${c['id']}',
+      'expected_version':'${c['version']}',
+    };
+    if(action=='renew_code'&&expiry!=null){
+      fields['valid_until']=expiry.toIso8601String().substring(0,10);
+    }
+    final response=await http.post(Uri.parse('$site/api/accounting/affiliate'),
+      headers:{'Authorization':'Bearer $token'},body:fields);
+    if(response.statusCode!=200)throw StateError('Aktion nicht verfügbar (HTTP ${response.statusCode})');
+  }
+  Future<void> editExistingCode(Map<String,dynamic> c,{
+     required String newCode,required double discount,required double commission,
+     required DateTime start,required DateTime end,int? maxUses,
+  }) async {
+    await assertAdmin();
+    final token=client.auth.currentSession?.accessToken;
+    if(token==null)throw StateError('Login abgelaufen');
+    final fields=<String,String>{
+      'action':'edit_code','code_id':'${c['id']}','expected_version':'${c['version']}',
+      'code':newCode.toUpperCase().trim(),'discount':discount.toStringAsFixed(2),
+      'commission':commission.toStringAsFixed(2),
+      'valid_from':start.toIso8601String().substring(0,10),
+      'valid_until':end.toIso8601String().substring(0,10),
+      'usage_limit':maxUses?.toString()??'',
+    };
+    final response=await http.post(Uri.parse('$site/api/accounting/affiliate'),
+      headers:{'Authorization':'Bearer $token'},body:fields);
+    if(response.statusCode!=200)throw StateError('Code konnte nicht gespeichert werden (HTTP ${response.statusCode})');
+  }
   Future<void> reviewApplication(String id, {required bool approved, String notes = ''}) async {
     await assertAdmin();
     // Status= pending guard prevents double approval; DB RLS authorizes admin.
@@ -180,6 +217,59 @@ class _LuviproMarketingAdminPageState extends State<LuviproMarketingAdminPage> {
       codeController.clear();await refresh();toast('Rabattcode gespeichert (inaktiv)');
     }catch(e){toast('Fehler: $e');}
   }
+
+  Future<void> manageCode(Map<String,dynamic> c,String action)async{
+    try{
+      DateTime? expiry;
+      if(action=='renew_code'){
+        final previous=DateTime.parse('${c['valid_until']}');
+        final first=previous.isAfter(DateTime.now())?previous:DateTime.now();
+        expiry=await showDatePicker(context:context,initialDate:first,firstDate:first,lastDate:DateTime(2100));
+        if(expiry==null)return;
+      }
+      await widget.api.manageCode(c,action,expiry:expiry);
+      await refresh();toast('Code gespeichert');
+    }catch(e){toast('Änderung fehlgeschlagen: $e');}
+  }
+  Future<void> editCode(Map<String,dynamic> c)async{
+    final codeField=TextEditingController(text:'${c['code']}');
+    final discountField=TextEditingController(text:((c['discount_bps'] as num)/100).toString());
+    final commissionField=TextEditingController(text:((c['commission_bps'] as num)/100).toString());
+    final limitField=TextEditingController(text:c['usage_limit']?.toString()??'');
+    var start=DateTime.parse('${c['valid_from']}');
+    var end=DateTime.parse('${c['valid_until']}');
+    final confirmed=await showDialog<bool>(context:context,builder:(dialog)=>StatefulBuilder(
+      builder:(dialog,change)=>AlertDialog(
+        title:const Text('Rabattcode bearbeiten'),
+        content:SingleChildScrollView(child:Column(mainAxisSize:MainAxisSize.min,children:[
+          TextField(controller:codeField,readOnly:(c['redemption_count'] as num)>0,decoration:const InputDecoration(labelText:'Code')),
+          TextField(controller:discountField,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Rabatt %')),
+          TextField(controller:commissionField,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Provision %')),
+          TextField(controller:limitField,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Max. Nutzung, leer = unbegrenzt')),
+          OutlinedButton(onPressed:(c['redemption_count'] as num)>0?null:()async{
+            final value=await showDatePicker(context:dialog,initialDate:start,firstDate:DateTime(2020),lastDate:DateTime(2100));
+            if(value!=null)change(()=>start=value);
+          },child:Text('Ab: ${start.toIso8601String().substring(0,10)}')),
+          OutlinedButton(onPressed:()async{
+            final value=await showDatePicker(context:dialog,initialDate:end,firstDate:DateTime(2020),lastDate:DateTime(2100));
+            if(value!=null)change(()=>end=value);
+          },child:Text('Bis: ${end.toIso8601String().substring(0,10)}')),
+          const Text('Änderungen pausieren den Code. Alte Provisionen bleiben erhalten.')
+        ])),
+        actions:[TextButton(onPressed:()=>Navigator.pop(dialog,false),child:const Text('Abbrechen')),
+          FilledButton(onPressed:()=>Navigator.pop(dialog,true),child:const Text('Speichern'))],
+      )));
+    if(confirmed==true){
+      try{
+        await widget.api.editExistingCode(c,newCode:codeField.text,
+          discount:double.parse(discountField.text.replaceAll(',','.')),
+          commission:double.parse(commissionField.text.replaceAll(',','.')),
+          start:start,end:end,maxUses:limitField.text.isEmpty?null:int.parse(limitField.text));
+        await refresh();toast('Konditionen gespeichert; Code pausiert');
+      }catch(e){toast('Fehler: $e');}
+    }
+    codeField.dispose();discountField.dispose();commissionField.dispose();limitField.dispose();
+  }
   Widget applicationView(){
     return ListView(children:applications.map((a)=>Card(
       child:Padding(padding:const EdgeInsets.all(14),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
@@ -214,7 +304,18 @@ class _LuviproMarketingAdminPageState extends State<LuviproMarketingAdminPage> {
         OutlinedButton(onPressed:()async{final d=await showDatePicker(context:context,initialDate:until,firstDate:DateTime(2026),lastDate:DateTime(2100));if(d!=null)setState(()=>until=d);},child:Text('Bis: ${until.year}-${until.month}-${until.day}')),
       ]),
       FilledButton(onPressed:newCode,child:const Text('Code speichern – inaktiv')),
-      ...codes.map((c)=>ListTile(title:Text('${c['code']}'),subtitle:Text('Rabatt ${(c['discount_bps'] as num)/100}% · Provision ${(c['commission_bps'] as num)/100}% · bis ${c['valid_until']}'),trailing:Text(c['active']==true?'Aktiv':'Inaktiv'))),
+      ...codes.map((c)=>Card(child:Padding(padding:const EdgeInsets.all(12),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Text('${c['code']}',style:Theme.of(context).textTheme.titleMedium),
+        Text('Rabatt ${(c['discount_bps'] as num)/100}% · Provision ${(c['commission_bps'] as num)/100}%'),
+        Text('Gültig bis: ${c['valid_until']} · Status: ${c['active']==true?'Aktiv':'Pausiert'}'),
+        Wrap(spacing:8,children:[
+          if(c['active']==true)OutlinedButton(onPressed:()=>manageCode(c,'pause_code'),child:const Text('Deaktivieren'))
+          else OutlinedButton(onPressed:()=>manageCode(c,'resume_code'),child:const Text('Aktivieren*')),
+          TextButton(onPressed:()=>manageCode(c,'renew_code'),child:const Text('Verlängern')),
+          TextButton(onPressed:()=>editCode(c),child:const Text('Bearbeiten')),
+        ]),
+        const Text('* Aktivierung nur bei freigeschalteter Checkout-Integration.')
+      ]))),
     ]);
   }
   Widget financeView(){

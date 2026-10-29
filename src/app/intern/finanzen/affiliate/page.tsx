@@ -5,17 +5,17 @@ import { isAccountingAdmin, accountingEnabled } from "@/lib/accounting/admin-aut
 import { affiliateConfigured, affiliateDb } from "@/lib/affiliate/server";
 export const dynamic="force-dynamic";
 export const metadata: Metadata={title:"Affiliate Verwaltung | LUVIPRO",robots:{index:false,follow:false,nocache:true}};
-type Applicant={id:string;company_name:string;contact_name:string;email:string;country:string;business_address:string;website:string;marketing_plan:string;status:string;created_at:string;registration_path:string};
-type Discount={id:string;code:string;affiliate_id:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean};
-export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string}>}) {
+type Applicant={id:string;owner_uid:string|null;company_name:string;contact_name:string;email:string;country:string;business_address:string;website:string;marketing_plan:string;status:string;created_at:string;registration_path:string};
+type Discount={id:string;code:string;affiliate_id:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean;version:number};
+export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string;error?:string}>}) {
  if(!accountingEnabled() || !(await isAccountingAdmin())) redirect("/intern/finanzen/login");
  const params=await searchParams;
  let apps:Applicant[]=[],codes:Discount[]=[],payouts:{id:string;affiliate_id:string;payout_month:string;status:string;amount_cents:number}[]=[],error="";
  if(!affiliateConfigured()) error="Das Affiliate-Modul ist noch nicht aktiviert (AFFILIATE_APPLICATIONS_ENABLED).";
  else try {
   const [a,c,p]=await Promise.all([
-   affiliateDb("luvipro_affiliate_applications?select=id,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path&order=created_at.desc&limit=100"),
-   affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active&order=created_at.desc&limit=100"),
+   affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path&order=created_at.desc&limit=100"),
+   affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active,version&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_affiliate_payouts?select=id,affiliate_id,payout_month,status,amount_cents&order=created_at.desc&limit=100")
   ]);
   apps=await a.json() as Applicant[]; codes=await c.json() as Discount[];payouts=await p.json() as typeof payouts;
@@ -27,6 +27,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
   <h1 className="text-4xl font-bold">Marketing & Affiliate Management</h1>
   <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">Nur die Verwaltung vergibt Rabattcodes nach persönlicher Prüfung des Gewerbenachweises. Rabattcodes sind noch nicht mit der Bezahlkasse verbunden.</p>
   {params.ok==="1"&&<p role="status" className="mt-6 rounded-lg bg-emerald-900/30 p-4 text-emerald-200">Änderung gespeichert.</p>}
+  {params.error==="1"&&<p role="alert" className="mt-5 rounded-lg bg-rose-500/10 p-4 text-rose-200">Aktion nicht ausgeführt. Bitte Ablaufdatum, Berechtigung oder veraltete Daten prüfen und neu laden.</p>}
   {error&&<p role="alert" className="mt-6 rounded-lg bg-amber-900/30 p-4 text-amber-100">{error}</p>}
   <section className="mt-12 rounded-2xl border border-white/10 p-6">
    <h2 className="text-2xl font-bold">Neuen Rabattcode manuell anlegen</h2>
@@ -50,6 +51,17 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
     <p className="mt-2 break-words text-sm text-slate-300">{a.email} · {a.country} · {a.business_address}</p>
     <p className="mt-2 break-words text-sm text-slate-400">{a.website} {a.marketing_plan}</p>
     <a className="mt-3 inline-block text-sm text-pulse underline" href={`/api/accounting/affiliate/document?id=${a.id}&format=pdf`}>Gewerbenachweis geschützt ansehen / herunterladen</a>
+    {a.status==="approved"&&<div className="mt-5 rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-4">
+     <p className="text-sm font-semibold text-emerald-100">Bestehendes LUVIPRO-Konto verbinden</p>
+     <p className="mt-2 text-xs leading-6 text-slate-300">Kundenkonto oder Partnerwerkstatt bleibt erhalten, inklusive aller bisherigen Rechte und Daten. Affiliate wird über dieselbe Supabase Auth-ID ergänzt. Falls die Konto-E-Mail mit der geprüften Affiliate-E-Mail identisch ist, kann der Nutzer die Verbindung selbst vornehmen.</p>
+     {a.owner_uid?<p className="mt-3 text-sm text-emerald-200">Verbunden mit Auth-Benutzer: {a.owner_uid}</p>:<form action="/api/accounting/affiliate" method="POST" className="mt-4 flex flex-col gap-3">
+      <input type="hidden" name="action" value="link_existing_account"/>
+      <input type="hidden" name="affiliate_id" value={a.id}/>
+      <label className="text-xs">Bestehende Auth User UUID (Kunde oder Werkstatt)<input name="owner_uid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" pattern="[0-9a-fA-F-]{36}" required className={input}/></label>
+      <label className="flex items-start gap-2 text-xs leading-6 text-slate-200"><input required type="checkbox" name="identity_verified" className="mt-1"/>Ich habe den Gewerbenachweis und die tatsächliche Zuordnung dieser vorhandenen Benutzer-ID persönlich verifiziert. Bestehende Rollen werden nicht geändert.</label>
+      <button className="self-start rounded-lg bg-violet-600 px-4 py-3 text-sm font-semibold">Vorhandenes Konto verknüpfen</button>
+     </form>}
+    </div>}
     {a.status==="pending"&&<form action="/api/accounting/affiliate" method="POST" className="mt-5 flex flex-wrap items-center gap-3">
      <input type="hidden" name="affiliate_id" value={a.id}/>
      <input className="rounded-lg border border-white/20 bg-transparent px-4 py-2 text-sm" name="review_notes" maxLength={500} placeholder="Prüfvermerk / Ablehnungsgrund" aria-label="Prüfvermerk"/>
@@ -59,11 +71,45 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
    </article>)}
    {!apps.length&&!error&&<p className="text-slate-400">Noch keine Anträge.</p>}</div>
   </section>
-  <section className="mt-12 rounded-2xl border border-white/10 p-6"><h2 className="text-2xl font-bold">Rabattcodes ({codes.length})</h2>
-   <div className="mt-5 overflow-x-auto"><table className="w-full min-w-[700px] text-left text-sm"><thead><tr className="border-b border-white/20">{["Code","Rabatt","Provision","Gültigkeit","Nutzung","Status"].map(x=><th className="p-3" key={x}>{x}</th>)}</tr></thead>
-   <tbody>{codes.map(c=><tr className="border-b border-white/10" key={c.id}>
-    <td className="p-3 font-semibold">{c.code}</td><td className="p-3">{c.discount_bps/100}%</td><td className="p-3">{c.commission_bps/100}%</td><td className="p-3">{c.valid_from} – {c.valid_until}</td><td className="p-3">{c.redemption_count}/{c.usage_limit??"∞"}</td><td className="p-3">{c.active?"Aktiv":"Nicht aktiviert"}</td>
-   </tr>)}</tbody></table></div>
+  <section className="mt-12 rounded-2xl border border-white/10 p-6">
+   <h2 className="text-2xl font-bold">Rabattcodes verwalten ({codes.length})</h2>
+   <p className="mt-3 text-sm leading-7 text-slate-300">Codes jederzeit pausieren, Laufzeit verlängern oder Konditionen ändern. Änderungen gelten nur für künftige Verkäufe und werden protokolliert. Benutzte Codes können nicht umbenannt werden. Aktivierung ist erst möglich, wenn die sichere Checkout-Rabattprüfung einsatzbereit ist.</p>
+   <div className="mt-7 grid gap-5 xl:grid-cols-2">{codes.map(c=><article key={c.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+    <div className="flex flex-wrap justify-between gap-4"><div>
+     <h3 className="text-xl font-bold text-pulse">{c.code}</h3>
+     <p className="mt-1 text-sm text-slate-300">{apps.find(a=>a.id===c.affiliate_id)?.company_name??"Partner"} · {c.discount_bps/100}% Rabatt · {c.commission_bps/100}% Provision</p>
+     <p className="mt-1 text-xs text-slate-400">{c.valid_from} – {c.valid_until} · {c.redemption_count}/{c.usage_limit??"∞"} Einlösungen</p>
+    </div><span className={`h-fit rounded-lg px-3 py-2 text-xs font-semibold ${c.active?"bg-emerald-700/30 text-emerald-200":"bg-amber-600/20 text-amber-100"}`}>{c.active?"Aktiv":"Pausiert / inaktiv"}</span></div>
+    <div className="mt-5 flex flex-wrap gap-3">
+     {c.active ? <form action="/api/accounting/affiliate" method="POST">
+      <input type="hidden" name="action" value="pause_code"/><input type="hidden" name="code_id" value={c.id}/><input type="hidden" name="expected_version" value={c.version}/>
+      <button className="rounded-lg bg-rose-700 px-4 py-2 text-sm font-semibold">Sofort deaktivieren</button>
+     </form>:<form action="/api/accounting/affiliate" method="POST">
+      <input type="hidden" name="action" value="resume_code"/><input type="hidden" name="code_id" value={c.id}/><input type="hidden" name="expected_version" value={c.version}/>
+      <button disabled={process.env.AFFILIATE_COUPON_REDEMPTION_ENABLED!=="true"} title="Nur nach geprüfter Checkout-Integration" className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40">Wieder aktivieren</button>
+     </form>}
+    </div>
+    <details className="mt-5 rounded-lg border border-white/10 p-4"><summary className="cursor-pointer font-semibold">Gültigkeit verlängern</summary>
+     <form action="/api/accounting/affiliate" method="POST" className="mt-4 flex flex-wrap items-end gap-3">
+      <input type="hidden" name="action" value="renew_code"/><input type="hidden" name="code_id" value={c.id}/><input type="hidden" name="expected_version" value={c.version}/>
+      <label className="text-sm">Neues Ablaufdatum<input type="date" name="valid_until" min={c.valid_until} defaultValue={c.valid_until} className={input} required/></label>
+      <button className="rounded-lg bg-violet-600 px-4 py-3 text-sm font-semibold">Verlängern</button>
+     </form>
+    </details>
+    <details className="mt-3 rounded-lg border border-white/10 p-4"><summary className="cursor-pointer font-semibold">Code / Konditionen bearbeiten</summary>
+     <form action="/api/accounting/affiliate" method="POST" className="mt-5 grid gap-4 sm:grid-cols-2">
+      <input type="hidden" name="action" value="edit_code"/><input type="hidden" name="code_id" value={c.id}/><input type="hidden" name="expected_version" value={c.version}/>
+      <label className="text-xs">Rabattcode<input className={input} name="code" defaultValue={c.code} required pattern="[A-Z0-9][A-Z0-9_-]{3,31}" maxLength={32} readOnly={c.redemption_count>0}/></label>
+      <label className="text-xs">Max. Einlösungen<input className={input} name="usage_limit" min={Math.max(1,c.redemption_count)} type="number" defaultValue={c.usage_limit??""} placeholder="Unbegrenzt"/></label>
+      <label className="text-xs">Rabatt %<input className={input} name="discount" required type="number" min="0" max="100" step=".01" defaultValue={c.discount_bps/100}/></label>
+      <label className="text-xs">Provision %<input className={input} name="commission" required type="number" min="0" max="100" step=".01" defaultValue={c.commission_bps/100}/></label>
+      <label className="text-xs">Gültig ab<input className={input} name="valid_from" required type="date" defaultValue={c.valid_from} readOnly={c.redemption_count>0}/></label>
+      <label className="text-xs">Gültig bis<input className={input} name="valid_until" required type="date" defaultValue={c.valid_until}/></label>
+      <p className="text-xs leading-6 text-amber-100 sm:col-span-2">Nach einer Konditionsänderung bleibt der Code zur Sicherheit inaktiv. Frühere Provisionen und Rechnungen bleiben unverändert.</p>
+      <button className="rounded-lg bg-violet-600 px-5 py-3 font-semibold sm:col-span-2">Änderungen speichern</button>
+     </form>
+    </details>
+   </article>)}{!codes.length&&<p className="text-slate-400">Keine Rabattcodes vorhanden.</p>}</div>
   </section>
   <section className="mt-12 rounded-2xl border border-white/10 p-6">
    <h2 className="text-2xl font-bold">Monatliche Affiliate-Abrechnungen</h2>
