@@ -5,7 +5,7 @@ import { isAccountingAdmin, accountingEnabled } from "@/lib/accounting/admin-aut
 import { affiliateConfigured, affiliateDb } from "@/lib/affiliate/server";
 export const dynamic="force-dynamic";
 export const metadata: Metadata={title:"Affiliate Verwaltung | LUVIPRO",robots:{index:false,follow:false,nocache:true}};
-type Applicant={id:string;company_name:string;contact_name:string;email:string;country:string;business_address:string;website:string;marketing_plan:string;status:string;created_at:string;registration_path:string};
+type Applicant={id:string;owner_uid:string|null;company_name:string;contact_name:string;email:string;country:string;business_address:string;website:string;marketing_plan:string;status:string;created_at:string;registration_path:string};
 type Discount={id:string;code:string;affiliate_id:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean;version:number};
 export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string;error?:string}>}) {
  if(!accountingEnabled() || !(await isAccountingAdmin())) redirect("/intern/finanzen/login");
@@ -14,7 +14,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
  if(!affiliateConfigured()) error="Das Affiliate-Modul ist noch nicht aktiviert (AFFILIATE_APPLICATIONS_ENABLED).";
  else try {
   const [a,c,p]=await Promise.all([
-   affiliateDb("luvipro_affiliate_applications?select=id,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path&order=created_at.desc&limit=100"),
+   affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active,version&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_affiliate_payouts?select=id,affiliate_id,payout_month,status,amount_cents&order=created_at.desc&limit=100")
   ]);
@@ -51,6 +51,17 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
     <p className="mt-2 break-words text-sm text-slate-300">{a.email} · {a.country} · {a.business_address}</p>
     <p className="mt-2 break-words text-sm text-slate-400">{a.website} {a.marketing_plan}</p>
     <a className="mt-3 inline-block text-sm text-pulse underline" href={`/api/accounting/affiliate/document?id=${a.id}&format=pdf`}>Gewerbenachweis geschützt ansehen / herunterladen</a>
+    {a.status==="approved"&&<div className="mt-5 rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-4">
+     <p className="text-sm font-semibold text-emerald-100">Bestehendes LUVIPRO-Konto verbinden</p>
+     <p className="mt-2 text-xs leading-6 text-slate-300">Kundenkonto oder Partnerwerkstatt bleibt erhalten, inklusive aller bisherigen Rechte und Daten. Affiliate wird über dieselbe Supabase Auth-ID ergänzt. Falls die Konto-E-Mail mit der geprüften Affiliate-E-Mail identisch ist, kann der Nutzer die Verbindung selbst vornehmen.</p>
+     {a.owner_uid?<p className="mt-3 text-sm text-emerald-200">Verbunden mit Auth-Benutzer: {a.owner_uid}</p>:<form action="/api/accounting/affiliate" method="POST" className="mt-4 flex flex-col gap-3">
+      <input type="hidden" name="action" value="link_existing_account"/>
+      <input type="hidden" name="affiliate_id" value={a.id}/>
+      <label className="text-xs">Bestehende Auth User UUID (Kunde oder Werkstatt)<input name="owner_uid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" pattern="[0-9a-fA-F-]{36}" required className={input}/></label>
+      <label className="flex items-start gap-2 text-xs leading-6 text-slate-200"><input required type="checkbox" name="identity_verified" className="mt-1"/>Ich habe den Gewerbenachweis und die tatsächliche Zuordnung dieser vorhandenen Benutzer-ID persönlich verifiziert. Bestehende Rollen werden nicht geändert.</label>
+      <button className="self-start rounded-lg bg-violet-600 px-4 py-3 text-sm font-semibold">Vorhandenes Konto verknüpfen</button>
+     </form>}
+    </div>}
     {a.status==="pending"&&<form action="/api/accounting/affiliate" method="POST" className="mt-5 flex flex-wrap items-center gap-3">
      <input type="hidden" name="affiliate_id" value={a.id}/>
      <input className="rounded-lg border border-white/20 bg-transparent px-4 py-2 text-sm" name="review_notes" maxLength={500} placeholder="Prüfvermerk / Ablehnungsgrund" aria-label="Prüfvermerk"/>
