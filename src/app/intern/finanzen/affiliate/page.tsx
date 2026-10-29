@@ -5,7 +5,7 @@ import { isAccountingAdmin, accountingEnabled } from "@/lib/accounting/admin-aut
 import { affiliateConfigured, affiliateDb } from "@/lib/affiliate/server";
 export const dynamic="force-dynamic";
 export const metadata: Metadata={title:"Affiliate Verwaltung | LUVIPRO",robots:{index:false,follow:false,nocache:true}};
-type Applicant={id:string;owner_uid:string|null;company_name:string;contact_name:string;email:string;country:string;business_address:string;website:string;marketing_plan:string;status:string;created_at:string;registration_path:string};
+type Applicant={id:string;owner_uid:string|null;company_name:string;contact_name:string;email:string;country:string;business_address:string;website:string;marketing_plan:string;status:string;created_at:string;registration_path:string;legal_agb_version:string|null;legal_agb_accepted_at:string|null;individual_agreement_ref:string;individual_agreement_accepted_at:string|null};
 type Discount={id:string;code:string;affiliate_id:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean;version:number};
 export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string;error?:string}>}) {
  if(!accountingEnabled() || !(await isAccountingAdmin())) redirect("/intern/finanzen/login");
@@ -19,7 +19,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
  if(!affiliateConfigured()) error="Das Affiliate-Modul ist noch nicht aktiviert (AFFILIATE_APPLICATIONS_ENABLED).";
  else try {
   const [a,c,p,tx,dt,tr,rm]=await Promise.all([
-   affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path&order=created_at.desc&limit=100"),
+   affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path,legal_agb_version,legal_agb_accepted_at,individual_agreement_ref,individual_agreement_accepted_at&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active,version&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_affiliate_payouts?select=id,affiliate_id,payout_month,status,amount_cents&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_affiliate_tax_profiles?select=affiliate_id,vat_mode,tax_number_or_vat_id,selfbilling_agreed,verified_at,legal_name,postal_address,selfbilling_agreement_reference&limit=100"),
@@ -32,7 +32,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
  const input="w-full rounded-lg border border-white/15 bg-[#10182a] p-3 text-white";
  const approved=apps.filter(a=>a.status==="approved");
  return <main className="min-h-screen bg-obsidian py-14 text-white"><div className="section-shell">
-  <nav className="mb-8 flex flex-wrap gap-5 text-sm text-pulse"><Link href="/intern/finanzen">← Buchhaltung</Link><Link href="/affiliate">Öffentliche Bewerbung ↗</Link></nav>
+  <nav className="mb-8 flex flex-wrap gap-5 text-sm text-pulse"><Link href="/intern/finanzen">← Buchhaltung</Link><Link href="/affiliate">Öffentliche Bewerbung ↗</Link><Link href="/affiliate/agb">Affiliate-AGB ↗</Link></nav>
   <h1 className="text-4xl font-bold">Marketing & Affiliate Management</h1>
   <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">Nur die Verwaltung vergibt Rabattcodes nach persönlicher Prüfung des Gewerbenachweises. Rabattcodes sind noch nicht mit der Bezahlkasse verbunden.</p>
   {params.ok==="1"&&<p role="status" className="mt-6 rounded-lg bg-emerald-900/30 p-4 text-emerald-200">Änderung gespeichert.</p>}
@@ -49,6 +49,8 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
     <label>Gültig ab<input className={input} type="date" name="valid_from" required/></label>
     <label>Gültig bis<input className={input} type="date" name="valid_until" required/></label>
     <label>Max. Einlösungen (optional)<input className={input} name="usage_limit" type="number" min="1" step="1"/></label>
+    <label className="text-sm sm:col-span-2 lg:col-span-3">Beleg/Vertragsreferenz der vom Affiliate bestätigten konkreten Codekonditionen<input className={input} name="code_terms_evidence_ref" minLength={4} maxLength={200} required placeholder="Unterschriebene Provisionsanlage oder datierte Vertragsreferenz"/></label>
+    <label className="flex items-start gap-3 text-xs leading-6 text-amber-100 sm:col-span-2 lg:col-span-3"><input type="checkbox" name="code_terms_confirmed" required className="mt-1"/>Der Affiliate hat den konkreten Rabatt-, Provisionssatz und Gültigkeitszeitraum nachweislich individuell bestätigt; die vereinbarte Provision ist inklusive ggf. anfallender Umsatzsteuer.</label>
     <p className="text-xs leading-6 text-amber-200 sm:col-span-2">Aus Sicherheitsgründen bleibt der Code zunächst inaktiv, bis Checkout-Validierung und Zahlungsnachweise angebunden und getestet sind. Eine Aktivierung erfolgt getrennt.</p>
     <button disabled={!approved.length||!!error} className="rounded-lg bg-violet-600 px-6 py-3 font-bold disabled:opacity-40">Code speichern</button>
    </form>
@@ -71,12 +73,26 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
       <button className="self-start rounded-lg bg-violet-600 px-4 py-3 text-sm font-semibold">Vorhandenes Konto verknüpfen</button>
      </form>}
     </div>}
-    {a.status==="pending"&&<form action="/api/accounting/affiliate" method="POST" className="mt-5 flex flex-wrap items-center gap-3">
-     <input type="hidden" name="affiliate_id" value={a.id}/>
-     <input className="rounded-lg border border-white/20 bg-transparent px-4 py-2 text-sm" name="review_notes" maxLength={500} placeholder="Prüfvermerk / Ablehnungsgrund" aria-label="Prüfvermerk"/>
-     <button name="action" value="approve" className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-bold">Gewerbe geprüft · Genehmigen</button>
-     <button name="action" value="reject" className="rounded-lg bg-rose-700 px-4 py-2 text-sm font-bold">Ablehnen</button>
-    </form>}
+    <p className="mt-3 text-xs text-slate-400">AGB-Fassung: {a.legal_agb_version||"Kein digitaler Nachweis"} · Bestätigt am: {a.legal_agb_accepted_at?.slice(0,10)||"—"} {a.individual_agreement_accepted_at?"· Einzelvereinbarung bestätigt: "+a.individual_agreement_ref:""}</p>
+    {a.status==="pending"&&<div className="mt-5 grid gap-4 lg:grid-cols-2">
+     <form action="/api/accounting/affiliate" method="POST" className="grid gap-3 rounded-lg border border-emerald-400/20 p-4">
+      <input type="hidden" name="affiliate_id" value={a.id}/><input type="hidden" name="action" value="approve"/>
+      <p className="text-sm font-semibold text-emerald-200">Gewerbe und individuelle Affiliate-Vereinbarung freigeben</p>
+      <label className="text-xs">Schriftlich bestätigte Provisionsvereinbarung / Vertragsreferenz
+        <input name="individual_agreement_ref" className={input} required minLength={4} maxLength={200} placeholder="Unterschriebener Vertrag, Datum, Dokument-ID"/>
+      </label>
+      <label className="text-xs">Prüfnotiz<input name="review_notes" className={input} maxLength={500} placeholder="Gewerbe / Vertreter / Dokument geprüft"/></label>
+      <label className="flex items-start gap-2 text-xs leading-6 text-slate-200"><input type="checkbox" name="individual_agreement_confirmed" required className="mt-1"/>Der Affiliate hat die individuelle Vereinbarung nachweislich angenommen; der Gewerbenachweis wurde überprüft.</label>
+      <label className="flex items-start gap-2 text-xs leading-6 text-slate-200"><input type="checkbox" name="gross_inclusive_terms" required className="mt-1"/>Die Brutto-Provisionsvergütung inklusive gegebenenfalls anfallender Umsatzsteuer wurde ausdrücklich vereinbart.</label>
+      <button disabled={!a.legal_agb_accepted_at} className="rounded-lg bg-emerald-700 px-4 py-3 text-sm font-bold disabled:opacity-40">Gewerbe und Vertrag geprüft · Genehmigen</button>
+     </form>
+     <form action="/api/accounting/affiliate" method="POST" className="grid content-start gap-3 rounded-lg border border-rose-400/20 p-4">
+      <input type="hidden" name="affiliate_id" value={a.id}/><input type="hidden" name="action" value="reject"/>
+      <p className="text-sm font-semibold text-rose-200">Bewerbung ablehnen</p>
+      <label className="text-xs">Begründung<input name="review_notes" className={input} maxLength={500} placeholder="Grund"/></label>
+      <button className="rounded-lg bg-rose-700 px-4 py-3 text-sm font-bold">Ablehnen</button>
+     </form>
+    </div>}
    </article>)}
    {!apps.length&&!error&&<p className="text-slate-400">Noch keine Anträge.</p>}</div>
   </section>
@@ -102,6 +118,8 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
      <form action="/api/accounting/affiliate" method="POST" className="mt-4 flex flex-wrap items-end gap-3">
       <input type="hidden" name="action" value="renew_code"/><input type="hidden" name="code_id" value={c.id}/><input type="hidden" name="expected_version" value={c.version}/>
       <label className="text-sm">Neues Ablaufdatum<input type="date" name="valid_until" min={c.valid_until} defaultValue={c.valid_until} className={input} required/></label>
+      <label className="text-xs sm:col-span-2">Referenz der schriftlich vereinbarten Verlängerung<input name="code_terms_evidence_ref" className={input} minLength={4} maxLength={200} required placeholder="Vertragsnachtrag"/></label>
+      <label className="flex items-center gap-2 text-xs"><input name="code_terms_confirmed" type="checkbox" required/>Verlängerung mit Affiliate vereinbart</label>
       <button className="rounded-lg bg-violet-600 px-4 py-3 text-sm font-semibold">Verlängern</button>
      </form>
     </details>
@@ -114,6 +132,8 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
       <label className="text-xs">Provision %<input className={input} name="commission" required type="number" min="0" max="100" step=".01" defaultValue={c.commission_bps/100}/></label>
       <label className="text-xs">Gültig ab<input className={input} name="valid_from" required type="date" defaultValue={c.valid_from} readOnly={c.redemption_count>0}/></label>
       <label className="text-xs">Gültig bis<input className={input} name="valid_until" required type="date" defaultValue={c.valid_until}/></label>
+      <label className="text-xs sm:col-span-2">Nachweis der individuellen Zustimmung zu diesen geänderten Bedingungen<input name="code_terms_evidence_ref" className={input} minLength={4} maxLength={200} required placeholder="Unterschriebener Nachtrag / datierter Bestätigungsbeleg"/></label>
+      <label className="flex items-start gap-2 text-xs sm:col-span-2"><input name="code_terms_confirmed" required type="checkbox" className="mt-1"/>Neue Bedingungen wurden nachweislich angenommen.</label>
       <p className="text-xs leading-6 text-amber-100 sm:col-span-2">Nach einer Konditionsänderung bleibt der Code zur Sicherheit inaktiv. Frühere Provisionen und Rechnungen bleiben unverändert.</p>
       <button className="rounded-lg bg-violet-600 px-5 py-3 font-semibold sm:col-span-2">Änderungen speichern</button>
      </form>
