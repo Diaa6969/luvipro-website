@@ -60,7 +60,7 @@ export async function POST(req:NextRequest){
    const affiliate=id(val(f,"affiliate_id",36)),month=val(f,"month",10);
    if(!DATE.test(month)||!month.endsWith("-01"))throw Error("Invalid payout month");
    await affiliateDb("rpc/luvipro_affiliate_prepare_manual_payout",{method:"POST",
-    body:JSON.stringify({p_affiliate:affiliate,p_month:month})});
+    body:JSON.stringify({p_affiliate:affiliate,p_month:month,p_operator:admin})});
   }else if(action==="issue_gutschrift"){
    if(f.get("terms_approved")!=="on")throw Error("Missing invoice review");
    const payout=id(val(f,"payout_id",36));
@@ -68,7 +68,7 @@ export async function POST(req:NextRequest){
    const address=[process.env.INVOICE_SELLER_STREET,process.env.INVOICE_SELLER_PLZ,process.env.INVOICE_SELLER_CITY].filter(Boolean).join(", ");
    if(legal.length<5||address.length<10||!process.env.INVOICE_SELLER_TAX_ID)throw Error("Registered company invoice data missing");
    await affiliateDb("rpc/luvipro_affiliate_issue_selfbilling",{method:"POST",
-    body:JSON.stringify({p_payout:payout,p_issuer_name:legal,p_issuer_address:address})});
+    body:JSON.stringify({p_payout:payout,p_issuer_name:legal,p_issuer_address:address,p_operator:admin})});
   }else if(action==="mark_manual_paid"){
    if(f.get("bank_transfer_done")!=="on"||f.get("evidence_checked")!=="on")
     throw Error("Manual bank evidence required");
