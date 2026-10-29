@@ -6,7 +6,9 @@ import { isAccountingRequestAuthorized } from "./admin-auth";
  * administrator (Supabase access token). Never trust a client-supplied user.role.
  */
 export async function isAuthorizedFinanceAdmin(req:NextRequest):Promise<boolean> {
- if(isAccountingRequestAuthorized(req)) return true;
+ // When Authorization is supplied, verify it INSTEAD of falling back to cookies.
+ // Prevent a forged bearer string from bypassing browser same-origin checks.
+ if(!req.headers.has("authorization")) return isAccountingRequestAuthorized(req);
  const bearer=req.headers.get("authorization")||"";
  if(!/^Bearer [a-zA-Z0-9_.-]{40,4000}$/.test(bearer)) return false;
  const host=process.env.SUPABASE_URL||"";
