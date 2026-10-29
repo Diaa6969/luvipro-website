@@ -118,7 +118,7 @@ create trigger luvipro_transfer_immutable_before before update or delete
 revoke execute on function public.luvipro_affiliate_immutable_rows() from public,anon,authenticated;
 
 -- ADMIN SERVER ONLY. Functions are SECURITY INVOKER and accessible solely to service_role.
-create or replace function public.luvipro_affiliate_prepare_manual_payout(p_affiliate uuid,p_month date)
+create or replace function public.luvipro_affiliate_prepare_manual_payout(p_affiliate uuid,p_month date,p_operator uuid)
 returns uuid language plpgsql security invoker set search_path=pg_catalog,public,pg_temp as $$
 declare v_id uuid; v_net bigint;v_count integer;
 begin
@@ -152,15 +152,15 @@ begin
  -- Single transaction guarantees exactly-once linked earnings.
  if (select coalesce(sum(commission_cents),0) from public.luvipro_affiliate_commissions where payout_id=v_id)<>v_net
  then raise exception 'Payout sum changed during settlement'; end if;
- insert into public.luvipro_affiliate_audit(action,entity_id,details)
- values('manual_payout_prepared',v_id,jsonb_build_object('affiliate_id',p_affiliate,'month',p_month,'commission_net_cents',v_net));
+ insert into public.luvipro_affiliate_audit(action,entity_id,actor_uid,details)
+ values('manual_payout_prepared',v_id,p_operator,jsonb_build_object('affiliate_id',p_affiliate,'month',p_month,'commission_net_cents',v_net));
  return v_id;
 end; $$;
-revoke execute on function public.luvipro_affiliate_prepare_manual_payout(uuid,date) from public,anon,authenticated;
+revoke execute on function public.luvipro_affiliate_prepare_manual_payout(uuid,date,uuid) from public,anon,authenticated;
 grant execute on function public.luvipro_affiliate_prepare_manual_payout(uuid,date) to service_role;
 
 create or replace function public.luvipro_affiliate_issue_selfbilling(
- p_payout uuid,p_issuer_name text,p_issuer_address text
+ p_payout uuid,p_issuer_name text,p_issuer_address text,p_operator uuid
 ) returns uuid language plpgsql security invoker set search_path=pg_catalog,public,pg_temp as $$
 declare v_id uuid; p public.luvipro_affiliate_payouts%rowtype;
  t public.luvipro_affiliate_tax_profiles%rowtype;v_vat bigint;v_num text;v_rate smallint;v_first date;v_last date;
@@ -192,11 +192,11 @@ begin
   t.legal_name,t.postal_address,t.tax_number_or_vat_id,
   p_issuer_name,p_issuer_address,t.vat_mode,v_rate,p.amount_cents,v_vat,p.amount_cents+v_vat,t.selfbilling_agreement_reference
  ) returning id into v_id;
- insert into public.luvipro_affiliate_audit(action,entity_id,details)
- values('selfbilling_issued',v_id,jsonb_build_object('payout_id',p.id,'number',v_num,'net',p.amount_cents,'vat',v_vat));
+ insert into public.luvipro_affiliate_audit(action,entity_id,actor_uid,details)
+ values('selfbilling_issued',v_id,p_operator,jsonb_build_object('payout_id',p.id,'number',v_num,'net',p.amount_cents,'vat',v_vat));
  return v_id;
 end; $$;
-revoke execute on function public.luvipro_affiliate_issue_selfbilling(uuid,text,text) from public,anon,authenticated;
+revoke execute on function public.luvipro_affiliate_issue_selfbilling(uuid,text,text,uuid) from public,anon,authenticated;
 grant execute on function public.luvipro_affiliate_issue_selfbilling(uuid,text,text) to service_role;
 
 create or replace function public.luvipro_affiliate_record_manual_transfer(
