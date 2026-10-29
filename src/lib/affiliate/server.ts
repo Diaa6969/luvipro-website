@@ -15,11 +15,11 @@ export async function affiliateDb(path:string, init:RequestInit={}) {
  if(!r.ok) throw new Error("Affiliate database failed: "+r.status);
  return r;
 }
-export async function acceptAffiliateSubmissionRate(ip:string) {
+export async function acceptAffiliateSubmissionRate(ip:string,maxPerDay=5) {
  const secret=process.env.AFFILIATE_RATE_SECRET;
  if(!secret||secret.length<32)throw new Error("Rate control disabled");
  const key=createHmac("sha256",secret).update(ip.trim().slice(0,110)).digest("hex");
- const response=await affiliateDb("rpc/luvipro_affiliate_take_rate",{method:"POST",body:JSON.stringify({p_key:key,p_limit:5})});
+ const response=await affiliateDb("rpc/luvipro_affiliate_take_rate",{method:"POST",body:JSON.stringify({p_key:key,p_limit:maxPerDay})});
  return (await response.json())===true;
 }
 export function registrationFileName(ext:"pdf"|"png"|"jpg") {return randomUUID()+"."+ext;}
