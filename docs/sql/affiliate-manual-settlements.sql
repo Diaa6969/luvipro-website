@@ -48,6 +48,9 @@ create table if not exists public.luvipro_affiliate_settlement_documents (
  document_type text not null check (document_type='gutschrift'),
  issued_at timestamptz not null default now(),
  service_month date not null check (extract(day from service_month)=1),
+ service_from date not null,
+ service_until date not null,
+ constraint luvipro_affiliate_service_period check (service_until>=service_from),
  supplier_legal_name text not null,
  supplier_address text not null,
  supplier_tax_number text not null,
@@ -119,7 +122,7 @@ create or replace function public.luvipro_affiliate_prepare_manual_payout(p_affi
 returns uuid language plpgsql security invoker set search_path=pg_catalog,public,pg_temp as $$
 declare v_id uuid; v_net bigint;v_count integer;
 begin
- if p_month is null or extract(day from p_month)<>1 or p_month>date_trunc('month',current_date)::date then
+ if p_month is null or extract(day from p_month)<>1 or p_month>=date_trunc('month',current_date)::date then
   raise exception 'Invalid settlement month';
  end if;
  if not exists(select 1 from public.luvipro_affiliate_applications where id=p_affiliate and status='approved') then
@@ -160,7 +163,7 @@ create or replace function public.luvipro_affiliate_issue_selfbilling(
  p_payout uuid,p_issuer_name text,p_issuer_address text
 ) returns uuid language plpgsql security invoker set search_path=pg_catalog,public,pg_temp as $$
 declare v_id uuid; p public.luvipro_affiliate_payouts%rowtype;
- t public.luvipro_affiliate_tax_profiles%rowtype;v_vat bigint;v_num text;v_rate smallint;
+ t public.luvipro_affiliate_tax_profiles%rowtype;v_vat bigint;v_num text;v_rate smallint;v_first date;v_last date;
 begin
  select * into p from public.luvipro_affiliate_payouts where id=p_payout for update;
  if not found or p.status<>'prepared' or p.amount_cents<=0 then raise exception 'Payout not prepared'; end if;
@@ -173,18 +176,19 @@ begin
  end if;
  if nullif(trim(p_issuer_name),'') is null or nullif(trim(p_issuer_address),'') is null
  then raise exception 'Registered LUVIPRO issuer details missing'; end if;
- select coalesce(sum(commission_cents),0) into v_vat from public.luvipro_affiliate_commissions
+ select coalesce(sum(commission_cents),0),min(created_at)::date,max(created_at)::date into v_vat,v_first,v_last
+ from public.luvipro_affiliate_commissions
  where payout_id=p_payout and affiliate_id=p.affiliate_id and status='eligible';
- if v_vat<>p.amount_cents then raise exception 'Commission sum mismatch'; end if;
+ if v_vat<>p.amount_cents or v_first is null or v_last is null then raise exception 'Commission sum mismatch'; end if;
  v_rate:=case when t.vat_mode='de_19' then 19 else 0 end;
  v_vat:=case when v_rate=19 then (p.amount_cents*19+50)/100 else 0 end;
  v_num:='GS-'||to_char(current_date,'YYYY')||'-'||lpad(nextval('public.luvipro_affiliate_gutschrift_sequence')::text,8,'0');
  insert into public.luvipro_affiliate_settlement_documents(
-  payout_id,affiliate_id,document_number,document_type,service_month,
+  payout_id,affiliate_id,document_number,document_type,service_month,service_from,service_until,
   supplier_legal_name,supplier_address,supplier_tax_number,
   issuer_legal_name,issuer_address,vat_mode,vat_rate,net_cents,vat_cents,gross_cents,agreement_ref
  )values(
-  p.id,p.affiliate_id,v_num,'gutschrift',p.payout_month,
+  p.id,p.affiliate_id,v_num,'gutschrift',p.payout_month,v_first,v_last,
   t.legal_name,t.postal_address,t.tax_number_or_vat_id,
   p_issuer_name,p_issuer_address,t.vat_mode,v_rate,p.amount_cents,v_vat,p.amount_cents+v_vat,t.selfbilling_agreement_reference
  ) returning id into v_id;
