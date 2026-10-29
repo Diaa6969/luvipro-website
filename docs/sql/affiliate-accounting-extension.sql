@@ -224,3 +224,28 @@ create trigger luvipro_affiliate_validate_payout_before
  before insert or update on public.luvipro_affiliate_payouts
  for each row execute function public.luvipro_affiliate_validate_payout();
 revoke execute on function public.luvipro_affiliate_validate_payout() from public,anon,authenticated;
+
+-- Atomic public application throttling; only trusted service_role can execute.
+create table if not exists public.luvipro_affiliate_rate_windows (
+ key_hash text primary key check (length(key_hash)=64),
+ hits integer not null default 0 check (hits >= 0),
+ expires_at timestamptz not null
+);
+alter table public.luvipro_affiliate_rate_windows enable row level security;
+revoke all on public.luvipro_affiliate_rate_windows from public,anon,authenticated;
+grant select,insert,update on public.luvipro_affiliate_rate_windows to service_role;
+create or replace function public.luvipro_affiliate_take_rate(p_key text,p_limit integer)
+returns boolean language plpgsql security invoker set search_path=pg_catalog,public,pg_temp as $$
+declare v_hits integer;
+begin
+ if p_key !~ '^[a-f0-9]{64}$' or p_limit<1 or p_limit>100 then raise exception 'Bad rate key'; end if;
+ insert into public.luvipro_affiliate_rate_windows(key_hash,hits,expires_at)
+ values(p_key,1,now()+interval '24 hours')
+ on conflict (key_hash) do update set
+  hits=case when luvipro_affiliate_rate_windows.expires_at < now() then 1 else luvipro_affiliate_rate_windows.hits+1 end,
+  expires_at=case when luvipro_affiliate_rate_windows.expires_at < now() then now()+interval '24 hours' else luvipro_affiliate_rate_windows.expires_at end
+ returning hits into v_hits;
+ return v_hits<=p_limit;
+end; $$;
+revoke execute on function public.luvipro_affiliate_take_rate(text,integer) from public,anon,authenticated;
+grant execute on function public.luvipro_affiliate_take_rate(text,integer) to service_role;
