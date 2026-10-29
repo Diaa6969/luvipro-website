@@ -148,7 +148,7 @@ export default async function AccountingDashboard({ searchParams }: {
                         <td className="whitespace-nowrap p-3">{eur(exp.gross_cents)}</td>
                         <td className="whitespace-nowrap p-3">{exp.vorsteuer_confirmed ? eur(exp.vat_cents) : "Nicht bestätigt"}</td>
                         <td className="p-3 text-xs">{exp.paid ? "Bezahlt" : "Offen"}</td>
-                        <td className="p-3"><a className="text-pulse underline" href={`/api/accounting/documents?kind=in&id=${exp.id}`}>Beleg</a></td>
+                        <td className="p-3"><a className="text-pulse underline" href={`/api/accounting/documents?kind=in&id=${exp.id}&format=pdf`}>PDF-Beleg</a></td>
                       </tr>
                     ))}</tbody>
                   </table>
