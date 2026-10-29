@@ -122,7 +122,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
   </section>
   <section className="mt-12 rounded-2xl border border-white/10 p-6">
    <h2 className="text-2xl font-bold">Steuerprofil & Gutschriftvereinbarung</h2>
-   <p className="mt-3 text-sm leading-7 text-amber-100">Nur nach echter Gewerbeprüfung und vorheriger schriftlicher Vereinbarung über das Gutschriftverfahren (§ 14 UStG). Für EU-/Auslandsfälle, § 13b und ungeklärte Steuerfälle gesperrt. Steuersatz 19 % oder § 19 UStG erst nach Prüfung festlegen. Das Dokument ist keine gewöhnliche Rechnung über eine Auszahlung, sondern eine Selbstabrechnung für die Werbeleistung des Affiliate.</p>
+   <p className="mt-3 text-sm leading-7 text-amber-100">Provision = festgelegter Prozentsatz vom Nettoverkaufspreis (nach Rabatt) als Bruttogesamtvergütung inklusive gegebenenfalls anfallender Umsatzsteuer – nur mit ausdrücklicher schriftlicher Vereinbarung. Der Affiliate versteuert seinen Gewinn selbst. Beispiel 270,00 € Gesamtprovision bei 19 % USt: 226,89 € netto + 43,11 € USt = 270,00 € Auszahlung; Kleinunternehmer: 270,00 € ohne ausgewiesene USt. Gutschriftverfahren nach § 14 UStG nur mit vorheriger schriftlicher Einigung. EU-/Auslandsfälle und ungeklärte Steuertatbestände bleiben gesperrt.</p>
    <div className="mt-6 grid gap-6 lg:grid-cols-2">{approved.map(a=>{
     const profile=profiles.find(p=>p.affiliate_id===a.id);
     return <form key={a.id} action="/api/accounting/affiliate/settlements" method="POST" className="grid gap-3 rounded-xl border border-white/10 bg-white/[.03] p-5 sm:grid-cols-2">
@@ -138,6 +138,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
       </select></label>
      <label className="text-xs sm:col-span-2">Schriftliche Gutschriftvereinbarung (Dokument-Referenz)<input name="agreement_ref" required maxLength={160} className={input} defaultValue={profile?.selfbilling_agreement_reference||""} placeholder="Vertrag / datierte Vereinbarung"/></label>
      <label className="flex gap-2 text-xs leading-5 sm:col-span-2"><input type="checkbox" name="selfbilling_agreed" required className="mt-1"/>Der Affiliate hat VOR Ausstellung der Gutschrift der Selbstabrechnung nachweislich zugestimmt.</label>
+     <label className="flex gap-2 text-xs leading-5 sm:col-span-2"><input type="checkbox" name="gross_inclusive_agreed" required className="mt-1"/>Die Provisionsvereinbarung bestimmt ausdrücklich: Provisionssatz auf Nettoverkaufspreis = endgültiger Brutto-Auszahlungsbetrag einschließlich ggf. anfallender USt; keine USt zusätzlich zu zahlen.</label>
      <label className="flex gap-2 text-xs leading-5 sm:col-span-2"><input type="checkbox" name="reviewed" required className="mt-1"/>Identität, Gewerbe, steuerliche Behandlung und Vereinbarung persönlich verifiziert.</label>
      <button className="rounded-lg bg-violet-600 px-4 py-3 text-sm font-semibold sm:col-span-2">Steuerprofil geprüft speichern</button>
      {profile&&<p className="text-xs text-emerald-100 sm:col-span-2">Verifiziert: {profile.verified_at?.slice(0,10)||"—"} · {profile.vat_mode}</p>}
