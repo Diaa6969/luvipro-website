@@ -9,7 +9,9 @@ export default function SettlementDemo(){
  const [bankRef,setBankRef]=useState("");
  const [actualTransfer,setActualTransfer]=useState(false);
  const [message,setMessage]=useState("");
- const net=27000, tax=vat==="19"?Math.round(net*.19):0,gross=net+tax;
+ const gross=27000; // Fixed, VAT-inclusive 10% of 2,700 € net device sale
+ const net=vat==="19"?Math.round(gross/1.19):gross;
+ const tax=gross-net;
  async function pdf(){
   const doc=await PDFDocument.create(),page=doc.addPage([595,842]);
   const bold=await doc.embedFont(StandardFonts.HelveticaBold),font=await doc.embedFont(StandardFonts.Helvetica);
@@ -38,9 +40,9 @@ export default function SettlementDemo(){
   <div className="mt-8 rounded-xl border border-amber-300/30 bg-amber-400/10 p-5 text-sm text-amber-100"><b>DEMO – SYNTHETISCHE DATEN.</b> Keine echte Firma, keine Steuerrechnung, keine Bankverbindung und keine Auszahlung.</div>
   <p className="mt-10 text-xs font-bold uppercase tracking-widest text-pulse">LUVIPRO · Buchhaltung Vorschau</p>
   <h1 className="mt-2 text-4xl font-bold">Monatliche Affiliate-Auszahlung</h1>
-  <p className="mt-4 leading-7 text-slate-300">Der Admin bereitet die Provision vor, prüft die steuerlichen Angaben und eine schriftliche Gutschriftvereinbarung, erzeugt den Beleg, überweist persönlich über sein Bankkonto und dokumentiert erst danach den Vorgang. Es gibt keine automatischen Überweisungen.</p>
+  <p className="mt-4 leading-7 text-slate-300">Der Affiliate erhält insgesamt 10 % des Nettoverkaufspreises als Brutto-Provision inklusive gegebenenfalls anfallender Umsatzsteuer (nur bei ausdrücklicher Vertragsvereinbarung). In diesem Beispiel sind es immer 270,00 € Gesamtauszahlung: bei 19 % USt sind 226,89 € netto und 43,11 € Umsatzsteuer enthalten. Der Admin erstellt eine Gutschrift, überweist ausschließlich selbst per Bank und bestätigt erst danach den Zahlungsausgang.</p>
   <div className="mt-8 grid gap-4 sm:grid-cols-3">
-   {[["Provision netto",net],["Umsatzsteuer",tax],["Bankauszahlung brutto",gross]].map(([label,amount])=><div className="rounded-xl border border-white/10 bg-white/[.04] p-5" key={String(label)}><p className="text-sm text-slate-300">{label}</p><p className="mt-3 text-2xl font-bold">{euro(Number(amount))}</p></div>)}
+   {[["Provision netto (nach USt-Aufteilung)",net],["Umsatzsteuer im Betrag enthalten",tax],["Bankauszahlung gesamt",gross]].map(([label,amount])=><div className="rounded-xl border border-white/10 bg-white/[.04] p-5" key={String(label)}><p className="text-sm text-slate-300">{label}</p><p className="mt-3 text-2xl font-bold">{euro(Number(amount))}</p></div>)}
   </div>
   <section className="mt-8 rounded-2xl border border-white/10 p-6">
    <div className="flex flex-wrap justify-between gap-4"><h2 className="text-xl font-bold">Abrechnungsstatus</h2><strong className="rounded-lg bg-white/10 px-4 py-2 text-sm">{stage}</strong></div>
@@ -58,7 +60,7 @@ export default function SettlementDemo(){
     <p className="text-sm leading-6 text-amber-100">LUVIPRO löst hier KEINE Überweisung aus. Admin muss den Bruttobetrag {euro(gross)} bei seiner Bank selbst überweisen.</p>
     <label className="text-sm">Bankreferenz / Verwendungszweck<input value={bankRef} onChange={e=>setBankRef(e.target.value)} className="mt-2 block w-full rounded-xl border border-white/20 bg-[#151d31] p-3" placeholder="DEMO-TRANSFER-0001"/></label>
     <label className="flex gap-3 text-sm"><input type="checkbox" checked={actualTransfer} onChange={e=>setActualTransfer(e.target.checked)}/>Externe Bankzahlung vom Admin bestätigt (in dieser Demo rein hypothetisch).</label>
-    <button onClick={pay} className="rounded-xl bg-emerald-700 px-5 py-3 font-semibold">Nur Nachweis dokumentieren</button>
+    <button onClick={pay} className="rounded-xl bg-emerald-700 px-5 py-3 font-semibold">✓ Admin bestätigt: Überweisung ist erfolgt</button>
    </div>}
    {stage==="paid"&&<div className="mt-7 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-4">Auszahlung dokumentiert (nur Demo). Bankreferenz: {bankRef}. Originale Rechnungen, Gutschriften und Buchungssätze müssen im Live-System unveränderbar archiviert werden.</div>}
    {message&&<p role="status" className="mt-5 text-sm text-amber-100">{message}</p>}
