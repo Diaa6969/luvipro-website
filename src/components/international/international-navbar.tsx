@@ -66,6 +66,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
     { label: t.site.imprint, href: "/impressum" },
     { label: t.site.privacy, href: "/datenschutz" },
     { label: t.site.terms, href: "/agb" },
+    { label: "Affiliate AGB", href: "/affiliate/agb" },
   ];
 
   const mobileMenu = isMounted && isOpen
