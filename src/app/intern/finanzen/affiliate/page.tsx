@@ -14,18 +14,20 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
  type TaxProfile={affiliate_id:string;vat_mode:string;tax_number_or_vat_id:string;selfbilling_agreed:boolean;verified_at:string|null;legal_name:string;postal_address:string;selfbilling_agreement_reference:string};
  type TaxDoc={id:string;payout_id:string;affiliate_id:string;document_number:string;net_cents:number;vat_cents:number;gross_cents:number};
  type Transfer={payout_id:string;gross_cents:number;bank_reference:string;transferred_on:string};
- let apps:Applicant[]=[],codes:Discount[]=[],payouts:Payout[]=[],profiles:TaxProfile[]=[],docs:TaxDoc[]=[],transfers:Transfer[]=[],error="";
+ type Reminder={payout_id:string;remind_on:string;note:string;status:"open"|"cleared";updated_at:string};
+ let apps:Applicant[]=[],codes:Discount[]=[],payouts:Payout[]=[],profiles:TaxProfile[]=[],docs:TaxDoc[]=[],transfers:Transfer[]=[],reminders:Reminder[]=[],error="";
  if(!affiliateConfigured()) error="Das Affiliate-Modul ist noch nicht aktiviert (AFFILIATE_APPLICATIONS_ENABLED).";
  else try {
-  const [a,c,p,tx,dt,tr]=await Promise.all([
+  const [a,c,p,tx,dt,tr,rm]=await Promise.all([
    affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_discount_codes?select=id,code,affiliate_id,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active,version&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_affiliate_payouts?select=id,affiliate_id,payout_month,status,amount_cents&order=created_at.desc&limit=100"),
    affiliateDb("luvipro_affiliate_tax_profiles?select=affiliate_id,vat_mode,tax_number_or_vat_id,selfbilling_agreed,verified_at,legal_name,postal_address,selfbilling_agreement_reference&limit=100"),
    affiliateDb("luvipro_affiliate_settlement_documents?select=id,payout_id,affiliate_id,document_number,net_cents,vat_cents,gross_cents&limit=100"),
-   affiliateDb("luvipro_affiliate_manual_transfers?select=payout_id,gross_cents,bank_reference,transferred_on&limit=100")
+   affiliateDb("luvipro_affiliate_manual_transfers?select=payout_id,gross_cents,bank_reference,transferred_on&limit=100"),
+   affiliateDb("luvipro_affiliate_payment_reminders?select=payout_id,remind_on,note,status,updated_at&order=remind_on.asc&limit=200")
   ]);
-  apps=await a.json() as Applicant[]; codes=await c.json() as Discount[];payouts=await p.json() as Payout[];profiles=await tx.json() as TaxProfile[];docs=await dt.json() as TaxDoc[];transfers=await tr.json() as Transfer[];
+  apps=await a.json() as Applicant[]; codes=await c.json() as Discount[];payouts=await p.json() as Payout[];profiles=await tx.json() as TaxProfile[];docs=await dt.json() as TaxDoc[];transfers=await tr.json() as Transfer[];reminders=await rm.json() as Reminder[];
  }catch{error="Die geschützten Affiliate-Tabellen sind noch nicht erreichbar. Migration und Rechte prüfen.";}
  const input="w-full rounded-lg border border-white/15 bg-[#10182a] p-3 text-white";
  const approved=apps.filter(a=>a.status==="approved");
@@ -144,6 +146,11 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
   </section>
   <section className="mt-12 rounded-2xl border border-white/10 p-6">
    <h2 className="text-2xl font-bold">Manuelle Auszahlung – keine automatische Überweisung</h2>
+   <div className="mt-5 grid gap-3 sm:grid-cols-3">
+    <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4"><p className="text-xs text-amber-100">Offene Auszahlungen</p><p className="mt-2 text-2xl font-bold">{payouts.filter(p=>p.status==="prepared"&&!transfers.some(t=>t.payout_id===p.id)).length}</p></div>
+    <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4"><p className="text-xs text-rose-100">Erinnerung fällig / überfällig</p><p className="mt-2 text-2xl font-bold">{reminders.filter(r=>r.status==="open" && r.remind_on <= new Date().toISOString().slice(0,10) && payouts.some(p=>p.id===r.payout_id && p.status==="prepared")).length}</p></div>
+    <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4"><p className="text-xs text-emerald-100">Zahlungen bestätigt</p><p className="mt-2 text-2xl font-bold">{transfers.length}</p></div>
+   </div>
    <p className="mt-3 text-sm leading-7 text-slate-300">1. Nur verifizierte/abgelaufene Provisionen zum Monatsabschluss vorbereiten. 2. Rechtssichere Gutschrift nach geprüftem Steuerprofil ausstellen. 3. Banküberweisung AUSSERHALB der Anwendung persönlich ausführen. 4. Erst danach Referenz und Datum erfassen. Alle Schritte erhalten einen unveränderbaren Prüfpfad. Kein Stripe-/PayPal-/Bank-Payout wird durch einen Klick hier ausgelöst.</p>
    <form action="/api/accounting/affiliate/settlements" method="POST" className="mt-6 flex flex-wrap items-end gap-4 rounded-xl border border-white/10 p-4">
     <input type="hidden" name="action" value="prepare"/>
@@ -158,7 +165,15 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
    <p className="mt-3 text-sm text-slate-400">Nur dokumentierte Auszahlungsperioden; die PDF-Abrechnung ist ein Nachweis und ersetzt keine ordnungsgemäße Provisionsrechnung.</p>
    <div className="mt-4 space-y-3">{payouts.map(p=><div key={p.id} className="flex flex-wrap justify-between gap-3 border-b border-white/10 py-3 text-sm">
     <span>{apps.find(a=>a.id===p.affiliate_id)?.company_name || p.affiliate_id} · {p.payout_month}</span>
-    <span>Provision netto: {new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(p.amount_cents/100)} · {p.status}</span>
+    <span>Provision gesamt (inkl. ggf. USt): {new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(p.amount_cents/100)} · {p.status}</span>
+    {p.status==="prepared" && <span className={`rounded-lg px-3 py-1 text-xs font-semibold ${reminders.some(r=>r.payout_id===p.id&&r.status==="open"&&r.remind_on<=new Date().toISOString().slice(0,10))?"bg-rose-700/30 text-rose-100":"bg-amber-700/20 text-amber-100"}`}>{reminders.some(r=>r.payout_id===p.id&&r.status==="open"&&r.remind_on<=new Date().toISOString().slice(0,10))?"🔔 Zahlungserinnerung fällig":"⏳ Zahlung offen"}</span>}
+    {p.status==="prepared" && <form action="/api/accounting/affiliate/settlements" method="POST" className="grid w-full gap-3 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 sm:grid-cols-3">
+      <input type="hidden" name="action" value="set_reminder"/>
+      <input type="hidden" name="payout_id" value={p.id}/>
+      <label className="text-xs">Zahlung erinnern am<input type="date" name="remind_on" required className={input} defaultValue={reminders.find(r=>r.payout_id===p.id)?.remind_on||new Date().toISOString().slice(0,10)}/></label>
+      <label className="text-xs sm:col-span-2">Notiz (optional)<input name="note" maxLength={300} className={input} defaultValue={reminders.find(r=>r.payout_id===p.id)?.note||""} placeholder="Bank prüfen / Zahlung manuell ausführen"/></label>
+      <button className="rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold sm:col-span-3">🔔 Zahlungserinnerung speichern / ändern</button>
+    </form>}
     <a className="text-pulse underline" href={`/api/accounting/affiliate/payout-pdf?id=${p.id}`}>Interne Abrechnung PDF ↓</a>
     {docs.find(d=>d.payout_id===p.id)?<div className="w-full rounded-lg border border-emerald-400/20 bg-emerald-500/5 p-4">
       {docs.filter(d=>d.payout_id===p.id).map(d=><div key={d.id} className="flex flex-wrap justify-between gap-3">
@@ -174,7 +189,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
         <label className="text-xs">Eindeutige Bankreferenz / Transaktions-ID<input className={input} name="payment_reference" minLength={5} maxLength={200} required/></label>
         <label className="text-xs sm:col-span-2 flex items-start gap-2"><input type="checkbox" name="bank_transfer_done" required className="mt-1"/>Ich habe die Überweisung persönlich außerhalb von LUVIPRO ausgeführt.</label>
         <label className="text-xs sm:col-span-2 flex items-start gap-2"><input type="checkbox" name="evidence_checked" required className="mt-1"/>Bankbeleg, Betrag inklusive Umsatzsteuer und Gutschrift geprüft.</label>
-        <button className="rounded-lg bg-emerald-700 px-4 py-3 text-sm font-semibold sm:col-span-2">Manuelle Zahlung als ausgeführt dokumentieren</button>
+        <button className="rounded-lg bg-emerald-700 px-4 py-3 text-sm font-semibold sm:col-span-2">✓ Admin bestätigt: Überweisung ist erfolgt</button>
        </form>}
      </div>:
      <form className="flex w-full flex-wrap items-center gap-3 rounded-lg border border-amber-500/20 p-4" action="/api/accounting/affiliate/settlements" method="POST">
