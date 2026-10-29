@@ -66,6 +66,7 @@ export async function POST(req:NextRequest) {
    if(updated.length!==1)throw new Error("Code changed concurrently");
    // Database trigger writes immutable before/after audit in the same transaction.
   } else throw new Error("Unsupported action");
+  if(req.headers.has("authorization"))return NextResponse.json({saved:true},{headers:{"Cache-Control":"no-store"}});
   return NextResponse.redirect(new URL("/intern/finanzen/affiliate?ok=1",req.url),303);
  }catch{
   if(!req.headers.has("authorization"))return NextResponse.redirect(new URL("/intern/finanzen/affiliate?error=1",req.url),303);
