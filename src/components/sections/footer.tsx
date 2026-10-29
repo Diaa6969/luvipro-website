@@ -6,6 +6,7 @@ const links = [
   { label: "Partnerwerkstatt", href: "/partner-workshops" },
   { label: "Affiliate-Partner werden", href: "/affiliate" },
   { label: "Affiliate-Konto & Einnahmen", href: "/affiliate/login" },
+  { label: "Affiliate AGB & Teilnahmebedingungen", href: "/affiliate/agb" },
   { label: "Prüfbericht per VIN / Nummer", href: "/reports" },
   { label: "Fahrzeug checken lassen", href: "/verify#partner-map" },
   { label: "Gerät & Voranfrage", href: "/products" },
