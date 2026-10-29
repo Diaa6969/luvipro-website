@@ -63,7 +63,7 @@ export default async function AccountingDashboard({ searchParams }: {
             <span className="rounded-xl border border-white/15 bg-white/10 px-4 py-2 font-semibold">{year}</span>
             <Link href={`/intern/finanzen?year=${year + 1}`} className="rounded-xl border border-white/20 px-3 py-2 hover:bg-white/10" aria-label="Folgejahr">→</Link>
             <Link href="/intern/finanzen/affiliate" className="rounded-xl border border-pulse/40 px-4 py-2 text-sm font-semibold text-pulse hover:bg-pulse/10">Affiliate & Rabattcodes</Link>
-            <a href={`/api/accounting/monthly-pdf?month=${year}-${String(new Date().getMonth()+1).padStart(2,"0")}`} className="rounded-xl border border-pulse/40 px-4 py-2 text-sm font-semibold text-pulse hover:bg-pulse/10">Monatsabrechnung PDF</a>
+            <a href={`/api/accounting/monthly-pdf?month=${year}-${String(year===new Date().getFullYear()?new Date().getMonth()+1:12).padStart(2,"0")}`} className="rounded-xl border border-pulse/40 px-4 py-2 text-sm font-semibold text-pulse hover:bg-pulse/10">Monatsabrechnung PDF</a>
             <form action="/api/accounting/session" method="GET" className="hidden" />
             <a href={`/api/accounting/export?year=${year}`} className="inline-flex items-center gap-2 rounded-xl border border-pulse/40 px-4 py-2 text-sm font-semibold text-pulse hover:bg-pulse/10"><ArrowDownToLine className="h-4 w-4" /> CSV / Excel</a>
           </div>
