@@ -99,7 +99,7 @@ export const affiliateAgbSections: LegalSection[] = [
   {
     title: "11. Monatliche Abrechnung und ausschließlich manuelle Auszahlung",
     paragraphs: [
-      "LUVIPRO erstellt monatliche Provisionsübersichten mit den verifizierten, abgerechneten Vorgängen und dem jeweils maßgeblichen Abrechnungszeitraum. Soweit rechtlich ein Handelsvertreterverhältnis vorliegt, gelten dessen zwingende Abrechnungs-, Auskunfts-, Buchauszugs- und Fälligkeitsrechte insbesondere aus §§ 87a und 87c HGB uneingeschränkt.",
+      "LUVIPRO erstellt monatliche Provisionsübersichten mit den verifizierten, abgerechneten Vorgängen und dem jeweils maßgeblichen Abrechnungszeitraum. Soweit rechtlich ein Handelsvertreterverhältnis vorliegt, gelten dessen zwingende Abrechnungs-, Auskunfts-, Buchauszugs- und Fälligkeitsrechte insbesondere aus § 87a und § 87c HGB uneingeschränkt.",
       "Eine Überweisung wird ausschließlich durch eine autorisierte Person von LUVIPRO über deren externen Bankzugang veranlasst. Die Plattform selbst bietet keine automatische Affiliate-Auszahlung. Der Administrator dokumentiert den tatsächlich erfolgten Zahlungsausgang anschließend mit Datum, Betrag und eindeutiger Bankreferenz; erforderlichenfalls zeigt die Plattform interne Zahlungserinnerungen.",
       "Eine fehlende technische Bestätigung im Admin-Bereich lässt eine rechtlich fällige Forderung nicht entfallen und ändert keine gesetzliche Zahlungsfrist. Der Affiliate stellt die für eine rechtmäßige Überweisung erforderlichen Zahlungsdaten sicher und kann unrichtige Abrechnungsstände zur Prüfung melden.",
     ],
