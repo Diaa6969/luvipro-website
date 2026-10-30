@@ -9,12 +9,12 @@ import { BrandLogo } from "@/components/ui/brand-logo";
 import { LanguagePicker } from "@/components/ui/language-picker";
 
 const navItems = [
-  { label: "Vorteile", href: "/#ecosystem" },
-  { label: "Für Werkstätten", href: "/products" },
-  { label: "Ablauf", href: "/#how-it-works" },
-  { label: "Fahrzeugcheck-Preise", href: "/#pricing" },
+  { label: "Fahrzeugcheck", href: "/verify#partner-map" },
+  { label: "Preise", href: "/#pricing" },
   { label: "Werkstatt finden", href: "/verify#partner-map" },
-  { label: "Berichte", href: "/reports" },
+  { label: "Prüfberichte", href: "/reports" },
+  { label: "Ablauf", href: "/#how-it-works" },
+  { label: "Für Werkstätten", href: "/products" },
 ];
 
 const mobileLinks = [
@@ -143,7 +143,7 @@ export function Navbar() {
           <div className="hidden items-center gap-5 xl:flex">
             {navItems.map((item) => (
               <Link
-                key={item.href}
+                key={`${item.label}-${item.href}`}
                 href={item.href}
                 className="text-sm font-medium text-slate-300 transition hover:text-white"
               >
