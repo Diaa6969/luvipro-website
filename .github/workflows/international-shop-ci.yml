@@ -47,6 +47,8 @@ jobs:
         run: npm run test:promo-pricing
       - name: Verify customer-first pricing and separate workshop device page
         run: npm run test:customer-home
+      - name: Verify SMTP composer compatibility without network
+        run: npm run test:smtp-compatibility
       - name: Run monthly accounting tests (synthetic)
         run: npm run test:accounting
       - name: Run bank transfer scenario tests (synthetic)

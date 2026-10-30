@@ -25,3 +25,9 @@ Uses the existing LUVIPRO Supabase project and Auth identity. Customer/Partner r
 The tested SQL units are already applied to the existing Supabase project. SQL sources here describe their final combined definitions; do not blindly reapply them to production. Production migrations and source/rollback checkpoints are recorded in the existing local readiness directory. All production users, reports and 1,244 Storage objects were preserved.
 
 This website branch is for review/preview. It is not authorization to merge a production website release, activate payments, create real contracts or publish the FlutterFlow application. A full synthetic registration → approval → order → settlement session with a dedicated test account remains separate from mocked/SQL verification. No real legal consent or external transfer was fabricated.
+
+## Final review delivery
+
+Draft PR #15 contains the website integration; current main was synchronized while preserving the customer-first homepage and removal of misleading demo links. No production merge was performed. The first Linux CI failure was a Windows-only synthetic PDF output path; the test now uses the OS temporary directory (or an explicit test output override).
+
+Dependency verification identified existing vulnerabilities. Compatible lockfile patches update Next 15.5.28 and transitive dependencies; PostCSS is pinned/overridden to 8.5.32 and Nodemailer is pinned to the official 10.3.1 release. The production Next build, in-memory SMTP MIME/attachment compatibility test, and affected financial tests pass. npm audit reports zero known vulnerabilities for this lockfile; this is not a proof of absence of all vulnerabilities. No SMTP message was sent and no production environment credentials were changed.
