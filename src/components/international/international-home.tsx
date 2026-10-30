@@ -52,8 +52,8 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                 {s.hero.description}
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <CtaLink href={`/${locale}/contact`} className="gap-2">
-                  {s.hero.partner} <ArrowRight className="h-4 w-4" />
+                <CtaLink href={`/${locale}/workshops`} className="gap-2">
+                  {locale === "ar" ? "احجز فحص سيارتك" : "Get your car checked"} <ArrowRight className="h-4 w-4" />
                 </CtaLink>
                 <CtaLink href={`/${locale}/reports`} variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
               </div>
@@ -185,7 +185,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                 </div>
               ))}
             </div>
-            <CtaLink href={`/${locale}/products`} className="mt-8">{t.site.shop} — LU3656060</CtaLink>
+            <CtaLink href={`/${locale}/workshops`} className="mt-8">{locale === "ar" ? "ابحث عن ورشة لفحص سيارتك" : "Find a workshop for your vehicle check"}</CtaLink>
           </Reveal>
         </div>
       </section>
@@ -259,8 +259,8 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
       <section id="pricing" className="bg-obsidian py-24">
         <div className="section-shell">
           <Reveal><SectionHeading eyebrow={s.business.eyebrow} title={s.business.title} description={s.business.description} /></Reveal>
-          <div className="mt-12 grid gap-5 lg:grid-cols-3">
-            {s.business.plans.map(([name, price, features, cta, href], index) => (
+          <div className="mx-auto mt-12 grid max-w-5xl gap-5 md:grid-cols-2">
+            {s.business.plans.slice(0,2).map(([name, price, features, cta, href], index) => (
               <Reveal key={name} delay={index * 0.08}>
                 <div className="glass-panel flex h-full flex-col rounded-lg p-6">
                   <p className="font-[var(--font-space-grotesk)] text-2xl font-semibold">{name}</p>
@@ -271,7 +271,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                     ))}
                   </div>
                   <CtaLink
-                    href={index < 2 ? "#partner-map" : `/${locale}/products`}
+                    href="#partner-map"
                     variant={index === 0 ? "primary" : "secondary"}
                     className="mt-8 gap-2"
                     target={href.startsWith("http") ? "_blank" : undefined}
@@ -326,7 +326,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               <h2 className="mx-auto mt-6 max-w-4xl font-[var(--font-space-grotesk)] text-3xl font-semibold text-white sm:text-5xl">{s.end.title}</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">{s.end.description}</p>
               <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-                <CtaLink href={`/${locale}/contact`} className="gap-2">{s.end.partner} <ArrowRight className="h-4 w-4" /></CtaLink>
+                <CtaLink href={`/${locale}/workshops`} className="gap-2">{locale === "ar" ? "افحص سيارتك" : "Get your car checked"} <ArrowRight className="h-4 w-4" /></CtaLink>
                 <CtaLink href={`/${locale}/reports`} variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
                 <CtaLink href={`/${locale}/workshops`} variant="secondary">{s.end.app}</CtaLink>
               </div>
