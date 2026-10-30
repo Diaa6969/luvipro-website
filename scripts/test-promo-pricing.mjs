@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import vm from 'node:vm';
+import os from 'node:os';
+import path from 'node:path';
 import ts from 'typescript';
 import { createRequire } from 'node:module';
 const require=createRequire(import.meta.url);
@@ -17,5 +18,7 @@ const invoice={invoiceNumber:'LUV-2026-9900001',kind:'device',quantity:1,promoSn
 assert.equal(document.validateInvoice(invoice).grossCents,324869);assert.throws(()=>document.validateInvoice({...invoice,quantity:2}));
 const bytes=await document.renderInvoicePDF(invoice);assert.equal(Buffer.from(bytes).subarray(0,5).toString(),'%PDF-');
 const pdf=await require('pdf-lib').PDFDocument.load(bytes);assert.equal(pdf.getPageCount(),1);
-fs.writeFileSync('C:/LUVIPRO_Workspace/readiness/affiliate_complete_20261029/synthetic_discounted_device_invoice.pdf',bytes);
+const outputPath=process.env.LUVIPRO_SYNTHETIC_PDF_PATH || path.join(os.tmpdir(),'luvipro_synthetic_discounted_device_invoice.pdf');
+fs.mkdirSync(path.dirname(outputPath),{recursive:true});
+fs.writeFileSync(outputPath,bytes);
 console.log('Promo pricing / trusted order / discounted invoice: 19 assertions PASS; one synthetic preview PDF generated; no network or payments.');
