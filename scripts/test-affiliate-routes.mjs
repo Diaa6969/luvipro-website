@@ -39,5 +39,17 @@ try{
  adminAuthorized=true;assert.equal((await promoAdmin.POST(adminRequest(adminBody,{origin:'https://other.example'}))).status,403);assert.equal(dbCalls.length,0);checks++;
  assert.equal((await promoAdmin.POST(adminRequest({...adminBody,code:{...adminBody.code,evidence_checked:false}}))).status,422);assert.equal(dbCalls.length,0);checks++;
  assert.equal((await promoAdmin.POST(adminRequest(adminBody))).status,200);assert.equal(dbCalls.length,1);const forwardedAdmin=JSON.parse(dbCalls[0].init.body);assert.equal(forwardedAdmin.p_actor,'11111111-1111-4111-8111-111111111111');assert.equal(forwardedAdmin.p_action,'save_code');assert.equal(forwardedAdmin.p_payload.actor,undefined);checks++;
+ const orders=load('src/app/api/store/account-orders/route.ts');calls=[];adminAuthorized=false;
+ const getOrders=(params='',auth=true)=>new next.NextRequest('https://synthetic.example/api/store/account-orders'+params,{headers:auth?{cookie:'luvipro_affiliate_session='+synthetic}: {}});
+ assert.equal((await orders.GET(getOrders('',false))).status,401);assert.equal(calls.length,0);checks++;
+ assert.equal((await orders.GET(getOrders('?offset=0&actor=FORGED'))).status,200);assert.ok(calls[0].url.endsWith('/luvipro_checkout_history_v1'));assert.deepEqual(JSON.parse(calls[0].options.body),{p_offset:0});checks++;
+ calls=[];assert.equal((await orders.GET(getOrders('?kind=partners&search=TEST'))).status,200);assert.deepEqual(JSON.parse(calls[0].options.body),{p_offset:0,p_search:'TEST'});checks++;
+ calls=[];assert.equal((await orders.GET(getOrders('?kind=admin_orders'))).status,403);assert.equal(calls.length,0);checks++;
+ const orderBody={action:'create',quoteId:'55555555-5555-4555-8555-555555555555',requestKey:'66666666-6666-4666-8666-666666666666',billing:{terms_accepted:true,privacy_accepted:true},price:1,actor:'FORGED'};
+ assert.equal((await orders.POST(request('/api/store/account-orders',JSON.stringify(orderBody),{origin:'https://other.example'}))).status,403);assert.equal(calls.length,0);checks++;
+ assert.equal((await orders.POST(request('/api/store/account-orders',JSON.stringify({...orderBody,quoteId:'FORGED'})))).status,422);assert.equal(calls.length,0);checks++;
+ assert.equal((await orders.POST(request('/api/store/account-orders',JSON.stringify(orderBody)))).status,200);assert.deepEqual(JSON.parse(calls[0].options.body),{p_quote:orderBody.quoteId,p_request:orderBody.requestKey,p_billing:orderBody.billing});assert.equal(calls[0].options.headers.Authorization,'Bearer '+synthetic);checks++;
+ calls=[];assert.equal((await orders.POST(request('/api/store/account-orders',JSON.stringify({action:'refund',orderId:orderBody.quoteId,confirmed:true})))).status,403);assert.equal(calls.length,0);checks++;
+ adminAuthorized=true;assert.equal((await orders.POST(request('/api/store/account-orders',JSON.stringify({action:'refund',orderId:orderBody.quoteId,confirmed:false})))).status,422);assert.equal(calls.length,0);checks++;
  console.log(JSON.stringify({passed:checks,failed:0,scope:'Actual Next route handlers with mocked Auth/DB/Edge fetch; no network, emails, agreements or payments'}));
 }finally{globalThis.fetch=savedFetch;for(const [key,value]of Object.entries({SUPABASE_URL:savedUrl,SUPABASE_SERVICE_ROLE_KEY:savedKey,SUPABASE_ANON_KEY:savedAnon})){if(value===undefined)delete process.env[key];else process.env[key]=value;}}

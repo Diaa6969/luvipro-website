@@ -154,6 +154,8 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady, bankReady
         )}
 
         <form onSubmit={submit} className="space-y-7">
+      <Link href="/inspections/checkout?product=device" className="mb-5 inline-block text-cyan-300 underline">Mit bestehendem Konto und Promo Code bestellen · ohne Zahlung</Link>
+
           <input className="hidden" type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
           <section>
             <h2 className="mb-5 text-xl font-bold text-white">1. Unternehmen & Kontakt</h2>

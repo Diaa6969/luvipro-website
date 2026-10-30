@@ -1,3 +1,4 @@
+import {AccountOrderHistory} from "@/components/shop/account-order-history";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -41,6 +42,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
   {params.ok==="1"&&<p role="status" className="mt-6 rounded-lg bg-emerald-900/30 p-4 text-emerald-200">Änderung gespeichert.</p>}
   {params.error==="1"&&<p role="alert" className="mt-5 rounded-lg bg-rose-500/10 p-4 text-rose-200">Aktion nicht ausgeführt. Bitte Ablaufdatum, Berechtigung oder veraltete Daten prüfen und neu laden.</p>}
   {error&&<p role="alert" className="mt-6 rounded-lg bg-amber-900/30 p-4 text-amber-100">{error}</p>}
+  <div className="my-10"><AccountOrderHistory admin/></div>
   <AffiliatePromoManager codes={codes} affiliates={apps} disabled={!!error}/>
   <section className="mt-12 rounded-2xl border border-white/10 p-6">
    <h2 className="text-2xl font-bold">Gewerbe-Bewerbungen ({apps.length})</h2>

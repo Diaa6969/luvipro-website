@@ -47,6 +47,7 @@ export default function VerifyPage() {
 
       {/* Put workshop search first: visitors requesting an inspection should
           not have to scroll past the report lookup to find the search input. */}
+      <div className="section-shell pb-6"><Link href="/inspections/checkout" className="inline-flex min-h-12 items-center rounded-full border border-pulse/50 px-6 py-3 font-semibold text-pulse">Standard / Premium mit Promo Code bestellen</Link></div>
       <section id="partner-map" className="scroll-mt-24 bg-midnight py-10 sm:py-14">
         <div className="section-shell">
           <WorkshopFinder locale="de" />
