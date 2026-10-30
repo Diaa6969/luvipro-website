@@ -3,7 +3,7 @@ import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
 
 const stats = [
-  { value: "UV", label: "UV-Inspektionsgeräte" },
+  { value: "UV", label: "Lack- & Karosseriecheck" },
   { value: "VIN", label: "Fahrzeugsuche über FIN / VIN" },
   { value: "PDF", label: "Digitale Fahrzeugberichte" },
 ];
@@ -20,17 +20,17 @@ export function Hero() {
               <span className="min-w-0 break-words">Jedes Fahrzeug hat eine Geschichte. Wir bringen die Wahrheit ans Licht.</span>
             </div>
             <h1 className="text-balance max-w-full font-[var(--font-space-grotesk)] text-[clamp(2.55rem,11vw,4.5rem)] font-semibold leading-[1.02] text-white sm:text-6xl lg:text-7xl">
-              LUVIPRO macht Fahrzeughistorie sichtbar.
+              Gebrauchtwagen checken lassen. Mit mehr Klarheit entscheiden.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
-              Professionelle UV-Prüfgeräte, VIN-basierte Fahrzeugsuche und strukturierte digitale Prüfberichte für Werkstätten, Verkäufer und Käufer.
+              Lassen Sie Ihr Wunschfahrzeug bei einer LUVIPRO Partnerwerkstatt untersuchen. Mit UV-gestützter Lackprüfung, Sichtkontrolle und verständlicher digitaler Dokumentation.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <CtaLink href="/contact" className="gap-2">
-                Partnerwerkstatt werden <ArrowRight className="h-4 w-4" />
+              <CtaLink href="/verify#partner-map" className="gap-2">
+                Fahrzeug checken lassen <ArrowRight className="h-4 w-4" />
               </CtaLink>
-              <CtaLink href="/verify#partner-map" variant="secondary">
-                Fahrzeug checken lassen
+              <CtaLink href="/reports" variant="secondary">
+                Prüfbericht suchen
               </CtaLink>
             </div>
           </div>
