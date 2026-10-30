@@ -3,9 +3,9 @@ import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const flows = [
-  { icon: Wrench, title: "Werkstätten", steps: ["UV-Inspektionsgerät einsetzen", "Fahrzeug prüfen und dokumentieren", "Digitalen Report erstellen"] },
-  { icon: BadgeEuro, title: "Verkäufer", steps: ["Fahrzeugprüfung anfragen", "Prüfbericht weitergeben", "Transparenz beim Verkauf schaffen"] },
-  { icon: UserCheck, title: "Käufer", steps: ["FIN/VIN eingeben", "Zugänglichen Prüfbericht ansehen", "Ergebnisse einordnen"] },
+  { icon: UserCheck, title: "Für Autokäufer", steps: ["Partnerwerkstatt finden", "Fahrzeugcheck anfragen", "Ergebnisse und vorhandene Berichte prüfen"] },
+  { icon: BadgeEuro, title: "Für Verkäufer", steps: ["Fahrzeugprüfung vereinbaren", "Befunde dokumentieren lassen", "Prüfbericht beim Verkauf nutzen"] },
+  { icon: Wrench, title: "So prüft die Werkstatt", steps: ["Fahrzeug und Lackoberflächen untersuchen", "Auffälligkeiten strukturiert dokumentieren", "Digitalen Fahrzeugbericht erstellen"] },
 ];
 
 export function HowItWorks() {
@@ -15,8 +15,8 @@ export function HowItWorks() {
         <Reveal>
           <SectionHeading
             eyebrow="Ablauf"
-            title="Ein Ablauf für alle Marktteilnehmer."
-            description="Jede Rolle sieht nur das, was sie braucht. Das System bleibt einheitlich, der Einstieg bleibt einfach."
+            title="So funktioniert Ihr Fahrzeugcheck."
+            description="Ob Sie ein Auto kaufen oder verkaufen: Finden Sie eine Partnerwerkstatt und erhalten Sie eine nachvollziehbare Dokumentation des vereinbarten Prüfumfangs."
             align="center"
           />
         </Reveal>

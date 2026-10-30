@@ -11,7 +11,7 @@ export default async function AffiliateLogin({searchParams}:{searchParams:Promis
    <p className="text-xs font-semibold uppercase tracking-widest text-pulse">LUVIPRO Partnerkonto</p>
    <h1 className="mt-3 text-3xl font-bold">Mit vorhandenem Konto anmelden</h1>
    <p className="mt-4 text-sm leading-7 text-slate-300">Nutzen Sie dieselbe E-Mail-Adresse und dasselbe Passwort wie in der LUVIPRO App – egal ob Sie Privatkunde oder Werkstattpartner sind. Es wird kein zweites Konto angelegt. Ihr Affiliate-Bereich wird nach der Gewerbeprüfung mit Ihrem bestehenden Konto verknüpft.</p>
-   {!enabled&&<p role="status" className="mt-5 rounded-lg border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">Der echte Kontozugriff ist noch nicht freigeschaltet. <Link href="/demo/marketing" className="underline">Interaktive Demo ausprobieren.</Link></p>}
+   {!enabled&&<p role="status" className="mt-5 rounded-lg border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">Die Anmeldung zum Affiliate-Bereich ist derzeit nicht freigeschaltet. Die Teilnahmebedingungen sind bereits verfügbar; hier werden erst nach Aktivierung der gesicherten Anbindung echte Partnerkonten zugelassen.</p>}
    {params.error==="1"&&<p role="alert" className="mt-5 rounded-lg bg-rose-500/10 p-4 text-sm text-rose-100">Anmeldung nicht möglich. Bitte Zugangsdaten, bestätigte E-Mail-Adresse und Gewerbe-Freigabe prüfen.</p>}
    <form action="/api/affiliate/session" method="POST" className="mt-7 space-y-5">
     <label className="block text-sm">E-Mail-Adresse<input required disabled={!enabled} autoComplete="email" type="email" name="email" maxLength={200} className="mt-2 block w-full rounded-xl border border-white/15 bg-[#10182a] p-3 text-white"/></label>

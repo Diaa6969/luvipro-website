@@ -159,7 +159,7 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      <Pricing id="preise" embedded />
+      <Pricing id="preise" embedded audience="partner" />
 
       <section className="bg-obsidian py-20 sm:py-24">
         <div className="section-shell">

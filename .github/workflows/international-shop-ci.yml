@@ -14,6 +14,8 @@ on:
       - feature/affiliate-code-controls-accounts
       - feature/affiliate-transfer-confirmation-reminders
       - feature/affiliate-agb-20261029
+      - fix/affiliate-public-no-demo
+      - feature/customer-first-homepage-20261030
   workflow_dispatch:
 
 permissions:
@@ -43,6 +45,8 @@ jobs:
         run: npm run test:affiliate-routes
       - name: Verify discounted order and invoice snapshots
         run: npm run test:promo-pricing
+      - name: Verify customer-first pricing and separate workshop device page
+        run: npm run test:customer-home
       - name: Run monthly accounting tests (synthetic)
         run: npm run test:accounting
       - name: Run bank transfer scenario tests (synthetic)
