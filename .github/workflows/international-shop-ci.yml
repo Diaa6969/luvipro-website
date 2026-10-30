@@ -43,6 +43,8 @@ jobs:
         run: npm run test:affiliate-agb
       - name: Verify shared Affiliate routes with mocked Auth and Edge calls
         run: npm run test:affiliate-routes
+      - name: Verify Affiliate-only shared Admin sessions
+        run: npm run test:affiliate-admin-session
       - name: Verify discounted order and invoice snapshots
         run: npm run test:promo-pricing
       - name: Verify customer-first pricing and separate workshop device page

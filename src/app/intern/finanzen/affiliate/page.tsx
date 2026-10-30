@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { isAccountingAdmin, accountingEnabled } from "@/lib/accounting/admin-auth";
+import { isAccountingAdmin } from "@/lib/accounting/admin-auth";
+import { isAffiliatePageAdmin } from "@/lib/affiliate/admin-access";
 import { affiliateBackendConfigured, affiliateDb } from "@/lib/affiliate/server";
 import { AffiliatePromoManager,type PromoCode } from "@/components/accounting/affiliate-promo-manager";
 export const dynamic="force-dynamic";
@@ -9,7 +10,8 @@ export const metadata: Metadata={title:"Affiliate Verwaltung | LUVIPRO",robots:{
 type Applicant={registration_verified_at:string|null;review_revision:number;id:string;owner_uid:string|null;company_name:string;contact_name:string;email:string;country:string;business_address:string;website:string;marketing_plan:string;status:string;created_at:string;registration_path:string;legal_agb_version:string|null;legal_agb_accepted_at:string|null;individual_agreement_ref:string;individual_agreement_accepted_at:string|null};
 
 export default async function AffiliateAdminPage({searchParams}:{searchParams:Promise<{ok?:string;error?:string}>}) {
- if(!accountingEnabled() || !(await isAccountingAdmin())) redirect("/intern/finanzen/login");
+ if(!(await isAffiliatePageAdmin())) redirect("/affiliate/login");
+ const legacyFinanceAdmin=await isAccountingAdmin();
  const params=await searchParams;
  type Payout={id:string;affiliate_id:string;payout_month:string;status:string;amount_cents:number};
  type TaxProfile={affiliate_id:string;vat_mode:string;tax_number_or_vat_id:string;selfbilling_agreed:boolean;verified_at:string|null;legal_name:string;postal_address:string;selfbilling_agreement_reference:string};
@@ -17,7 +19,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
  type Transfer={payout_id:string;gross_cents:number;bank_reference:string;transferred_on:string};
  type Reminder={payout_id:string;remind_on:string;note:string;status:"open"|"cleared";updated_at:string};
  let apps:Applicant[]=[],codes:PromoCode[]=[],payouts:Payout[]=[],profiles:TaxProfile[]=[],docs:TaxDoc[]=[],transfers:Transfer[]=[],reminders:Reminder[]=[],error="";
- if(!affiliateBackendConfigured()) error="Das Affiliate-Modul ist noch nicht aktiviert (AFFILIATE_APPLICATIONS_ENABLED).";
+ if(!affiliateBackendConfigured()) error="Die gesicherte Affiliate-Anbindung ist noch nicht konfiguriert.";
  else try {
   const [a,c,p,tx,dt,tr,rm]=await Promise.all([
    affiliateDb("luvipro_affiliate_applications?select=registration_verified_at,review_revision,id,owner_uid,company_name,contact_name,email,country,business_address,website,marketing_plan,status,created_at,registration_path,legal_agb_version,legal_agb_accepted_at,individual_agreement_ref,individual_agreement_accepted_at&order=created_at.desc&limit=100"),
@@ -33,7 +35,7 @@ export default async function AffiliateAdminPage({searchParams}:{searchParams:Pr
  const input="w-full rounded-lg border border-white/15 bg-[#10182a] p-3 text-white";
  const approved=apps.filter(a=>a.status==="approved");
  return <main className="min-h-screen bg-obsidian py-14 text-white"><div className="section-shell">
-  <nav className="mb-8 flex flex-wrap gap-5 text-sm text-pulse"><Link href="/intern/finanzen">← Buchhaltung</Link><Link href="/affiliate">Öffentliche Bewerbung ↗</Link><Link href="/affiliate/agb">Affiliate-AGB ↗</Link></nav>
+  <nav className="mb-8 flex flex-wrap gap-5 text-sm text-pulse"><Link href="/affiliate">← Affiliate-Programm</Link>{legacyFinanceAdmin&&<Link href="/intern/finanzen">Buchhaltung</Link>}<Link href="/affiliate">Öffentliche Bewerbung ↗</Link><Link href="/affiliate/agb">Affiliate-AGB ↗</Link></nav>
   <h1 className="text-4xl font-bold">Marketing & Affiliate Management</h1>
   <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">Nur die Verwaltung vergibt Rabattcodes nach persönlicher Prüfung des Gewerbenachweises. Preisprüfung und Bestellzuordnung nutzen die gemeinsame Datenbank. Zahlungsdienste bleiben separat deaktiviert.</p>
   {params.ok==="1"&&<p role="status" className="mt-6 rounded-lg bg-emerald-900/30 p-4 text-emerald-200">Änderung gespeichert.</p>}

@@ -23,7 +23,8 @@
     "test:affiliate-routes": "node scripts/test-affiliate-routes.mjs",
     "test:promo-pricing": "node scripts/test-promo-pricing.mjs",
     "test:customer-home": "node scripts/test-customer-first-homepage.mjs",
-    "test:smtp-compatibility": "node scripts/test-smtp-compatibility.mjs"
+    "test:smtp-compatibility": "node scripts/test-smtp-compatibility.mjs",
+    "test:affiliate-admin-session": "node scripts/test-affiliate-admin-session.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",

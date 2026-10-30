@@ -1,6 +1,6 @@
 import { NextRequest,NextResponse } from "next/server";
 import { isSameOrigin } from "@/lib/accounting/admin-auth";
-import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
+import { isAuthorizedAffiliateAdmin as isAuthorizedFinanceAdmin } from "@/lib/affiliate/admin-access";
 import { financeAdminActor } from "@/lib/affiliate/admin-actor";
 import { affiliateDb } from "@/lib/affiliate/server";
 export const runtime="nodejs";

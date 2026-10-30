@@ -1,6 +1,6 @@
 import { NextRequest,NextResponse } from "next/server";
 import { PDFDocument,StandardFonts,rgb,type PDFPage } from "pdf-lib";
-import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
+import { isAuthorizedAffiliateAdmin as isAuthorizedFinanceAdmin } from "@/lib/affiliate/admin-access";
 import { affiliateDb, affiliateBackendConfigured } from "@/lib/affiliate/server";
 export const runtime="nodejs";
 const money=(n:number)=>new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(n/100);

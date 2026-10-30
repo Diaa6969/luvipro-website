@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
-import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
+import { isAuthorizedAffiliateAdmin as isAuthorizedFinanceAdmin } from "@/lib/affiliate/admin-access";
 import { affiliateDb, affiliateBackendConfigured } from "@/lib/affiliate/server";
 export const runtime="nodejs";
 export async function GET(req:NextRequest) {
