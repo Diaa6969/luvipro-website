@@ -1,6 +1,6 @@
 import {
   AlertTriangle, ArrowRight, BadgeCheck, BadgeEuro, Bell, Car, CarFront, Check,
-  CircuitBoard, DatabaseZap, ExternalLink, FileCheck2, FileLock2, FileScan,
+  DatabaseZap, ExternalLink, FileCheck2, FileLock2, FileScan,
   FileWarning, Fingerprint, LockKeyhole, MapPin, MapPinned, Navigation,
   ScanLine, ScanSearch, ScanText, ShieldAlert, ShieldCheck, Smartphone,
   Sparkles, Store, UserCheck, UserRoundCheck, Wrench, Zap,
@@ -161,7 +161,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                   <div className="flex h-full flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <span className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm text-slate-200">{s.device.badge}</span>
-                      <CircuitBoard className="h-9 w-9 shrink-0 text-pulse" />
+                      <CarFront className="h-9 w-9 shrink-0 text-pulse" />
                     </div>
                     <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-full border border-pulse/50 bg-pulse/10 shadow-glow">
                       <ScanLine className="h-20 w-20 text-pulse" />
