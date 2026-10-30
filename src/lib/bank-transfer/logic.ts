@@ -1,10 +1,11 @@
-import { calculateInvoicePricing, moneyEUR } from "@/lib/invoicing/prices";
+import { calculateInvoicePricing, promoInvoicePricing, moneyEUR } from "@/lib/invoicing/prices";
 
 export type BankOrder = {
   id: string; request_key: string; invoice_id: string; invoice_number: string;
   customer_company: string; customer_contact: string; customer_email: string;
   customer_address: string; customer_postal_code: string; customer_city: string;
   customer_phone: string; quantity: number;
+  promo_snapshot?:Record<string,unknown>|null; product_kind?:"device"|"inspection_standard"|"inspection_premium";
   net_cents: number; vat_cents: number; gross_cents: number;
   payment_status: "pending" | "paid" | "cancelled";
   payment_mail_status: "pending" | "sending" | "sent" | "failed";
@@ -26,7 +27,8 @@ export function isValidGermanIban(raw: string): boolean {
 }
 
 export function assertBankOrder(order: BankOrder) {
-  const totals = calculateInvoicePricing("device", order.quantity);
+  const totals = order.promo_snapshot?promoInvoicePricing(order.promo_snapshot):calculateInvoicePricing("device", order.quantity);
+  if(order.promo_snapshot&&(order.promo_snapshot.quantity!==order.quantity||totals.kind!==order.product_kind))throw Error("Order identity snapshot mismatch");
   if (order.net_cents !== totals.netCents || order.vat_cents !== totals.vatCents ||
       order.gross_cents !== totals.grossCents ||
       !/^LUV-\d{4}-\d{7,}$/.test(order.invoice_number)) {

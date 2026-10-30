@@ -19,7 +19,9 @@
     "test:locales": "node scripts/test-site-locales.mjs",
     "test:language-navigation": "node scripts/test-language-navigation.mjs",
     "test:legal-published": "node scripts/test-legal-published.mjs",
-    "test:vehicle-check": "node scripts/test-vehicle-check-journey.mjs"
+    "test:vehicle-check": "node scripts/test-vehicle-check-journey.mjs",
+    "test:affiliate-routes": "node scripts/test-affiliate-routes.mjs",
+    "test:promo-pricing": "node scripts/test-promo-pricing.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",

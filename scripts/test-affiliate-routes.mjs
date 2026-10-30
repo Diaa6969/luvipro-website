@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import ts from 'typescript';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),next=require('next/server');
+const savedFetch=globalThis.fetch,savedUrl=process.env.SUPABASE_URL,savedKey=process.env.SUPABASE_SERVICE_ROLE_KEY,savedAnon=process.env.SUPABASE_ANON_KEY;
+let checks=0,calls=[],upstreamStatus=201,owned=[],dbCalls=[],adminAuthorized=false;const synthetic='SYNTHETIC_NOT_A_REAL_AUTH_TOKEN';
+const same=req=>req.headers.get('origin')===new URL(req.url).origin;
+const server={affiliateConfigured:()=>true,affiliateBackendConfigured:()=>true,acceptAffiliateSubmissionRate:async()=>true,affiliateDb:async(path,init)=>{dbCalls.push({path,init});return Response.json(path.includes("admin_dispatch")?"55555555-5555-4555-8555-555555555555":owned);}};
+const account={AFFILIATE_COOKIE:'luvipro_affiliate_session',verifyAffiliateToken:async token=>{assert.equal(token,synthetic);return {id:'22222222-2222-4222-8222-222222222222',email:'synthetic@example.invalid',email_confirmed_at:'2026-10-30'};}};
+function load(file){const mod={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;const deps={'next/server':next,'@/lib/affiliate/server':server,'@/lib/affiliate/account':account,'@/lib/accounting/admin-auth':{isSameOrigin:same},'@/lib/accounting/admin-request':{isAuthorizedFinanceAdmin:async()=>adminAuthorized},'@/lib/affiliate/admin-actor':{financeAdminActor:async()=>'11111111-1111-4111-8111-111111111111'},'@/lib/affiliate/terms':{affiliateTermsVersion:'2026-10-29'}};new Function('require','module','exports',code)(n=>{if(!(n in deps))throw Error('Unexpected import '+n);return deps[n];},mod,mod.exports);return mod.exports;}
+const request=(path,body,{auth=true,origin='https://synthetic.example',size='2048'}={})=>new next.NextRequest('https://synthetic.example'+path,{method:'POST',headers:{origin,host:'synthetic.example','content-length':size,...auth?{cookie:'luvipro_affiliate_session='+synthetic}:{}},body});
+function form(consent=true){const f=new FormData();for(const [k,v]of Object.entries({company:'SYNTHETIC BUSINESS',contact:'SYNTHETIC CONTACT',email:'forged@example.invalid',address:'SYNTHETIC ADDRESS 123',phone:'',social:'',marketing:'',country:'DE',website_check:'',terms_version:'2026-10-29',privacy:'on',terms:consent?'on':''}))f.set(k,v);f.set('registration',new File([new TextEncoder().encode('%PDF-'+'.'.repeat(40))],'synthetic.pdf',{type:'application/pdf'}));return f;}
+try{
+ process.env.SUPABASE_URL='https://synthetic.supabase.co';process.env.SUPABASE_SERVICE_ROLE_KEY='SYNTHETIC_NOT_A_KEY';process.env.SUPABASE_ANON_KEY='SYNTHETIC_NOT_A_KEY';
+ globalThis.fetch=async(url,options)=>{calls.push({url,options});return Response.json({application_id:'44444444-4444-4444-8444-444444444444',status:'pending'},{status:upstreamStatus});};
+ const apply=load('src/app/api/affiliate/apply/route.ts');
+ assert.equal((await apply.POST(request('/api/affiliate/apply',form(),{auth:false}))).status,401);assert.equal(calls.length,0);checks++;
+ assert.equal((await apply.POST(request('/api/affiliate/apply',form(),{origin:'https://other.example'}))).status,403);assert.equal(calls.length,0);checks++;
+ assert.equal((await apply.POST(request('/api/affiliate/apply',form(false)))).status,422);assert.equal(calls.length,0);checks++;
+ assert.equal((await apply.POST(request('/api/affiliate/apply',form(),{size:'6000000'}))).status,413);assert.equal(calls.length,0);checks++;
+ const success=await apply.POST(request('/api/affiliate/apply',form()));assert.equal(success.status,303);assert.ok(success.headers.get('location').endsWith('/affiliate/dashboard'));assert.equal(calls.length,1);assert.equal(calls[0].options.body.get('company_name'),'SYNTHETIC BUSINESS');assert.equal(calls[0].options.body.get('email'),null);assert.equal(calls[0].options.body.get('terms_accepted'),'true');checks++;
+ upstreamStatus=503;assert.equal((await apply.POST(request('/api/affiliate/apply',form()))).status,422);checks++;
+ const session=load('src/app/api/affiliate/session/route.ts');calls=[];globalThis.fetch=async(url,options)=>{calls.push({url,options});return Response.json({access_token:synthetic,expires_in:3600});};
+ const login=()=>request('/api/affiliate/session',new URLSearchParams({email:'synthetic@example.invalid',password:'SYNTHETIC_NON_SECRET_TEST_INPUT'}),{auth:false});
+ owned=[];const fresh=await session.POST(login());assert.ok(fresh.headers.get('location').endsWith('/affiliate'));assert.match(fresh.headers.get('set-cookie'),/HttpOnly/i);assert.match(fresh.headers.get('set-cookie'),/SameSite=strict/i);checks++;
+ owned=[{id:'44444444-4444-4444-8444-444444444444'}];assert.ok((await session.POST(login())).headers.get('location').endsWith('/affiliate/dashboard'));checks++;
+ const quote=load('src/app/api/store/promo-quote/route.ts');calls=[];
+ const quoteRequest=(body,opts={})=>{const req=request('/api/store/promo-quote',JSON.stringify(body),opts);req.headers.set('content-type','application/json');return req;};
+ const body={product:'device',quantity:1,code:'SYNTHETIC10'};
+ assert.equal((await quote.POST(quoteRequest(body,{auth:false}))).status,401);assert.equal(calls.length,0);checks++;
+ assert.equal((await quote.POST(quoteRequest({...body,product:'paid_private_report'}))).status,422);assert.equal(calls.length,0);checks++;
+ globalThis.fetch=async(url,options)=>{calls.push({url,options});return Response.json({quote_id:'55555555-5555-4555-8555-555555555555',gross_cents:'324869'});};
+ assert.equal((await quote.POST(quoteRequest(body))).status,200);const forwarded=JSON.parse(calls[0].options.body);assert.equal(forwarded.p_product,'device');assert.equal(forwarded.p_quantity,1);assert.equal(forwarded.p_code,'SYNTHETIC10');assert.equal(forwarded.p_actor,undefined);checks++;
+ const promoAdmin=load('src/app/api/accounting/affiliate/promo/route.ts');dbCalls=[];
+ const adminBody={actor:'33333333-3333-4333-8333-333333333333',id:null,version:null,code:{code:'SYNTHETIC',code_type:'device',evidence_checked:true,affiliate_id:null,active:false},rules:[{product_kind:'device',discount_kind:'percent',discount_bps:0,commission_bps:0}]};
+ const adminRequest=(body,opts={})=>{const req=request('/api/accounting/affiliate/promo',JSON.stringify(body),opts);req.headers.set('content-type','application/json');return req;};
+ assert.equal((await promoAdmin.POST(adminRequest(adminBody))).status,401);assert.equal(dbCalls.length,0);checks++;
+ adminAuthorized=true;assert.equal((await promoAdmin.POST(adminRequest(adminBody,{origin:'https://other.example'}))).status,403);assert.equal(dbCalls.length,0);checks++;
+ assert.equal((await promoAdmin.POST(adminRequest({...adminBody,code:{...adminBody.code,evidence_checked:false}}))).status,422);assert.equal(dbCalls.length,0);checks++;
+ assert.equal((await promoAdmin.POST(adminRequest(adminBody))).status,200);assert.equal(dbCalls.length,1);const forwardedAdmin=JSON.parse(dbCalls[0].init.body);assert.equal(forwardedAdmin.p_actor,'11111111-1111-4111-8111-111111111111');assert.equal(forwardedAdmin.p_action,'save_code');assert.equal(forwardedAdmin.p_payload.actor,undefined);checks++;
+ console.log(JSON.stringify({passed:checks,failed:0,scope:'Actual Next route handlers with mocked Auth/DB/Edge fetch; no network, emails, agreements or payments'}));
+}finally{globalThis.fetch=savedFetch;for(const [key,value]of Object.entries({SUPABASE_URL:savedUrl,SUPABASE_SERVICE_ROLE_KEY:savedKey,SUPABASE_ANON_KEY:savedAnon})){if(value===undefined)delete process.env[key];else process.env[key]=value;}}

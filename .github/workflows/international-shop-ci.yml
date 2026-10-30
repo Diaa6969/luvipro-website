@@ -3,6 +3,7 @@ name: LUVIPRO feature build check
 on:
   push:
     branches:
+      - codex/flutterflow-affiliate-reminders
       - feature/international-home-en-ar
       - feature/european-locales
       - feature/language-menu-solid-header
@@ -38,6 +39,10 @@ jobs:
         run: npm run test:affiliate-payout
       - name: Validate dedicated Affiliate AGB and consent (synthetic)
         run: npm run test:affiliate-agb
+      - name: Verify shared Affiliate routes with mocked Auth and Edge calls
+        run: npm run test:affiliate-routes
+      - name: Verify discounted order and invoice snapshots
+        run: npm run test:promo-pricing
       - name: Run monthly accounting tests (synthetic)
         run: npm run test:accounting
       - name: Run bank transfer scenario tests (synthetic)

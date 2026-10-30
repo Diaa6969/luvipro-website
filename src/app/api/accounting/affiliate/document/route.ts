@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
 import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
-import { affiliateDb, affiliateConfigured } from "@/lib/affiliate/server";
+import { affiliateDb, affiliateBackendConfigured } from "@/lib/affiliate/server";
 export const runtime="nodejs";
 export async function GET(req:NextRequest) {
  if(!(await isAuthorizedFinanceAdmin(req))) return NextResponse.json({error:"Unauthorized"},{status:401});
  const id=req.nextUrl.searchParams.get("id")||"";
- if(!affiliateConfigured()||!/^[0-9a-f-]{36}$/.test(id)) return NextResponse.json({error:"Not found"},{status:404});
+ if(!affiliateBackendConfigured()||!/^[0-9a-f-]{36}$/.test(id)) return NextResponse.json({error:"Not found"},{status:404});
  try{
   const r=await affiliateDb("luvipro_affiliate_applications?id=eq."+id+"&select=registration_path&limit=1");
   const rows=await r.json() as {registration_path:string}[];

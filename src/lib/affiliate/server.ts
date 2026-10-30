@@ -1,12 +1,14 @@
 import "server-only";
 import { randomUUID, createHmac } from "node:crypto";
-export function affiliateConfigured() {
- return process.env.AFFILIATE_APPLICATIONS_ENABLED === "true" && !!process.env.SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY && (process.env.AFFILIATE_RATE_SECRET?.length || 0)>=32;
+export function affiliateBackendConfigured(){
+ return /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(process.env.SUPABASE_URL||"") && !!process.env.SUPABASE_SERVICE_ROLE_KEY && (process.env.AFFILIATE_RATE_SECRET?.length||0)>=32;
 }
+/** Pause new website applications independently of historical account/finance access. */
+export function affiliateConfigured(){return affiliateBackendConfigured()&&process.env.AFFILIATE_APPLICATIONS_ENABLED==="true";}
 function env() {
  const host = process.env.SUPABASE_URL || "";
  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
- if(!affiliateConfigured() || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(host)) throw new Error("Affiliate backend disabled");
+ if(!affiliateBackendConfigured() || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(host)) throw new Error("Affiliate backend disabled");
  return {host,key};
 }
 export async function affiliateDb(path:string, init:RequestInit={}) {

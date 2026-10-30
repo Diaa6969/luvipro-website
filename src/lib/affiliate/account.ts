@@ -1,14 +1,14 @@
 import "server-only";
 import { cookies } from "next/headers";
-import { affiliateDb, affiliateConfigured } from "./server";
+import { affiliateDb, affiliateBackendConfigured } from "./server";
 
 export const AFFILIATE_COOKIE = "luvipro_affiliate_session";
 type AuthUser = {id:string;email:string;email_confirmed_at?:string|null};
-export type AffiliateOwner = {id:string;owner_uid:string|null;company_name:string;contact_name:string;status:string;email:string};
+export type AffiliateOwner = {id:string;owner_uid:string|null;company_name:string;contact_name:string;status:string;email:string;applicant_message?:string};
 function hostAndKey(){
  const base=process.env.SUPABASE_URL||"";
  const key=process.env.SUPABASE_SERVICE_ROLE_KEY||"";
- if(!affiliateConfigured() || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(base) || !key)throw new Error("Affiliate account disabled");
+ if(!affiliateBackendConfigured() || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(base) || !key)throw new Error("Affiliate account disabled");
  return {base,key};
 }
 export async function verifyAffiliateToken(token:string):Promise<AuthUser>{
@@ -30,7 +30,7 @@ export async function claimExistingAffiliate(token:string):Promise<AffiliateOwne
  const user=await verifyAffiliateToken(token);
  // First prefer a verified admin-linked account. The customer/workshop and
  // business email addresses do not have to match after manual verification.
- const ownerResult=await affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,status&status=eq.approved&owner_uid=eq."+user.id+"&limit=2");
+ const ownerResult=await affiliateDb("luvipro_affiliate_applications?select=id,owner_uid,company_name,contact_name,email,status,applicant_message&owner_uid=eq."+user.id+"&limit=2");
  const owned=await ownerResult.json() as AffiliateOwner[];
  if(owned.length===1)return owned[0];
  if(owned.length>1)throw new Error("Ambiguous affiliate ownership");
@@ -76,7 +76,7 @@ export async function affiliateAccountSummary(token:string){
    throw new Error("Too many accounting entries for safe display; paginated export required");
  }
  const [codes,commissions,payouts,documents]=await Promise.all([
-  readOwned<{id:string;code:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean}>("luvipro_discount_codes","id,code,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active","valid_from.desc"),
+  readOwned<{id:string;code_type:string;rules:{product_kind:string;discount_kind:string;discount_bps:number;fixed_net_cents:number;commission_bps:number|null;enabled:boolean}[];code:string;discount_bps:number;commission_bps:number;valid_from:string;valid_until:string;usage_limit:number|null;redemption_count:number;active:boolean}>("luvipro_discount_codes","id,code_type,rules:luvipro_promo_rules(product_kind,discount_kind,discount_bps,fixed_net_cents,commission_bps,enabled),code,discount_bps,commission_bps,valid_from,valid_until,usage_limit,redemption_count,active","valid_from.desc"),
   readOwned<{id:string;status:string;commission_cents:number;created_at:string;verified_paid_at:string|null;delivered_at:string|null}>("luvipro_affiliate_commissions","id,status,commission_cents,created_at,verified_paid_at,delivered_at","created_at.desc"),
   readOwned<{id:string;payout_month:string;status:string;amount_cents:number;paid_at:string|null}>("luvipro_affiliate_payouts","id,payout_month,status,amount_cents,paid_at","payout_month.desc"),
   readOwned<{id:string;payout_id:string;document_number:string;service_month:string;net_cents:number;vat_cents:number;gross_cents:number}>("luvipro_affiliate_settlement_documents","id,payout_id,document_number,service_month,net_cents,vat_cents,gross_cents","issued_at.desc")

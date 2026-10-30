@@ -1,14 +1,14 @@
 import { NextRequest,NextResponse } from "next/server";
 import { PDFDocument,StandardFonts,rgb,type PDFPage } from "pdf-lib";
 import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
-import { affiliateDb, affiliateConfigured } from "@/lib/affiliate/server";
+import { affiliateDb, affiliateBackendConfigured } from "@/lib/affiliate/server";
 export const runtime="nodejs";
 const money=(n:number)=>new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(n/100);
 const safe=(s:string)=>s.replace(/[^\x20-\xFF]/g,"?").slice(0,90);
 export async function GET(req:NextRequest){
  if(!(await isAuthorizedFinanceAdmin(req)))return NextResponse.json({error:"Unauthorized"},{status:401});
  const id=req.nextUrl.searchParams.get("id")||"";
- if(!affiliateConfigured()||!/^[0-9a-f-]{36}$/.test(id))return NextResponse.json({error:"Not found"},{status:404});
+ if(!affiliateBackendConfigured()||!/^[0-9a-f-]{36}$/.test(id))return NextResponse.json({error:"Not found"},{status:404});
  try{
   const a=await affiliateDb("luvipro_affiliate_payouts?id=eq."+id+"&select=id,affiliate_id,payout_month,status,amount_cents,paid_at,payment_reference&limit=1");
   const p=(await a.json() as {id:string;affiliate_id:string;payout_month:string;status:string;amount_cents:number;paid_at:string|null;payment_reference:string|null}[])[0];

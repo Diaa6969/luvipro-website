@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { affiliateConfigured } from "@/lib/affiliate/server";
+import { affiliateBackendConfigured } from "@/lib/affiliate/server";
 export const metadata:Metadata={title:"Affiliate Login | LUVIPRO",robots:{index:false,follow:false,nocache:true}};
 export const dynamic="force-dynamic";
 export default async function AffiliateLogin({searchParams}:{searchParams:Promise<{error?:string}>}){
- const params=await searchParams,enabled=affiliateConfigured();
+ const params=await searchParams,enabled=affiliateBackendConfigured();
  return <main className="min-h-screen bg-obsidian px-5 pb-24 pt-14 text-white"><div className="mx-auto max-w-xl">
   <Link href="/affiliate" className="text-pulse">← Affiliate-Programm</Link>
   <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.04] p-7 sm:p-10">

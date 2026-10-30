@@ -3,6 +3,7 @@ import { isSameOrigin } from "@/lib/accounting/admin-auth";
 import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
 import {describeCodeChange,type DiscountCodeRow} from "@/lib/affiliate/code-controls";
 import { affiliateDb } from "@/lib/affiliate/server";
+import { financeAdminActor } from "@/lib/affiliate/admin-actor";
 import { monthOf } from "@/lib/accounting/monthly";
 export const runtime="nodejs";
 function str(f:FormData,k:string,max:number) {const v=f.get(k);if(typeof v!=="string"||v.length>max||/[\r\n]/.test(v)) throw new Error("Invalid "+k);return v.trim();}
@@ -16,24 +17,23 @@ export async function POST(req:NextRequest) {
  const size=Number(req.headers.get("content-length")||"0");
  if(!Number.isSafeInteger(size)||size<=0||size>7000) return NextResponse.json({error:"Invalid request size"},{status:403});
  try {
-  const f=await req.formData(),action=str(f,"action",30);
+  const f=await req.formData(),action=str(f,"action",30),actor=await financeAdminActor(req);
   if(action==="approve"||action==="reject") {
-   const affiliate_id=uuid(str(f,"affiliate_id",36)),review_notes=str(f,"review_notes",500);
+   const affiliate_id=uuid(str(f,"affiliate_id",36)),review_notes=optionalStr(f,"review_notes",500);
    const status=action==="approve"?"approved":"rejected";
    const contractRef=action==="approve"?str(f,"individual_agreement_ref",200):"";
    if(action==="approve" && (contractRef.length<4 || f.get("individual_agreement_confirmed")!=="on"
      || f.get("gross_inclusive_terms")!=="on")) throw new Error("Signed individual terms and gross-inclusive compensation agreement required");
-   // Update only pending applications. A signed-in admin must inspect document before approving.
-   const r=await affiliateDb("luvipro_affiliate_applications?id=eq."+affiliate_id+"&status=eq.pending&select=id",{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify({status,review_notes,reviewed_at:new Date().toISOString(),updated_at:new Date().toISOString(),
-      ...(action==="approve"?{individual_agreement_ref:contractRef,individual_agreement_accepted_at:new Date().toISOString()}: {})})});
-   const data=await r.json() as {id:string}[];
-   if(data.length!==1) throw new Error("Not pending");
-   await affiliateDb("luvipro_affiliate_audit",{method:"POST",body:JSON.stringify({action:"application_"+status,entity_id:affiliate_id,details:{review_notes,...(action==="approve"?{individual_agreement_ref:contractRef,gross_inclusive_verified:true}: {})}})});
+   const revision=Number(str(f,"review_revision",10));if(!Number.isSafeInteger(revision)||revision<0)throw Error("Reload review");
+   const message=optionalStr(f,"applicant_message",1600);
+   await affiliateDb("rpc/luvipro_affiliate_admin_dispatch_v1",{method:"POST",body:JSON.stringify({p_actor:actor,p_action:"review",p_payload:{application_id:affiliate_id,expected_revision:revision,status,public_message:message,private_note:review_notes,registration_checked:action==="approve"&&f.get("individual_agreement_confirmed")==="on",contract_checked:action==="approve"&&f.get("individual_agreement_confirmed")==="on",contract_reference:contractRef}})});
   }else if(action==="create_code") {
-   const affiliate_id=uuid(str(f,"affiliate_id",36));
+   const affiliateInput=optionalStr(f,"affiliate_id",36),affiliate_id=affiliateInput?uuid(affiliateInput):null;
+   if(affiliate_id){
    const a=await affiliateDb("luvipro_affiliate_applications?id=eq."+affiliate_id+"&status=eq.approved&select=id,legal_agb_version,legal_agb_accepted_at,individual_agreement_ref,individual_agreement_accepted_at&limit=1");
    const rows=await a.json() as {id:string;legal_agb_version:string|null;legal_agb_accepted_at:string|null;individual_agreement_ref:string;individual_agreement_accepted_at:string|null}[];
    if(rows.length!==1||!rows[0].legal_agb_accepted_at||!rows[0].individual_agreement_accepted_at||rows[0].individual_agreement_ref.length<4) throw new Error("Partner must accept AGB and sign individual terms");
+   }
    const code=str(f,"code",32).toUpperCase();
    if(!/^[A-Z0-9][A-Z0-9_-]{3,31}$/.test(code)) throw new Error("Code");
    const valid_from=date(str(f,"valid_from",10)),valid_until=date(str(f,"valid_until",10));
@@ -43,11 +43,11 @@ export async function POST(req:NextRequest) {
    if(usage_limit!==null&&(!Number.isSafeInteger(usage_limit)||usage_limit<1)) throw new Error("Usage");
    const codeTermsRef=str(f,"code_terms_evidence_ref",200);
    if(codeTermsRef.length<4||f.get("code_terms_confirmed")!=="on")throw new Error("Signed code conditions required");
-   const body={affiliate_id,code,discount_bps:pct(str(f,"discount",6)),commission_bps:pct(str(f,"commission",6)),valid_from,valid_until,usage_limit,active:false,
-     code_terms_evidence_ref:codeTermsRef,code_terms_confirmed_at:new Date().toISOString()};
-   const r=await affiliateDb("luvipro_discount_codes?select=id",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify(body)});
-   const out=await r.json() as {id:string}[];
-   await affiliateDb("luvipro_affiliate_audit",{method:"POST",body:JSON.stringify({action:"code_created",entity_id:out[0]?.id,details:{code,valid_from,valid_until,affiliate_id,code_terms_evidence_ref:codeTermsRef}})});
+   const scope=optionalStr(f,"code_type",20)||"device";
+   if(!["device","inspection","both"].includes(scope))throw Error("Invalid code scope");
+   const products=scope==="device"?["device"]:scope==="inspection"?["inspection_standard","inspection_premium"]:["device","inspection_standard","inspection_premium"];
+   const rules=products.map(product=>({product_kind:product,discount_kind:"percent",discount_bps:pct(str(f,product==="device"?"discount":product+"_discount",8)),commission_bps:pct(str(f,product==="device"?"commission":product+"_commission",8)),settlement_delay_days:Number(str(f,product+"_delay",4)||"15")}));
+   await affiliateDb("rpc/luvipro_promo_admin_dispatch_v1",{method:"POST",body:JSON.stringify({p_actor:actor,p_action:"save_code",p_payload:{code:{affiliate_id,code,code_type:scope,valid_from,valid_until,usage_limit,active:false,terms_reference:codeTermsRef,evidence_checked:true},rules}})});
   }else if(action==="link_existing_account"){
    const affiliate_id=uuid(str(f,"affiliate_id",36));
    const owner_uid=uuid(str(f,"owner_uid",36));
@@ -82,7 +82,7 @@ export async function POST(req:NextRequest) {
    if(!current||current.version!==expectedVersion)throw new Error("Stale code version");
    const app=await affiliateDb("luvipro_affiliate_applications?select=status,legal_agb_accepted_at,individual_agreement_accepted_at&id=eq."+current.affiliate_id+"&limit=1");
    const agreement=(await app.json() as {status:string;legal_agb_accepted_at:string|null;individual_agreement_accepted_at:string|null}[])[0];
-   if(action==="resume_code" && (!agreement||agreement.status!=="approved"||!agreement.legal_agb_accepted_at||!agreement.individual_agreement_accepted_at||!current.code_terms_confirmed_at||current.code_terms_evidence_ref.length<4))
+   if(action==="resume_code" && current.affiliate_id && (!agreement||agreement.status!=="approved"||!agreement.legal_agb_accepted_at||!agreement.individual_agreement_accepted_at||!current.code_terms_confirmed_at||current.code_terms_evidence_ref.length<4))
       throw new Error("Partner and code terms not verified");
    const hasPast=await affiliateDb("luvipro_affiliate_commissions?select=id&code_id=eq."+codeId+"&limit=1");
    const previousSales=(await hasPast.json() as {id:string}[]).length>0;
@@ -99,11 +99,12 @@ export async function POST(req:NextRequest) {
      if(codeTermsRef.length<4||f.get("code_terms_confirmed")!=="on")throw new Error("Signed changed code conditions required");
      Object.assign(changes,{code_terms_evidence_ref:codeTermsRef,code_terms_confirmed_at:new Date().toISOString()});
    }
-   const patch=await affiliateDb("luvipro_discount_codes?select=id&id=eq."+codeId+"&version=eq."+expectedVersion,{
-    method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify(changes)
-   });
-   const updated=await patch.json() as {id:string}[];
-   if(updated.length!==1)throw new Error("Code changed concurrently");
+   const details=await affiliateDb("luvipro_discount_codes?select=*,rules:luvipro_promo_rules(*)&id=eq."+codeId+"&limit=1");
+   const currentDetail=(await details.json() as ({code_type:string;rules:Record<string,unknown>[]}&Record<string,unknown>)[])[0];
+   if(!currentDetail)throw Error("Code missing");
+   const merged:Record<string,unknown>={...currentDetail,...changes};
+   const rules=currentDetail.rules.length?currentDetail.rules.filter(r=>r.enabled!==false).map(r=>r.product_kind==="device"?{...r,discount_bps:merged.discount_bps,commission_bps:merged.commission_bps}:r):[{product_kind:"device",discount_kind:"percent",discount_bps:merged.discount_bps,commission_bps:merged.commission_bps,settlement_delay_days:15}];
+   await affiliateDb("rpc/luvipro_promo_admin_dispatch_v1",{method:"POST",body:JSON.stringify({p_actor:actor,p_action:"save_code",p_payload:{id:codeId,version:expectedVersion,code:{...merged,terms_reference:merged.code_terms_evidence_ref,evidence_checked:true},rules}})});
    // Database trigger writes immutable before/after audit in the same transaction.
   } else throw new Error("Unsupported action");
   if(req.headers.has("authorization"))return NextResponse.json({saved:true},{headers:{"Cache-Control":"no-store"}});
