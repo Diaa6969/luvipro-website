@@ -27,12 +27,12 @@ const en = {
     nav: ["Ecosystem", "Device", "How it works", "Prices", "Workshops"],
     hero: {
       badge: "Every vehicle has a story. We bring the truth to light.",
-      title: "LUVIPRO makes vehicle history visible.",
-      description: "A connected approach combining professional UV inspection devices, VIN-based report lookup and digital vehicle reports for workshops, sellers and buyers.",
+      title: "Get your used car checked before you decide.",
+      description: "Have a partner workshop inspect your vehicle with UV-assisted paint checks, a visual assessment and clear digital documentation.",
       partner: "Become a partner workshop",
       verify: "Verify a vehicle",
       stats: [
-        ["UV", "Professional UV inspection devices"],
+        ["UV", "Paint and bodywork check"],
         ["VIN", "Vehicle identification number lookup"],
         ["PDF", "Digital vehicle inspection reports"],
       ],
@@ -53,10 +53,10 @@ const en = {
     },
     ecosystem: {
       eyebrow: "Ecosystem",
-      title: "Hardware, inspections and digital reports—connected.",
-      description: "One workflow to help workshops document their findings and make vehicle information easier to understand.",
+      title: "Understand more about your next used car.",
+      description: "Compare inspection packages, find a participating workshop and check for an existing vehicle report.",
       items: [
-        ["UV inspection device", "Specialist hardware for conducting UV-supported vehicle inspections."],
+        ["Paint and bodywork", "Partner workshops examine paintwork and document visible irregularities."],
         ["VIN-based lookup", "Look up the availability of a digital report using a vehicle identification number."],
         ["Structured inspection", "A consistent workflow for recording findings and supporting evidence."],
         ["Digital PDF reports", "Readable inspection reports intended to support buying and selling decisions."],
@@ -67,9 +67,9 @@ const en = {
     },
     device: {
       eyebrow: "Inspection technology",
-      title: "A UV inspection device for professional workshops.",
-      description: "The LU3656060 is LUVIPRO’s 365 nm UV inspection device for structured professional vehicle examinations.",
-      badge: "LU3656060 · 365 nm",
+      title: "What will the vehicle check tell you?",
+      description: "A partner workshop examines paintwork and vehicle surfaces, records visible signs of repair work and prepares structured findings for your report.",
+      badge: "Vehicle inspection · LUVIPRO",
       labels: ["UV", "VIN", "PDF"],
       items: ["Professional UV-supported examination", "Inspection documentation linked to the vehicle VIN", "Results prepared for a digital vehicle report"],
     },
@@ -95,7 +95,7 @@ const en = {
     },
     business: {
       eyebrow: "Business model",
-      title: "Clear pricing for the device and vehicle inspections.",
+      title: "Choose a vehicle check: Standard or Premium.",
       description: "Standard and Premium inspections are offered through participating partner workshops. Check your region for confirmed available workshops.",
       plans: [
         ["Standard inspection", "€59.99 / vehicle", ["UV-assisted paint inspection", "Visual exterior inspection", "Interior inspection", "Documented findings"], "Check availability", "/partner-workshops"],
@@ -187,12 +187,12 @@ const ar: typeof en = {
     nav: ["المنظومة", "الجهاز", "طريقة العمل", "الأسعار", "الورش"],
     hero: {
       badge: "لكل سيارة قصة. نحن نسلّط الضوء على الحقيقة.",
-      title: "LUVIPRO يكشف تفاصيل تاريخ السيارة.",
-      description: "منظومة مترابطة تجمع أجهزة الفحص الاحترافية بالأشعة فوق البنفسجية، والبحث عن التقارير برقم الهيكل VIN، وتقارير الفحص الرقمية للورش والبائعين والمشترين.",
+      title: "افحص سيارتك المستعملة قبل اتخاذ القرار.",
+      description: "اطلب فحص سيارتك لدى ورشة شريكة باستخدام فحص الطلاء بالأشعة فوق البنفسجية والفحص البصري، مع توثيق النتائج بتقرير رقمي واضح.",
       partner: "انضم كورشة شريكة",
       verify: "تحقق من سيارة",
       stats: [
-        ["UV", "أجهزة احترافية للفحص بالأشعة فوق البنفسجية"],
+        ["UV", "فحص الطلاء والهيكل"],
         ["VIN", "البحث باستخدام رقم هيكل السيارة"],
         ["PDF", "تقارير رقمية لفحص السيارات"],
       ],
@@ -213,10 +213,10 @@ const ar: typeof en = {
     },
     ecosystem: {
       eyebrow: "المنظومة",
-      title: "الأجهزة والفحوص والتقارير الرقمية في منظومة واحدة.",
-      description: "سير عمل موحد يساعد الورش على توثيق نتائج الفحص ويجعل معلومات السيارة أسهل للفهم.",
+      title: "معلومات أوضح قبل شراء سيارتك المستعملة.",
+      description: "قارن باقات الفحص، واعثر على ورشة شريكة، وابحث عن تقرير فحص سابق للسيارة.",
       items: [
-        ["جهاز الفحص بالأشعة فوق البنفسجية", "جهاز متخصص لدعم الفحص الفني للسيارات بالأشعة فوق البنفسجية."],
+        ["فحص الطلاء والهيكل", "تفحص الورش الشريكة أسطح الطلاء وتوثّق أي ملاحظات ظاهرة."],
         ["البحث برقم الهيكل VIN", "البحث عن توفر تقرير رقمي باستخدام رقم تعريف السيارة."],
         ["فحص منظّم", "خطوات موحدة لتسجيل النتائج والأدلة المساندة."],
         ["تقارير PDF رقمية", "تقارير فحص مفهومة تهدف إلى دعم قرارات البيع والشراء."],
@@ -227,9 +227,9 @@ const ar: typeof en = {
     },
     device: {
       eyebrow: "تقنية الفحص",
-      title: "جهاز فحص بالأشعة فوق البنفسجية للورش الاحترافية.",
-      description: "جهاز LUVIPRO LU3656060 يعمل بطول موجي 365 نانومتر لدعم الفحص المهني والمنظم للسيارات.",
-      badge: "LU3656060 · 365 nm",
+      title: "ما الذي يشمله فحص السيارة؟",
+      description: "تفحص الورشة الشريكة طلاء السيارة وهيكلها وتوثّق العلامات الظاهرة التي قد تشير إلى إصلاحات سابقة ضمن تقرير واضح.",
+      badge: "فحص السيارة · LUVIPRO",
       labels: ["UV", "VIN", "PDF"],
       items: ["فحص احترافي بمساعدة الأشعة فوق البنفسجية", "توثيق الفحص بالاعتماد على رقم الهيكل", "إعداد النتائج لتقرير سيارة رقمي"],
     },
@@ -255,7 +255,7 @@ const ar: typeof en = {
     },
     business: {
       eyebrow: "نموذج العمل",
-      title: "أسعار واضحة للجهاز وخدمات فحص السيارات.",
+      title: "اختر فحص سيارتك: Standard أو Premium.",
       description: "فحص Standard وPremium من خدمات ورش LUVIPRO الشريكة. تحقق من توافر ورشة مؤكدة في منطقتك.",
       plans: [
         ["الفحص العادي Standard", "59,99 € للسيارة", ["فحص الطلاء بالأشعة فوق البنفسجية", "فحص بصري للهيكل الخارجي", "فحص المقصورة الداخلية", "توثيق نتائج الفحص"], "التحقق من التوفر", "/partner-workshops"],

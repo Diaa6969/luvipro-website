@@ -1,4 +1,4 @@
-import { CircuitBoard, ScanLine, Sparkles } from "lucide-react";
+import { CarFront, ScanLine, Sparkles } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { CtaLink } from "@/components/ui/cta-link";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -15,9 +15,9 @@ export function UvScanner() {
                 <div className="flex h-full flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm text-slate-200">
-                      LUVIPRO LU3656060
+                      Fahrzeugcheck mit LUVIPRO
                     </span>
-                    <CircuitBoard className="h-9 w-9 text-pulse" />
+                    <CarFront className="h-9 w-9 text-pulse" />
                   </div>
                   <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-full border border-pulse/50 bg-pulse/10 shadow-glow">
                     <ScanLine className="h-20 w-20 text-pulse" />
@@ -36,20 +36,20 @@ export function UvScanner() {
         </Reveal>
         <Reveal delay={0.12}>
           <SectionHeading
-            eyebrow="Technik"
-            title="UV-Inspektionsgerät für Partnerwerkstätten."
-            description="Das LUVIPRO LU3656060 mit 365 nm unterstützt die strukturierte UV-gestützte Fahrzeugprüfung in Werkstätten und die anschließende Dokumentation der Befunde."
+            eyebrow="Was wird geprüft?"
+            title="Auffälligkeiten erkennen, bevor Sie sich entscheiden."
+            description="Bei einem LUVIPRO Fahrzeugcheck untersucht eine Partnerwerkstatt Lackoberflächen und Karosserie, dokumentiert erkennbare Auffälligkeiten und hält die Ergebnisse für Sie in einem strukturierten Bericht fest."
           />
           <div className="mt-8 space-y-4">
-            {["UV-gestützte Untersuchung von Lackoberflächen", "Dokumentation von Auffälligkeiten und Reparaturspuren", "Zuordnung der Prüfung zur Fahrzeug-FIN und zum digitalen Report"].map((item) => (
+            {["Prüfung von Lackoberflächen auf mögliche Nachlackierungen und Reparaturspuren", "Sichtprüfung der Karosserie und strukturierte Dokumentation", "Fahrzeugbezogener Bericht über die FIN/VIN – mit geregeltem Zugriff"].map((item) => (
               <div key={item} className="flex items-center gap-3 text-slate-200">
                 <Sparkles className="h-5 w-5 text-pulse" />
                 {item}
               </div>
             ))}
           </div>
-          <CtaLink href="/products" className="mt-8">
-            LU3656060 ansehen & unverbindlich anfragen
+          <CtaLink href="/verify#partner-map" className="mt-8">
+            Fahrzeugcheck bei einer Partnerwerkstatt anfragen
           </CtaLink>
         </Reveal>
       </div>

@@ -50,13 +50,13 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
 
   const closeMenu = () => setIsOpen(false);
   const navItems = t.sections.nav.map((label, index) => ({
-    label,
-    href: [`/${locale}#ecosystem`, `/${locale}/products`, `/${locale}#how-it-works`, `/${locale}/products`, `/${locale}#partner-map`][index],
+    label: index === 1 ? (locale === "ar" ? "للورشات" : "For workshops") : label,
+    href: [`/${locale}#ecosystem`, `/${locale}/products`, `/${locale}#how-it-works`, `/${locale}#pricing`, `/${locale}#partner-map`][index],
   }));
   const mobileLinks = [
     { label: t.site.home, href: `/${locale}` },
-    { label: t.site.products, href: `/${locale}/products` },
-    { label: t.site.prices, href: `/${locale}/products` },
+    { label: locale === "ar" ? "للورشات · الجهاز" : "For workshops · Device", href: `/${locale}/products` },
+    { label: t.site.prices, href: `/${locale}#pricing` },
     { label: locale === "ar" ? "البحث عن تقرير" : "Find a report", href: `/${locale}/reports` },
     { label: t.site.verify, href: `/${locale}/reports` },
     { label: t.site.workshops, href: `/${locale}/workshops` },
@@ -145,7 +145,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
           </div>
           <div className="hidden items-center gap-3 2xl:flex">
             <CtaLink href={`/${locale}/reports`} variant="secondary">{locale === "ar" ? "البحث عن تقرير" : "Find report"}</CtaLink>
-            <CtaLink href={`/${locale}/contact`}>{t.site.partner}</CtaLink>
+            <CtaLink href={`/${locale}/workshops`}>{locale === "ar" ? "افحص سيارتك" : "Get your car checked"}</CtaLink>
           </div>
           <div className="ms-auto shrink-0 xl:ms-0"><LanguagePicker current={locale} compact /></div>
           <button

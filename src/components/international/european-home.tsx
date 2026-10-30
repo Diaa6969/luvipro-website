@@ -15,7 +15,7 @@ export function EuropeanHeader({ locale, section }: { locale: SiteLocale; sectio
   const t = siteTranslation(locale);
   const items = [
     [t.navHome, localeHome(locale)],
-    [t.navDevice, localeHref(locale, "products")],
+    [t.navDevice + " · B2B", localeHref(locale, "products")],
     [t.navReports, localeHref(locale, "reports")],
     [t.navPartners, localeHref(locale, "workshops")],
     [t.navContact, localeHref(locale, "contact")],
@@ -83,21 +83,21 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
             <h1 className="mt-8 max-w-3xl font-[var(--font-space-grotesk)] text-[clamp(2.4rem,5vw,4.5rem)] font-semibold leading-[1.07]">{t.headline}</h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">{t.intro}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href={localeHref(locale,"reports")} className={primary}>{t.reportCta}<ArrowRight className="size-4" /></Link>
-              <Link href={localeHref(locale,"products")} className={secondary}>{t.navDevice}</Link>
+              <Link href={localeHref(locale,"workshops")} className={primary}>{t.navPartners}<ArrowRight className="size-4" /></Link>
+              <Link href={localeHref(locale,"reports")} className={secondary}>{t.reportCta}</Link>
             </div>
           </div>
           <div className={panel}>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pulse">LUVIPRO · 365 nm</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pulse">LUVIPRO · UV / FIN / VIN</p>
             <div className="my-9 flex items-center justify-around">
               <ScanLine className="size-20 text-pulse sm:size-28" strokeWidth={1.25} />
               <div className="h-px flex-1 bg-gradient-to-r from-pulse to-ultraviolet" />
               <CarFront className="size-20 text-white sm:size-28" strokeWidth={1.25} />
             </div>
             <div className="grid grid-cols-3 gap-2 text-center text-sm">
-              {["UV 365 nm","VIN / FIN","PDF"].map(x=><div key={x} className="rounded-xl border border-white/10 bg-black/20 p-3 font-semibold">{x}</div>)}
+              {["UV Check","VIN / FIN","PDF"].map(x=><div key={x} className="rounded-xl border border-white/10 bg-black/20 p-3 font-semibold">{x}</div>)}
             </div>
-            <p className="mt-6 text-sm leading-7 text-slate-300">{t.uvText}</p>
+            <p className="mt-6 text-sm leading-7 text-slate-300">{t.trustText}</p>
           </div>
         </div>
       </section>
@@ -106,7 +106,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
         <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">{t.features}</h2>
         <div className="mt-9 grid gap-5 md:grid-cols-3">
           {[
-            [ScanLine,t.uvTitle,t.uvText],
+            [ScanLine,t.uvTitle,t.trustText],
             [Fingerprint,t.vinTitle,t.vinText],
             [FileCheck2,t.pdfTitle,t.pdfText],
           ].map(([Icon,title,body],i)=>{
@@ -118,23 +118,21 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
       <section className="bg-midnight py-20">
         <div className="section-shell">
           <h2 className="text-3xl font-semibold sm:text-4xl">{t.prices}</h2>
-          <div className="mt-9 grid gap-5 md:grid-cols-3">
+          <div className="mx-auto mt-9 grid max-w-5xl gap-5 md:grid-cols-2">
             {[
               ["Standard","59,99 €","19% VAT"],
               ["Premium","119,99 €","19% VAT"],
-              ["LUVIPRO LU3656060","3.000,00 €","B2B"],
             ].map(([label,amount,tax])=>
               <div key={label} className={panel}>
                 <p className="text-xl font-semibold">{label}</p>
                 <p className="mt-5 font-[var(--font-space-grotesk)] text-4xl font-bold">{amount}</p>
                 <p className="mt-2 text-xs text-slate-400">{tax}</p>
-                <Link href={label==="LUVIPRO LU3656060"?localeHref(locale,"products"):localeHref(locale,"workshops")} className="mt-8 inline-flex items-center gap-2 font-semibold text-pulse hover:text-white">
-                  {label==="LUVIPRO LU3656060"?t.order:t.partnerCta}<ArrowRight className="size-4" />
+                <Link href={localeHref(locale,"workshops")} className="mt-8 inline-flex items-center gap-2 font-semibold text-pulse hover:text-white">
+                  {t.partnerCta}<ArrowRight className="size-4" />
                 </Link>
               </div>
             )}
           </div>
-          <p className="mt-6 text-sm leading-7 text-slate-300">{t.priceNote}</p>
         </div>
       </section>
       <section id="reports" className="section-shell grid items-center gap-9 py-20 lg:grid-cols-[0.9fr_1.1fr]">

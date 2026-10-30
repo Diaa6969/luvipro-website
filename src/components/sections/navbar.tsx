@@ -9,18 +9,18 @@ import { BrandLogo } from "@/components/ui/brand-logo";
 import { LanguagePicker } from "@/components/ui/language-picker";
 
 const navItems = [
-  { label: "Ecosystem", href: "/#ecosystem" },
-  { label: "Gerät", href: "/products" },
+  { label: "Fahrzeugcheck", href: "/verify#partner-map" },
+  { label: "Preise", href: "/#pricing" },
+  { label: "Werkstatt finden", href: "/verify#partner-map" },
+  { label: "Prüfberichte", href: "/reports" },
   { label: "Ablauf", href: "/#how-it-works" },
-  { label: "Preise", href: "/products#preise" },
-  { label: "Werkstätten", href: "/#partner-map" },
-  { label: "Berichte", href: "/reports" },
+  { label: "Für Werkstätten", href: "/products" },
 ];
 
 const mobileLinks = [
   { label: "Startseite", href: "/" },
-  { label: "Gerät LU3656060", href: "/products" },
-  { label: "Preise", href: "/products#preise" },
+  { label: "Für Werkstätten · Gerät & Konditionen", href: "/products" },
+  { label: "Fahrzeugcheck-Preise", href: "/#pricing" },
   { label: "Prüfbericht suchen", href: "/reports" },
   { label: "Fahrzeug checken lassen", href: "/verify#partner-map" },
   { label: "Partnerwerkstätten", href: "/partner-workshops" },
@@ -143,7 +143,7 @@ export function Navbar() {
           <div className="hidden items-center gap-5 xl:flex">
             {navItems.map((item) => (
               <Link
-                key={item.href}
+                key={`${item.label}-${item.href}`}
                 href={item.href}
                 className="text-sm font-medium text-slate-300 transition hover:text-white"
               >
@@ -156,7 +156,7 @@ export function Navbar() {
             <CtaLink href="/reports" variant="secondary">
               Prüfbericht suchen
             </CtaLink>
-            <CtaLink href="/contact">Partner werden</CtaLink>
+            <CtaLink href="/verify#partner-map">Fahrzeug checken lassen</CtaLink>
           </div>
 
           <div className="ms-auto shrink-0 xl:ms-0"><LanguagePicker current="de" compact /></div>

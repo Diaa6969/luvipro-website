@@ -3,7 +3,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const ecosystemItems = [
-  { icon: ScanSearch, title: "UV-Inspektionsgerät", text: "Professionelle UV-Prüftechnik unterstützt Werkstätten bei der Untersuchung von Lackoberflächen." },
+  { icon: ScanSearch, title: "Lack & Karosserie", text: "Partnerwerkstätten prüfen Lackoberflächen und halten auffällige Stellen nachvollziehbar fest." },
   { icon: Search, title: "VIN-/FIN-Suche", text: "Fahrzeugberichte werden über die Fahrzeug-Identifizierungsnummer zugeordnet und gefunden." },
   { icon: CarFront, title: "Fahrzeugprüfung", text: "Strukturierte Prüfabläufe dokumentieren Ergebnisse aus UV-Prüfung und Sichtkontrolle." },
   { icon: FileCheck2, title: "PDF-Reports", text: "Strukturierte Fahrzeugreports für Verkauf, Ankauf und Dokumentation." },
@@ -18,8 +18,8 @@ export function Ecosystem() {
         <Reveal>
           <SectionHeading
             eyebrow="Ökosystem"
-            title="Ein System, das Gerätetechnik, Daten und Marktvertrauen verbindet."
-            description="LUVIPRO ist nicht nur ein Report. Es ist eine Infrastruktur für wiederholbare, nachvollziehbare Verifizierung."
+            title="Mehr wissen, bevor Sie einen Gebrauchtwagen kaufen."
+            description="Fahrzeug untersuchen lassen, Ergebnisse verstehen und einen passenden Prüfbericht finden – mit LUVIPRO und teilnehmenden Partnerwerkstätten."
             align="center"
           />
         </Reveal>
