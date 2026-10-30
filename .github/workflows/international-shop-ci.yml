@@ -13,6 +13,7 @@ on:
       - feature/affiliate-code-controls-accounts
       - feature/affiliate-transfer-confirmation-reminders
       - feature/affiliate-agb-20261029
+      - fix/affiliate-public-no-demo
   workflow_dispatch:
 
 permissions:
