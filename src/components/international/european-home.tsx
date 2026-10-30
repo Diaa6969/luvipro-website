@@ -97,7 +97,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
             <div className="grid grid-cols-3 gap-2 text-center text-sm">
               {["UV Check","VIN / FIN","PDF"].map(x=><div key={x} className="rounded-xl border border-white/10 bg-black/20 p-3 font-semibold">{x}</div>)}
             </div>
-            <p className="mt-6 text-sm leading-7 text-slate-300">{t.uvText}</p>
+            <p className="mt-6 text-sm leading-7 text-slate-300">{t.trustText}</p>
           </div>
         </div>
       </section>
@@ -106,7 +106,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
         <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">{t.features}</h2>
         <div className="mt-9 grid gap-5 md:grid-cols-3">
           {[
-            [ScanLine,t.uvTitle,t.uvText],
+            [ScanLine,t.uvTitle,t.trustText],
             [Fingerprint,t.vinTitle,t.vinText],
             [FileCheck2,t.pdfTitle,t.pdfText],
           ].map(([Icon,title,body],i)=>{
@@ -133,7 +133,6 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
               </div>
             )}
           </div>
-          <p className="mt-6 text-sm leading-7 text-slate-300">{t.priceNote}</p>
         </div>
       </section>
       <section id="reports" className="section-shell grid items-center gap-9 py-20 lg:grid-cols-[0.9fr_1.1fr]">
