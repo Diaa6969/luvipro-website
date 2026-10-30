@@ -37,4 +37,5 @@ assert.doesNotMatch(eu,/\["LUVIPRO LU3656060","3\.000,00 €","B2B"\]/);
 assert.match(eu,/max-w-5xl gap-5 md:grid-cols-2/);
 assert.match(eu,/localeHref\(locale,"workshops"\)/);
 assert.match(eu,/navDevice \+ " · B2B"/);
+assert.doesNotMatch(eu.split("export function EuropeanInner(")[0],/t\.priceNote|t\.uvText/,"European customer home must not show device price or 365nm specifications");
 console.log("Customer-first German/EN/AR/EU homepages and B2B-only LU3656060 offer: PASS");
