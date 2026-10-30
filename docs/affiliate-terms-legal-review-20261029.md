@@ -45,3 +45,7 @@ The public checkbox is NOT the signed economic agreement. Applicant must separat
 6. Existing app/web checkout promo attribution and verified payment evidence are still not enabled and need transaction-specific validation.
 
 The page is public informational B2B contract language; **not a claim of court-tested legal enforceability**.
+
+## Production deploy retry – 30 October 2026
+
+A fresh push to the existing `main` branch was requested to retry the Vercel production deployment after the previous `Deployment rate limited` status. This is a documentation-only deploy trigger; production code, user data, Supabase schema and payment settings were not changed. Verify the new commit status in Vercel before calling publication successful.
