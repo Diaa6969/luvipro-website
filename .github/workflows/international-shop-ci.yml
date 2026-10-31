@@ -59,6 +59,9 @@ jobs:
         run: npm run test:legal-published
       - name: Check customer vehicle-inspection navigation and workshop search
         run: npm run test:vehicle-check
+      - name: Probe new diverse object-only car footage for unfilled cards
+        if: github.ref_name == 'preview/semantic-film-background-v2-20261031'
+        run: node scripts/probe-clean-object-only-videos.mjs
       - name: Validate semantic footage placement behind readable text
         run: npm run test:semantic-film
       - name: Verify seven licensed vehicle/inspection video files
