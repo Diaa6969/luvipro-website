@@ -7,36 +7,16 @@ import {join} from "node:path";
 import {spawnSync} from "node:child_process";
 const records = [
   {
-    "name": "exhaustSmoke",
-    "url": "https://videos.pexels.com/video-files/6160051/6160051-hd_1920_1080_24fps.mp4"
+    "name": "turboEngine",
+    "url": "https://videos.pexels.com/video-files/4101732/4101732-hd_1920_1080_25fps.mp4"
   },
   {
-    "name": "taillightRed",
-    "url": "https://videos.pexels.com/video-files/9737964/9737964-hd_1920_1080_24fps.mp4"
+    "name": "racingEngine",
+    "url": "https://videos.pexels.com/video-files/13358202/13358202-hd_1080_1920_30fps.mp4"
   },
   {
-    "name": "exhaustSport",
-    "url": "https://videos.pexels.com/video-files/5309321/5309321-hd_1920_1080_25fps.mp4"
-  },
-  {
-    "name": "rearLight",
-    "url": "https://videos.pexels.com/video-files/6159285/6159285-hd_1920_1080_30fps.mp4"
-  },
-  {
-    "name": "tailpipe",
-    "url": "https://videos.pexels.com/video-files/5611523/5611523-hd_1920_1080_30fps.mp4"
-  },
-  {
-    "name": "rainyWindshield",
-    "url": "https://videos.pexels.com/video-files/15660166/15660166-hd_1280_720_30fps.mp4"
-  },
-  {
-    "name": "heavyRainWindow",
-    "url": "https://videos.pexels.com/video-files/9101557/9101557-hd_1920_1080_24fps.mp4"
-  },
-  {
-    "name": "softRainWindow",
-    "url": "https://videos.pexels.com/video-files/10541023/10541023-hd_1280_720_25fps.mp4"
+    "name": "headlightCloseup",
+    "url": "https://videos.pexels.com/video-files/11330902/11330902-sd_640_360_25fps.mp4"
   }
 ];
 const dir=mkdtempSync(join(tmpdir(),"luvi-visual-audit-"));
@@ -60,7 +40,7 @@ try{
    console.log("CANDIDATE_ORDER",i,name,bytes.length);
  }
  const out=join(dir,"contact.jpg");
- ff(["-framerate","1","-pattern_type","glob","-i",join(dir,"frame-*.jpg"),"-vf","tile=4x4:padding=3:margin=3:color=black","-frames:v","1","-q:v","8",out]);
+ ff(["-framerate","1","-pattern_type","glob","-i",join(dir,"frame-*.jpg"),"-vf","tile=3x2:padding=3:margin=3:color=black","-frames:v","1","-q:v","8",out]);
  const b64=read(out).toString("base64");
  console.log("CANDIDATE_SHEET_BEGIN");
  for(let i=0;i<b64.length;i+=1600)console.log("CANDIDATE_CHUNK "+b64.slice(i,i+1600));
