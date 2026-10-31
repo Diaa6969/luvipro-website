@@ -19,7 +19,7 @@ export function OcrVerification() {
               { icon: LockKeyhole, title: "Zugriffsrechte berücksichtigen" },
             ].map((item) => (
               <div key={item.title} className="semantic-card p-5">
-                <SemanticFilm scene="documents" />
+                <SemanticFilm  />
                 <item.icon className="h-7 w-7 text-pulse" />
                 <p className="mt-4 font-semibold text-white">{item.title}</p>
               </div>
