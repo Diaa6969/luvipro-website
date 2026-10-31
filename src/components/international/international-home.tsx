@@ -11,6 +11,7 @@ import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
+import { UvCarScene } from "@/components/ui/uv-car-scene";
 import { InternationalNavbar, LocaleDocument } from "./international-navbar";
 import { WorkshopFinder } from "@/components/sections/workshop-finder";
 import { internationalHomeCopy, type InternationalLocale } from "@/lib/international-home-copy";
@@ -36,8 +37,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
       <InternationalNavbar locale={locale} />
 
       {/* Hero: identical visual structure to the German homepage. */}
-      <section className="relative min-h-screen bg-radial-grid pt-24 sm:pt-32">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(217,247,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(217,247,255,0.045)_1px,transparent_1px)] bg-[size:72px_72px]" />
+      <section className="relative min-h-screen pt-24 sm:pt-32">
         <div className="section-shell relative grid min-w-0 items-center gap-10 pb-20 sm:gap-12 sm:pb-24 lg:grid-cols-[1.02fr_0.98fr]">
           <Reveal>
             <div className="min-w-0 max-w-full">
@@ -62,31 +62,24 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
           <Reveal delay={0.15}>
             <div className="relative min-w-0 max-w-full">
               <div className="hero-glow-pulse absolute -inset-3 rounded-lg bg-pulse/10 blur-2xl sm:-inset-6 sm:blur-3xl" />
-              <div className="hero-visual-float glass-panel relative w-full max-w-full overflow-hidden rounded-lg p-4 sm:p-5">
-                <div className="aspect-[4/3] min-w-0 rounded-lg border border-white/10 bg-[radial-gradient(circle_at_55%_20%,rgba(32,214,255,0.32),transparent_25%),linear-gradient(145deg,rgba(8,17,31,0.35),rgba(0,0,0,0.72))] p-4 sm:p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="min-w-0">
-                      <p className="text-sm uppercase text-pulse">{s.hero.example}</p>
-                      <p className="mt-2 break-words font-[var(--font-space-grotesk)] text-xl font-semibold sm:text-2xl">BMW 530d Touring</p>
+              <div className="hero-visual-float glass-panel relative w-full max-w-full overflow-hidden rounded-3xl p-3 sm:p-5">
+                <div className="rounded-2xl border border-white/10 bg-[#090c1b]/90 p-3 sm:p-5">
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-pulse sm:text-xs">LUVIPRO · UV Inspection</p>
+                      <p className="mt-1 text-sm font-semibold text-white sm:text-base">{isArabic ? "فحص طلاء وهيكل السيارة" : "Paint & bodywork inspection"}</p>
                     </div>
-                    <ScanLine className="h-8 w-8 shrink-0 text-pulse sm:h-10 sm:w-10" />
+                    <ScanLine className="h-8 w-8 text-ultraviolet" aria-hidden="true" />
                   </div>
-                  <div className="mt-8 rounded-lg border border-white/10 bg-black/35 p-3 sm:mt-10 sm:p-4">
-                    <div className="mb-4 h-2 w-32 rounded-full bg-pulse/80" />
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      {s.hero.checks.map((item) => (
-                        <div key={item} className="rounded-lg border border-white/10 bg-white/5 p-3">
-                          <p className="text-sm font-semibold text-white">{item}</p>
-                          <p className="mt-1 text-xs text-slate-400">{s.hero.exampleStatus}</p>
-                        </div>
-                      ))}
-                    </div>
+                  <UvCarScene label={isArabic ? "رسم متحرك توضيحي لسيارة يجري عليها مسح ضوئي بالأشعة البنفسجية" : "Illustration of an ultraviolet beam scanning the surface of a car"} />
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
+                    {s.hero.checks.slice(0, 3).map((item) => (
+                      <span key={item} className="rounded-full border border-pulse/20 bg-pulse/[0.07] px-3 py-1.5">{item}</span>
+                    ))}
                   </div>
-                  <div className="mt-7 flex items-center gap-4">
-                    <CarFront className="h-12 w-12 shrink-0 text-white" />
-                    <div className="h-px flex-1 bg-gradient-to-r from-pulse via-ultraviolet to-transparent" />
-                    <Fingerprint className="h-12 w-12 shrink-0 text-ultraviolet" />
-                  </div>
+                  <p className="mt-3 text-xs text-slate-400">
+                    {isArabic ? "رسم توضيحي فقط — لا يمثل نتيجة فحص حقيقية." : "Illustration only – not an actual inspection finding."}
+                  </p>
                 </div>
               </div>
             </div>
@@ -94,7 +87,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
         </div>
         <div className="section-shell relative -mt-10 grid gap-4 pb-16 sm:grid-cols-3">
           {s.hero.stats.map(([value, label]) => (
-            <div key={value} className="glass-panel rounded-lg p-5">
+            <div key={value} className="glass-panel cinematic-card rounded-lg p-5">
               <p className="font-[var(--font-space-grotesk)] text-3xl font-semibold text-white">{value}</p>
               <p className="mt-1 text-sm text-slate-300">{label}</p>
             </div>
@@ -110,7 +103,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               const Icon = problemIcons[index];
               return (
                 <Reveal key={title} delay={index * 0.08}>
-                  <div className="glass-panel h-full rounded-lg p-6">
+                  <div className="glass-panel cinematic-card h-full rounded-lg p-6">
                     <Icon className="h-9 w-9 text-pulse" />
                     <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">{title}</h3>
                     <p className="mt-3 leading-7 text-slate-300">{description}</p>
@@ -136,7 +129,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               const Icon = ecosystemIcons[index];
               return (
                 <Reveal key={title} delay={index * 0.05}>
-                  <div className="group h-full rounded-lg border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 hover:bg-pulse/[0.07]">
+                  <div className="cinematic-card group h-full rounded-lg border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 hover:bg-pulse/[0.07]">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-pulse/10 text-pulse"><Icon className="h-6 w-6" /></div>
                     <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">{title}</h3>
                     <p className="mt-3 leading-7 text-slate-300">{description}</p>
@@ -237,7 +230,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               const Icon = flowIcons[index];
               return (
                 <Reveal key={title} delay={index * 0.08}>
-                  <div className="glass-panel h-full rounded-lg p-6">
+                  <div className="glass-panel cinematic-card h-full rounded-lg p-6">
                     <div className="flex items-center justify-between"><Icon className="h-9 w-9 text-pulse" /><Car className="h-6 w-6 text-white/30" /></div>
                     <h3 className="mt-7 font-[var(--font-space-grotesk)] text-2xl font-semibold">{title}</h3>
                     <ol className="mt-6 space-y-4">
@@ -262,7 +255,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
           <div className="mx-auto mt-12 grid max-w-5xl gap-5 md:grid-cols-2">
             {s.business.plans.slice(0,2).map(([name, price, features, cta, href], index) => (
               <Reveal key={name} delay={index * 0.08}>
-                <div className="glass-panel flex h-full flex-col rounded-lg p-6">
+                <div className="glass-panel cinematic-card flex h-full flex-col rounded-lg p-6">
                   <p className="font-[var(--font-space-grotesk)] text-2xl font-semibold">{name}</p>
                   <p className="mt-3 text-lg text-pulse">{price}</p>
                   <div className="mt-7 space-y-3">
@@ -321,7 +314,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
       <section className="bg-midnight py-24">
         <div className="section-shell">
           <Reveal>
-            <div className="glass-panel rounded-lg p-8 text-center sm:p-12">
+            <div className="glass-panel cinematic-card rounded-lg p-8 text-center sm:p-12">
               <ShieldCheck className="mx-auto h-12 w-12 text-pulse" />
               <h2 className="mx-auto mt-6 max-w-4xl font-[var(--font-space-grotesk)] text-3xl font-semibold text-white sm:text-5xl">{s.end.title}</h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">{s.end.description}</p>
