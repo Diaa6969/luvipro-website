@@ -14,6 +14,7 @@ on:
       - feature/affiliate-transfer-confirmation-reminders
       - feature/affiliate-agb-20261029
       - fix/affiliate-public-no-demo
+      - preview/semantic-film-background-v2-20261031
       - feature/customer-first-homepage-20261030
   workflow_dispatch:
 
@@ -58,6 +59,8 @@ jobs:
         run: npm run test:legal-published
       - name: Check customer vehicle-inspection navigation and workshop search
         run: npm run test:vehicle-check
+      - name: Probe verified semantic Pexels automotive MP4 sources
+        run: node scripts/probe-semantic-video-variants.mjs
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'
