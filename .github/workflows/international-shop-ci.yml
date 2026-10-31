@@ -61,6 +61,8 @@ jobs:
         run: npm run test:vehicle-check
       - name: Validate semantic footage placement behind readable text
         run: npm run test:semantic-film
+      - name: Probe distinct object-only car footage candidates (preview)
+        run: node scripts/probe-clean-object-only-videos.mjs
       - name: Verify seven licensed vehicle/inspection video files
         run: node scripts/test-semantic-video-urls.mjs
       - name: Verify production build (payments disabled)
