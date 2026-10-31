@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { affiliateConfigured } from "@/lib/affiliate/server";
 import { affiliateCurrentSession, verifyAffiliateToken } from "@/lib/affiliate/account";
-import { isAffiliatePageAdmin } from "@/lib/affiliate/admin-access";
 import { affiliateTermsVersion } from "@/lib/affiliate/terms";
 export const metadata: Metadata = { title: "Affiliate-Partner werden | LUVIPRO", description: "LUVIPRO Partnerprogramm für registrierte Unternehmen und Gewerbetreibende." };
 export default async function AffiliatePage({searchParams}:{searchParams:Promise<{submitted?:string}>}) {
  const { submitted }=await searchParams;
  const token=await affiliateCurrentSession();let confirmedEmail="";if(token){try{confirmedEmail=(await verifyAffiliateToken(token)).email;}catch{}}
- const canAdmin=!!confirmedEmail&&await isAffiliatePageAdmin();
  const canApply=affiliateConfigured()&&!!confirmedEmail;
  const input="mt-2 w-full rounded-xl border border-white/20 bg-[#10182a] p-3 text-white outline-none focus:border-violet-400";
  return <main className="min-h-screen bg-obsidian pb-20 pt-16 text-white"><div className="section-shell max-w-4xl">
@@ -16,7 +14,7 @@ export default async function AffiliatePage({searchParams}:{searchParams:Promise
   <p className="mt-10 text-xs font-bold uppercase tracking-widest text-pulse">LUVIPRO · Partnerprogramm</p>
   <h1 className="mt-3 text-4xl font-bold">Affiliate-Partner werden</h1>
   <div className="mt-5 rounded-xl border border-violet-400/30 bg-violet-500/10 p-5 text-sm leading-7 text-slate-200"><b>Vertragsgrundlagen:</b> Vor einer Aufnahme lesen Sie bitte die <Link href="/affiliate/agb" className="font-semibold text-pulse underline">Affiliate-Teilnahmebedingungen (AGB)</Link>. Ihre individuelle Rabatt- und Provisionsquote wird erst gesondert vereinbart. Bei vereinbarter Brutto-Provision ist eine auf Ihre Leistung anfallende Umsatzsteuer bereits im Provisionsgesamtbetrag enthalten. Ihre eigenen Ertragsteuern tragen Sie selbst.</div>
-  <div className="mt-6 flex flex-wrap gap-3"><Link href="/affiliate/login" className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-500">Mein Affiliate-Konto / Einnahmen</Link>{canAdmin&&<Link href="/intern/finanzen/affiliate" className="rounded-xl border border-violet-400/40 px-5 py-3 text-sm font-semibold text-white">Affiliate-Verwaltung</Link>}</div>
+  <div className="mt-6 flex flex-wrap gap-3"><Link href="/affiliate/login" className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-500">Mein Affiliate-Konto / Einnahmen</Link></div>
   <p className="mt-5 max-w-2xl leading-8 text-slate-300">Bewerben Sie sich als registriertes Unternehmen oder Gewerbetreibender. Jede Bewerbung und jede Rabattaktion wird persönlich geprüft und freigegeben. Provisionen werden nur für verifizierte Käufe nach Ablauf der maßgeblichen Widerrufs- bzw. Rückgabefrist monatlich abgerechnet. Die individuell vereinbarte Provisionsquote bezieht sich auf den Nettoverkaufspreis nach Rabatt; der Provisionsbetrag ist als gesamte Bruttovergütung einschließlich gegebenenfalls anfallender Umsatzsteuer vorgesehen. Voraussetzung ist eine ausdrückliche schriftliche Vergütungsvereinbarung. Für die eigene Gewinnbesteuerung ist der Affiliate verantwortlich.</p>
   {submitted==="1" ? <div role="status" className="mt-10 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-6">Vielen Dank. Ihre Bewerbung wurde zur Prüfung aufgenommen. Eine Freigabe oder ein Rabattcode erfolgt nicht automatisch.</div> : <>
    {!affiliateConfigured() && <div role="status" className="mt-10 rounded-2xl border border-amber-300/30 bg-amber-300/10 p-6 text-amber-100">
