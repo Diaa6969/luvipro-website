@@ -59,7 +59,7 @@ export function Hero() {
       <div className="section-shell relative -mt-7 grid gap-4 pb-16 sm:grid-cols-3">
         {stats.map((stat) => (
           <div key={stat.value} className="semantic-card min-h-[135px] p-5">
-            <SemanticFilm  />
+            <SemanticFilm />
             <CheckCircle2 className="h-5 w-5 text-pulse" aria-hidden="true" />
             <p className="mt-2 font-[var(--font-space-grotesk)] text-3xl font-semibold text-white">{stat.value}</p>
             <p className="mt-1 text-sm text-slate-200">{stat.label}</p>
