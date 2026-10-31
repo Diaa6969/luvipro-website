@@ -34,7 +34,7 @@ assert.match(css,/\.real-car-footage-card/);
 assert.match(css,/@keyframes luvipro-live-footage-scan/);
 assert.match(bg,/cinematic-aurora/);
 assert.doesNotMatch(bg,/cinematic-grid/);
-assert.match(docs,/Mixkit Stock Video Free License/);
+assert.match(docs,/Pexels License/);
 assert.doesNotMatch(docs,/clips are AI generated/i);
 assert.match(read("src/app/products/page.tsx"),/audience="partner"/);
 for(const clip of ["studio","detail","night","engine"]) {
