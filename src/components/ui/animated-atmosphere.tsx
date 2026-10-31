@@ -6,7 +6,7 @@ import { SemanticFilm } from "@/components/ui/semantic-film";
 export function AnimatedAtmosphere() {
   return (
     <div className="cinematic-atmosphere semantic-atmosphere" aria-hidden="true">
-      <SemanticFilm scene="workshop" mode="ambient" />
+      <SemanticFilm scene="ambient" mode="ambient" />
       <div className="semantic-ambient-aurora semantic-ambient-aurora-left" />
       <div className="semantic-ambient-aurora semantic-ambient-aurora-right" />
       <div className="semantic-ambient-beam" />
