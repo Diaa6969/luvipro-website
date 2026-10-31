@@ -76,6 +76,9 @@ jobs:
       - name: Audit video stills for people, logos and embedded text (preview only)
         if: github.ref_name == 'preview/semantic-film-background-v2-20261031'
         run: node scripts/audit-cinematic-samples.mjs
+      - name: Audit ten additional unique car video candidates
+        if: github.ref_name == 'preview/semantic-film-background-v2-20261031'
+        run: node scripts/audit-more-car-video-candidates.mjs
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'
