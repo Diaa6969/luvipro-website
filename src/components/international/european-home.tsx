@@ -7,7 +7,7 @@ import { localeHome, localeHref, type SiteLocale } from "@/lib/site-locales";
 import { siteTranslation } from "@/lib/site-translation";
 import { EuropeanLookup } from "./european-lookup";
 import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
-import { UvCarScene } from "@/components/ui/uv-car-scene";
+import { RealCarFootage } from "@/components/ui/real-car-footage";
 
 const panel = "cinematic-card rounded-2xl border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 sm:p-8";
 const primary = "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-pulse px-6 py-3 font-semibold text-obsidian transition hover:bg-frost";
@@ -93,7 +93,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
           <div className={panel}>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pulse">LUVIPRO · UV / FIN / VIN</p>
             <div className="my-5">
-              <UvCarScene compact label="Stylized vehicle under a soft ultraviolet light scan, illustration only" />
+              <RealCarFootage clip="studio" variant="hero" label="Authentic sports car footage with a stylized violet lighting effect" uvOverlay />
             </div>
             <div className="grid grid-cols-3 gap-2 text-center text-sm">
               {["UV Check","VIN / FIN","PDF"].map(x=><div key={x} className="rounded-xl border border-white/10 bg-black/20 p-3 font-semibold">{x}</div>)}
@@ -112,7 +112,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
             [FileCheck2,t.pdfTitle,t.pdfText],
           ].map(([Icon,title,body],i)=>{
             const Symbol = Icon as typeof ScanLine;
-            return <div key={i} className={panel}><Symbol className="size-9 text-pulse"/><h3 className="mt-5 text-xl font-semibold">{title as string}</h3><p className="mt-3 text-sm leading-7 text-slate-300">{body as string}</p></div>;
+            return <div key={i} className={panel}><RealCarFootage clip={(["detail","night","studio"] as const)[i]} variant="strip" label="Real automotive footage" /><Symbol className="mt-5 size-9 text-pulse"/><h3 className="mt-5 text-xl font-semibold">{title as string}</h3><p className="mt-3 text-sm leading-7 text-slate-300">{body as string}</p></div>;
           })}
         </div>
       </section>
@@ -125,7 +125,8 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
               ["Premium","119,99 €","19% VAT"],
             ].map(([label,amount,tax])=>
               <div key={label} className={panel}>
-                <p className="text-xl font-semibold">{label}</p>
+                <RealCarFootage clip={label === "Standard" ? "detail" : "engine"} variant="card" label="Authentic real-car video footage" uvOverlay />
+                <p className="mt-5 text-xl font-semibold">{label}</p>
                 <p className="mt-5 font-[var(--font-space-grotesk)] text-4xl font-bold">{amount}</p>
                 <p className="mt-2 text-xs text-slate-400">{tax}</p>
                 <Link href={localeHref(locale,"workshops")} className="mt-8 inline-flex items-center gap-2 font-semibold text-pulse hover:text-white">
