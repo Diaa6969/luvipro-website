@@ -6,8 +6,10 @@ import { DocumentLanguage } from "@/components/ui/document-language";
 import { localeHome, localeHref, type SiteLocale } from "@/lib/site-locales";
 import { siteTranslation } from "@/lib/site-translation";
 import { EuropeanLookup } from "./european-lookup";
+import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
+import { UvCarScene } from "@/components/ui/uv-car-scene";
 
-const panel = "rounded-2xl border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 sm:p-8";
+const panel = "cinematic-card rounded-2xl border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 sm:p-8";
 const primary = "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-pulse px-6 py-3 font-semibold text-obsidian transition hover:bg-frost";
 const secondary = "inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-pulse/40 bg-pulse/10 px-6 py-3 font-semibold text-white transition hover:border-pulse";
 
@@ -72,9 +74,10 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
   return (
     <main lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} className="cinematic-page min-h-screen overflow-hidden bg-obsidian text-white">
       <DocumentLanguage locale={locale} />
+      <AnimatedAtmosphere />
       <EuropeanHeader locale={locale} />
-      <section className="relative overflow-hidden bg-radial-grid py-20 sm:py-28">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(126,34,206,0.25),transparent_45%),radial-gradient(circle_at_20%_70%,rgba(32,214,255,0.12),transparent_35%)]" />
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(126,34,206,0.14),transparent_45%),radial-gradient(circle_at_20%_70%,rgba(32,214,255,0.09),transparent_35%)]" />
         <div className="section-shell relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="min-w-0">
             <p className="inline-flex max-w-full items-center gap-2 rounded-full border border-pulse/30 bg-pulse/10 px-4 py-2 text-sm font-semibold text-frost">
@@ -89,10 +92,8 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
           </div>
           <div className={panel}>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pulse">LUVIPRO · UV / FIN / VIN</p>
-            <div className="my-9 flex items-center justify-around">
-              <ScanLine className="size-20 text-pulse sm:size-28" strokeWidth={1.25} />
-              <div className="h-px flex-1 bg-gradient-to-r from-pulse to-ultraviolet" />
-              <CarFront className="size-20 text-white sm:size-28" strokeWidth={1.25} />
+            <div className="my-5">
+              <UvCarScene compact label="Stylized vehicle under a soft ultraviolet light scan, illustration only" />
             </div>
             <div className="grid grid-cols-3 gap-2 text-center text-sm">
               {["UV Check","VIN / FIN","PDF"].map(x=><div key={x} className="rounded-xl border border-white/10 bg-black/20 p-3 font-semibold">{x}</div>)}
