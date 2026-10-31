@@ -1,6 +1,7 @@
 import { AlertTriangle, FileWarning, ScanSearch, ShieldAlert } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { SemanticFilm } from "@/components/ui/semantic-film";
 
 const problems = [
   {
@@ -34,7 +35,8 @@ export function Problem() {
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {problems.map((problem, index) => (
             <Reveal key={problem.title} delay={index * 0.08}>
-              <div className="glass-panel h-full rounded-lg p-6">
+              <div className="semantic-card h-full p-6">
+                <SemanticFilm scene={(["paint", "documents", "workshop"] as const)[index]} />
                 <problem.icon className="h-9 w-9 text-pulse" />
                 <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">
                   {problem.title}
