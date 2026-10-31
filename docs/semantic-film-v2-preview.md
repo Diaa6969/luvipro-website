@@ -26,3 +26,7 @@ Production deploy must be confirmed separately by **successful Vercel status on 
 ## Performance caveat
 
 Seventeen genuine MP4s increase transfer on a full long-page scroll. Viewport-only loading and Save-Data/reduced-motion support reduce this cost. For production optimization, progressively encode verified short 480p/720p loops and self-host static poster/video derivatives, and test mobile Safari/Android performance. There are no new cookies or JS trackers in the animation implementation.
+
+## Production release trigger / Vercel status
+
+The cinematic revisions were merged after green CI to `main` as PR #17. On 31 Oct 2026 the initial Vercel production deployment was rejected with **Deployment rate limited — retry in 24 hours**. A documentation-only commit was made to request one fresh production deployment without modifying application behavior. The GitHub SHA and resulting Vercel status must be verified separately; successful GitHub merge alone is not a public deployment.
