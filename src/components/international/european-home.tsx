@@ -6,6 +6,8 @@ import { DocumentLanguage } from "@/components/ui/document-language";
 import { localeHome, localeHref, type SiteLocale } from "@/lib/site-locales";
 import { siteTranslation } from "@/lib/site-translation";
 import { EuropeanLookup } from "./european-lookup";
+import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
+import { SemanticFilm } from "@/components/ui/semantic-film";
 
 const panel = "rounded-2xl border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 sm:p-8";
 const primary = "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-pulse px-6 py-3 font-semibold text-obsidian transition hover:bg-frost";
@@ -72,8 +74,10 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
   return (
     <main lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} className="cinematic-page min-h-screen overflow-hidden bg-obsidian text-white">
       <DocumentLanguage locale={locale} />
+      <AnimatedAtmosphere />
       <EuropeanHeader locale={locale} />
-      <section className="relative overflow-hidden bg-radial-grid py-20 sm:py-28">
+      <section className="semantic-hero relative overflow-hidden py-20 sm:py-28">
+        <SemanticFilm scene="inspection" mode="hero" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(126,34,206,0.25),transparent_45%),radial-gradient(circle_at_20%_70%,rgba(32,214,255,0.12),transparent_35%)]" />
         <div className="section-shell relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="min-w-0">
@@ -87,7 +91,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
               <Link href={localeHref(locale,"reports")} className={secondary}>{t.reportCta}</Link>
             </div>
           </div>
-          <div className={panel}>
+          <div className={"semantic-card "+panel}>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pulse">LUVIPRO · UV / FIN / VIN</p>
             <div className="my-9 flex items-center justify-around">
               <ScanLine className="size-20 text-pulse sm:size-28" strokeWidth={1.25} />
@@ -111,7 +115,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
             [FileCheck2,t.pdfTitle,t.pdfText],
           ].map(([Icon,title,body],i)=>{
             const Symbol = Icon as typeof ScanLine;
-            return <div key={i} className={panel}><Symbol className="size-9 text-pulse"/><h3 className="mt-5 text-xl font-semibold">{title as string}</h3><p className="mt-3 text-sm leading-7 text-slate-300">{body as string}</p></div>;
+            return <div key={i} className={"semantic-card "+panel}><SemanticFilm scene={(["paint","documents","digital"] as const)[i]} /><Symbol className="size-9 text-pulse"/><h3 className="mt-5 text-xl font-semibold">{title as string}</h3><p className="mt-3 text-sm leading-7 text-slate-300">{body as string}</p></div>;
           })}
         </div>
       </section>
@@ -123,7 +127,8 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
               ["Standard","59,99 €","19% VAT"],
               ["Premium","119,99 €","19% VAT"],
             ].map(([label,amount,tax])=>
-              <div key={label} className={panel}>
+              <div key={label} className={"semantic-card "+panel}>
+                <SemanticFilm scene={label === "Standard" ? "paint" : "diagnostic"} />
                 <p className="text-xl font-semibold">{label}</p>
                 <p className="mt-5 font-[var(--font-space-grotesk)] text-4xl font-bold">{amount}</p>
                 <p className="mt-2 text-xs text-slate-400">{tax}</p>
@@ -147,7 +152,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
         </div>
       </section>
       <section className="section-shell py-20">
-        <div className={panel}><FileLock2 className="size-9 text-pulse"/><h2 className="mt-5 text-3xl font-semibold">{t.trustTitle}</h2><p className="mt-4 max-w-3xl text-base leading-8 text-slate-300">{t.trustText}</p></div>
+        <div className={"semantic-card "+panel}><SemanticFilm scene="documents" /><FileLock2 className="size-9 text-pulse"/><h2 className="mt-5 text-3xl font-semibold">{t.trustTitle}</h2><p className="mt-4 max-w-3xl text-base leading-8 text-slate-300">{t.trustText}</p></div>
       </section>
       <EuropeanFooter locale={locale} />
     </main>
