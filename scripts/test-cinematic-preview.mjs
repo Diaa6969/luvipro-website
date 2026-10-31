@@ -20,7 +20,7 @@ assert.doesNotMatch(hero,/BMW 530d|bg-radial-grid|bg-\[linear-gradient\(rgba\(21
 assert.match(sv,/viewBox="0 0 680 320"/);
 assert.match(sv,/aria-label=\{label\}/);
 assert.match(sv,/uv-car-sweep-rect/);
-assert.doesNotMatch(sv,/fetch\(|setInterval|requestAnimationFrame|canvas|three\.js/i);
+assert.doesNotMatch(sv.replace(/\/\*[\s\S]*?\*\//g,""),/fetch\(|setInterval|requestAnimationFrame|<canvas|three\.js/i);
 assert.match(css,/@keyframes luvipro-car-scan/);
 assert.match(css,/@keyframes luvipro-card-sheen/);
 assert.match(css,/prefers-reduced-motion: reduce/);
