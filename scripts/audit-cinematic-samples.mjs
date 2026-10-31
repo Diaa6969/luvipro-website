@@ -7,7 +7,7 @@ import {join} from "node:path";
 import {spawnSync} from "node:child_process";
 const s=readFileSync("src/lib/semantic-film-clips.ts","utf8");
 const records=[...s.matchAll(/(\w+): \{ src: "(https:\/\/videos\.pexels\.com\/video-files\/[^"]+\.mp4)"/g)].map(m=>({name:m[1],url:m[2]}));
-if(records.length !== 9) throw Error("Expected 9 clips");
+if(records.length !== 8) throw Error("Expected 8 clips");
 const dir=mkdtempSync(join(tmpdir(),"luvi-visual-audit-"));
 function ff(args){
  const r=spawnSync("ffmpeg",["-hide_banner","-loglevel","error","-nostdin","-y",...args],{timeout:40000,encoding:"utf8"});
@@ -29,7 +29,7 @@ try{
    console.log("AUDIT_ORDER",i,name,bytes.length);
  }
  const out=join(dir,"contact.jpg");
- ff(["-framerate","1","-pattern_type","glob","-i",join(dir,"frame-*.jpg"),"-vf","tile=3x6:padding=3:margin=3:color=black","-frames:v","1","-q:v","8",out]);
+ ff(["-framerate","1","-pattern_type","glob","-i",join(dir,"frame-*.jpg"),"-vf","tile=4x4:padding=3:margin=3:color=black","-frames:v","1","-q:v","8",out]);
  const b64=read(out).toString("base64");
  console.log("AUDIT_SHEET_BEGIN");
  for(let i=0;i<b64.length;i+=1600)console.log("AUDIT_CHUNK "+b64.slice(i,i+1600));
