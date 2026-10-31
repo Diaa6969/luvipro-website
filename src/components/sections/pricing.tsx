@@ -12,7 +12,7 @@ export function Pricing({ id = "pricing", embedded = false, audience = "customer
   if (audience === "partner") return <section id={id} className={`scroll-mt-24 ${embedded ? "bg-midnight py-20 sm:py-24" : "bg-obsidian py-24"}`}><div className="section-shell">
     <Reveal><SectionHeading eyebrow="Für Werkstätten & Unternehmen" title="LU3656060: Gerät und Konditionen für Profis." description="Gerätepreis, Ausstattung und Bestellanfrage für gewerbliche LUVIPRO Partner. Die Geräteinformationen sind bewusst von den Fahrzeugcheck-Angeboten für Privatkunden getrennt." /></Reveal>
     <div className="mt-10 max-w-xl"><Reveal delay={0.16}>
-            <div className="glass-panel flex h-full flex-col rounded-2xl p-6 sm:p-7">
+            <div className="glass-panel cinematic-card flex h-full flex-col rounded-2xl p-6 sm:p-7">
               <div className="flex items-center gap-3">
                 <ScanLine className="h-7 w-7 text-pulse" />
                 <p className="font-[var(--font-space-grotesk)] text-2xl font-semibold">LU3656060</p>
@@ -55,7 +55,7 @@ export function Pricing({ id = "pricing", embedded = false, audience = "customer
         <div className="mx-auto mt-12 grid max-w-5xl gap-5 md:grid-cols-2">
           {INSPECTION_SERVICES.map((plan, index) => (
             <Reveal key={plan.id} delay={index * 0.08}>
-              <div className={`glass-panel flex h-full flex-col rounded-2xl p-6 sm:p-7 ${plan.id === "premium" ? "border-pulse/40" : ""}`}>
+              <div className={`glass-panel cinematic-card flex h-full flex-col rounded-2xl p-6 sm:p-7 ${plan.id === "premium" ? "border-pulse/40" : ""}`}>
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-[var(--font-space-grotesk)] text-2xl font-semibold">{plan.name}</p>
                   {plan.id === "premium" && <span className="rounded-full bg-pulse/15 px-3 py-1 text-xs font-semibold text-pulse">Erweitert</span>}
