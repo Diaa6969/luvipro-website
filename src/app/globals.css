@@ -122,17 +122,6 @@ body {
     linear-gradient(145deg, #02040a 0%, #07101e 48%, #03040a 100%);
 }
 
-.cinematic-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.48;
-  background-image:
-    linear-gradient(rgba(217, 247, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(217, 247, 255, 0.04) 1px, transparent 1px);
-  background-size: 72px 72px;
-  animation: grid-drift 22s linear infinite;
-}
-
 .cinematic-glow {
   position: absolute;
   width: 46vw;
@@ -245,12 +234,6 @@ body {
   100% {
     transform: translateX(320%) skewX(-18deg);
     opacity: 0;
-  }
-}
-
-@keyframes grid-drift {
-  to {
-    background-position: 72px 72px;
   }
 }
 
@@ -367,4 +350,163 @@ body {
   .glass-panel:hover {
     transform: none;
   }
+}
+
+/* LUVIPRO UV CINEMATIC – light, continuous motion with no square grid.
+   Pure CSS + one compact SVG, no JS animation loop or WebGL dependency. */
+.cinematic-atmosphere {
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(96, 47, 172, .22), transparent 38%),
+    radial-gradient(ellipse at 84% 62%, rgba(22, 115, 183, .13), transparent 43%),
+    linear-gradient(155deg, #03050e 0%, #080b1b 44%, #02050c 100%);
+}
+
+.cinematic-aurora {
+  position: absolute;
+  width: min(90vw, 1150px);
+  height: min(44vw, 520px);
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: .23;
+  will-change: transform;
+  background: linear-gradient(120deg, transparent 6%, #3d1979 34%, #6538ad 49%, #124f84 70%, transparent 94%);
+  transform: rotate(-17deg);
+  animation: luvipro-aurora 22s ease-in-out infinite alternate;
+}
+
+.cinematic-aurora-first { left: -35%; top: 5%; }
+.cinematic-aurora-second { right: -35%; bottom: 0; opacity: .17; animation-delay: -12s; animation-duration: 29s; transform: rotate(17deg); }
+
+.cinematic-light-ribbon {
+  position: absolute;
+  width: min(88vw, 1250px);
+  height: clamp(2px, .35vw, 5px);
+  border-radius: 999px;
+  opacity: .32;
+  background: linear-gradient(90deg, transparent 0%, rgba(145, 81, 250, .06) 18%, rgba(152, 82, 245, .56) 47%, rgba(67, 198, 244, .48) 68%, transparent 100%);
+  box-shadow: 0 0 35px 12px rgba(127, 65, 220, .14);
+  animation: luvipro-ribbon 17s ease-in-out infinite alternate;
+}
+.cinematic-light-ribbon-one { top: 24%; left: -14%; transform: rotate(-19deg); }
+.cinematic-light-ribbon-two { top: 73%; right: -19%; opacity: .19; transform: rotate(14deg); animation-delay: -8s; animation-duration: 21s; }
+
+@keyframes luvipro-aurora {
+  from { transform: translate3d(-4%, 2%, 0) rotate(-17deg) scale(.94); }
+  to { transform: translate3d(12%, -8%, 0) rotate(-9deg) scale(1.12); }
+}
+@keyframes luvipro-ribbon {
+  from { opacity: .17; translate: -7% -14px; }
+  to { opacity: .46; translate: 15% 20px; }
+}
+
+/* The hero scan is deliberately an illustrative visual, not a diagnostic claim. */
+.uv-car-scene {
+  background:
+    radial-gradient(ellipse at 48% 70%, rgba(116, 64, 218, .14), transparent 59%),
+    radial-gradient(ellipse at 78% 24%, rgba(36, 197, 239, .09), transparent 39%),
+    linear-gradient(148deg, #0b1022 2%, #0a0d1a 55%, #040612 100%);
+  border: 1px solid rgba(133, 120, 207, .24);
+}
+.uv-car-aura {
+  position: absolute;
+  left: 16%;
+  top: 17%;
+  width: 70%;
+  height: 58%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(111, 73, 240, .2), transparent 70%);
+  filter: blur(24px);
+  animation: luvipro-car-aura 9s ease-in-out infinite alternate;
+}
+.uv-car-floor {
+  position: absolute;
+  inset: auto 5% 9%;
+  height: 16%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(94, 49, 191, .2), transparent 76%);
+  filter: blur(14px);
+}
+.uv-car-sweep-rect,
+.uv-car-scan-ray {
+  transform: translateX(0);
+  animation: luvipro-car-scan 8s cubic-bezier(.48, .05, .45, .96) infinite;
+  will-change: transform;
+}
+.uv-car-scan-ray { animation-delay: 0s; }
+.uv-car-bottom-glow {
+  position: absolute;
+  inset: auto 14% 3%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(118, 57, 225, .75), rgba(31, 210, 255, .54), transparent);
+  box-shadow: 0 0 19px 4px rgba(104, 66, 210, .32);
+  animation: luvipro-car-aura 8s ease-in-out infinite alternate;
+}
+
+@keyframes luvipro-car-scan {
+  0%, 5% { transform: translateX(0); opacity: .1; }
+  12%, 71% { opacity: 1; }
+  82%, 100% { transform: translateX(900px); opacity: .08; }
+}
+@keyframes luvipro-car-aura {
+  from { opacity: .52; transform: scale(.94); }
+  to { opacity: 1; transform: scale(1.06); }
+}
+
+/* Card motion: a quiet moving UV reflection plus hover/focus lift.
+   Not an interactive 3D tilt that would obstruct readable content. */
+.cinematic-page .cinematic-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform 380ms cubic-bezier(.2,.8,.2,1), border-color 380ms ease, box-shadow 380ms ease, background-color 380ms ease;
+}
+.cinematic-page .cinematic-card::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  top: -55%;
+  bottom: -55%;
+  left: -75%;
+  width: 44%;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent 0%, rgba(143, 76, 241, .065) 36%, rgba(185, 147, 255, .16) 52%, rgba(40, 206, 246, .085) 66%, transparent 100%);
+  transform: skewX(-22deg) translateX(-170%);
+  animation: luvipro-card-sheen 13s ease-in-out infinite;
+  animation-delay: var(--card-sheen-delay, 0s);
+}
+.cinematic-page .cinematic-card > * {
+  position: relative;
+  z-index: 1;
+}
+@keyframes luvipro-card-sheen {
+  0%, 13% { transform: skewX(-22deg) translateX(-170%); opacity: 0; }
+  20% { opacity: .8; }
+  46% { transform: skewX(-22deg) translateX(850%); opacity: .65; }
+  56%, 100% { transform: skewX(-22deg) translateX(850%); opacity: 0; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .cinematic-page .cinematic-card:hover,
+  .cinematic-page .cinematic-card:focus-within {
+    transform: translateY(-6px);
+    border-color: rgba(126, 86, 244, .48);
+    box-shadow: 0 28px 76px rgba(77, 40, 158, .2), 0 12px 55px rgba(16, 130, 178, .10);
+  }
+  .cinematic-page .cinematic-card:hover::after { animation-duration: 4.6s; }
+}
+@media (max-width: 640px) {
+  .cinematic-aurora { width: 115vw; height: 70vw; filter: blur(44px); }
+  .cinematic-light-ribbon { width: 128vw; opacity: .16; }
+  .cinematic-page .cinematic-card::after { animation-duration: 18s; opacity: .52; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-aurora, .cinematic-light-ribbon, .uv-car-aura,
+  .uv-car-sweep-rect, .uv-car-scan-ray, .uv-car-bottom-glow,
+  .cinematic-page .cinematic-card::after {
+    animation: none !important;
+    will-change: auto;
+  }
+  .cinematic-page .cinematic-card::after { opacity: 0; }
+  .uv-car-sweep-rect { transform: translateX(420px); }
+  .uv-car-scan-ray { transform: translateX(420px); opacity: .55; }
 }
