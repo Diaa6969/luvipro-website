@@ -4,12 +4,12 @@
 
 ## Corrected after visual feedback
 
-- Removed films with **real mechanics or other people**, including hands in workshops; removed recordings of invoices, paperwork, smartphone/tablet screens and embedded text.
-- Reduced nine visible films to exactly nine **distinct** close-ups of car objects. A given film source is used at most once on each localized landing page. Other cards use handcrafted CSS UV light animation—**not a repeated video**.
+- Removed films deliberately showing **real mechanics or other people**, including hands in workshops; removed recordings of invoices, paperwork, smartphone/tablet screens, and the paintwork scene that showed suspicious reflective lettering during frame inspection.
+- Reduced eight visible films to exactly nine **distinct** close-ups of car objects. A given film source is used at most once on each localized landing page. Other cards use handcrafted CSS UV light animation—**not a repeated video**.
 - Entire card is the video background behind the heading/price/button; no small video boxes. CSS contains a dark scrim for contrast.
 - Increased underlying atmospheric video visibility substantially from approximately 1–2% effective to roughly 25–35%, by increasing video opacity/brightness and reducing section masks. The video stays muted and doesn't prevent reading.
 - Original illustrated "demo" vehicles and random street-traffic videos are no longer used.
-- Animation performance: IntersectionObserver pause offscreen, reduced-motion and save-data disable playback, fallback on errors. Nine unique media sources is still bandwidth heavy; production should use self-hosted transcoded files, static posters and cap concurrent playback.
+- Animation performance: IntersectionObserver pause offscreen, reduced-motion and save-data disable playback, fallback on errors. Eight unique media sources is still bandwidth heavy; production should use self-hosted transcoded files, static posters and cap concurrent playback.
 - Scenes describe automotive *objects*, not an actual LUVIPRO 365 nm inspection; effects are purely aesthetic.
 - The website is built as the original Next.js repository's **draft PR #17** and Vercel Preview; do not publish to the main domain until user approves and independent legal/media QA is completed.
 
@@ -23,7 +23,6 @@ Pexels video license allows general commercial website use with no attribution: 
 | Hero background | 4707143 | Vehicle headlight coming on |
 | Standard card | 6159202 | Close-up of vehicle paint |
 | Premium card | 8104040 | Moving car wheel close-up |
-| Surface check | 6157786 | Vehicle body paint details |
 | Eco: paint | 6159204 | Car exterior reflection |
 | Eco: headlight | 5309342 | Headlight reflecting ambient light |
 | UV / surface feature | 6157864 | Finished paintwork surface |
@@ -33,7 +32,7 @@ All direct MP4 URLs are in `src/lib/semantic-film-clips.ts`. A CI smoke test che
 
 ## Legal and technical launch gate
 
-1. Inspect at least two separate frames of each source for persons, logos, license plates, source-imposed text and any watermark. Inspect all nine videos at full length for edge cases; compare versions rendered on mobile and desktop.
+1. Inspect at least two separate frames of each source for persons, logos, license plates, source-imposed text and any watermark. Inspect all eight videos at full length for edge cases; compare versions rendered on mobile and desktop.
 2. Record licence URL, author, source ID, date and archival screenshot for each selected clip. Do not imply any brand/producer endorsed LUVIPRO.
 3. Prefer replacing these stock videos with wholly bespoke, separately licensed, brand-free videos and self-hosting for production; Pexels CDN currently sees visitor requests/IP.
 4. Get explicit user visual approval on the preview before merging or production Vercel deployment.
