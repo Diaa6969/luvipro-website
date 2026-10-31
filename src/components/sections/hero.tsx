@@ -44,11 +44,11 @@ export function Hero() {
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-pulse sm:text-xs">LUVIPRO · CINEMATIC AUTOMOTIVE</p>
-                    <p className="mt-1 text-sm font-semibold text-white sm:text-base">Fahrzeugoberflächen im Fokus</p>
+                    <p className="mt-1 text-sm font-semibold text-white sm:text-base">Gebrauchtwagen sicherer einschätzen</p>
                   </div>
                   <ScanLine className="h-7 w-7 text-ultraviolet sm:h-9 sm:w-9" aria-hidden="true" />
                 </div>
-                <RealCarFootage clip="studio" variant="hero" label="Echte Videoaufnahme eines Sportwagens in einer Garage, mit violettem LUVIPRO Lichteffekt" uvOverlay />
+                <RealCarFootage clip="studio" variant="hero" label="Echte Nachtaufnahme von Fahrzeugen im Straßenverkehr mit violettem LUVIPRO Lichteffekt" uvOverlay />
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-300 sm:text-sm">
                   {["Lack", "Karosserie", "Digitaler Bericht"].map((item) => (
                     <span key={item} className="rounded-full border border-pulse/20 bg-pulse/[0.07] px-3 py-1.5">{item}</span>
