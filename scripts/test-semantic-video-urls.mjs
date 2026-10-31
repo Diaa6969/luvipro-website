@@ -9,10 +9,15 @@ const checks=await Promise.all(urls.map(async(url)=>{
  try{
   const res=await fetch(url,{headers:{"Range":"bytes=0-255"},signal:AbortSignal.timeout(15000)});
   const reader=res.body?.getReader();
-  const first=await reader?.read();
+  const chunks=[];let total=0;
+  while(reader && total<12){
+    const chunk=await reader.read();
+    if(chunk.done)break;
+    chunks.push(Buffer.from(chunk.value));total+=chunk.value.length;
+  }
   await reader?.cancel();
-  const bytes=first?.value||new Uint8Array(0);
-  const validMagic=bytes.length>=8&&String.fromCharCode(...bytes.slice(4,8))==="ftyp";
+  const bytes=Buffer.concat(chunks);
+  const validMagic=bytes.length>=8&&bytes.toString("ascii",4,8)==="ftyp";
   if(!res.ok||!res.headers.get("content-type")?.includes("video/mp4")||!validMagic)
     throw Error("HTTP "+res.status+" content-type="+res.headers.get("content-type")+" magic="+validMagic);
   console.log("VERIFIED_MP4",url);
