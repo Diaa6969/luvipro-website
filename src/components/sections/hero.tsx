@@ -1,5 +1,5 @@
 import { ArrowRight, BadgeCheck, ScanLine } from "lucide-react";
-import { UvCarScene } from "@/components/ui/uv-car-scene";
+import { RealCarFootage } from "@/components/ui/real-car-footage";
 import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -43,18 +43,18 @@ export function Hero() {
               <div className="relative rounded-2xl border border-white/10 bg-[#090c1b]/90 p-3 sm:p-5">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-pulse sm:text-xs">LUVIPRO · UV Inspection</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-pulse sm:text-xs">LUVIPRO · CINEMATIC AUTOMOTIVE</p>
                     <p className="mt-1 text-sm font-semibold text-white sm:text-base">Fahrzeugoberflächen im Fokus</p>
                   </div>
                   <ScanLine className="h-7 w-7 text-ultraviolet sm:h-9 sm:w-9" aria-hidden="true" />
                 </div>
-                <UvCarScene />
+                <RealCarFootage clip="studio" variant="hero" label="Echte Videoaufnahme eines Sportwagens in einer Garage, mit violettem LUVIPRO Lichteffekt" uvOverlay />
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-300 sm:text-sm">
                   {["Lack", "Karosserie", "Digitaler Bericht"].map((item) => (
                     <span key={item} className="rounded-full border border-pulse/20 bg-pulse/[0.07] px-3 py-1.5">{item}</span>
                   ))}
                 </div>
-                <p className="mt-3 text-xs text-slate-400">Illustrative UV-Animation – kein tatsächlicher Fahrzeugprüfbefund.</p>
+                <p className="mt-3 text-xs text-slate-400">Reale Fahrzeugaufnahme, stilisierte UV-Beleuchtung – keine Darstellung eines tatsächlichen Prüfergebnisses.</p>
               </div>
             </div>
           </div>
