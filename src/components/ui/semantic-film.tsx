@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CLIPS, type FilmScene } from "@/lib/semantic-film-clips";
+import { GeneratedClip } from "@/components/ui/generated-clip";
 
 type FilmMode = "ambient" | "hero" | "card" | "section";
 
@@ -61,6 +62,7 @@ export function SemanticFilm({
   }, [inView, motionAllowed, failed]);
 
   const load = !!scene && inView && motionAllowed && !failed;
+  const clip = scene ? CLIPS[scene] : null;
   return (
     <div
       ref={root}
@@ -68,12 +70,12 @@ export function SemanticFilm({
       aria-hidden="true"
     >
       <div className="semantic-film-still" />
-      {load && (
+      {load && clip?.kind === "stock" && (
         <video
           ref={player}
           key={scene}
           className="semantic-film-video"
-          src={scene ? CLIPS[scene].src : undefined}
+          src={clip.src}
           preload={mode === "hero" ? "metadata" : "none"}
           autoPlay
           muted
@@ -85,6 +87,7 @@ export function SemanticFilm({
           onError={() => setFailed(true)}
         />
       )}
+      {load && clip?.kind === "generated" && <GeneratedClip theme={clip.theme} />}
       <div className="semantic-film-contrast" />
       <div className="semantic-film-light" />
     </div>
