@@ -1,4 +1,5 @@
-import { ArrowRight, BadgeCheck, CarFront, Fingerprint, ScanLine } from "lucide-react";
+import { ArrowRight, BadgeCheck, ScanLine } from "lucide-react";
+import { UvCarScene } from "@/components/ui/uv-car-scene";
 import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -11,7 +12,6 @@ const stats = [
 export function Hero() {
   return (
     <section className="relative min-h-screen bg-radial-grid pt-24 sm:pt-32">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(217,247,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(217,247,255,0.045)_1px,transparent_1px)] bg-[size:72px_72px]" />
       <div className="section-shell relative grid min-w-0 items-center gap-10 pb-20 sm:gap-12 sm:pb-24 lg:grid-cols-[1.02fr_0.98fr]">
         <Reveal>
           <div className="min-w-0 max-w-full">
@@ -38,34 +38,23 @@ export function Hero() {
 
         <Reveal delay={0.15}>
           <div className="relative min-w-0 max-w-full">
-            <div className="hero-glow-pulse absolute -inset-3 rounded-lg bg-pulse/10 blur-2xl sm:-inset-6 sm:blur-3xl" />
-            <div className="hero-visual-float glass-panel relative w-full max-w-full overflow-hidden rounded-lg p-4 sm:p-5">
-              <div className="aspect-[4/3] min-w-0 rounded-lg border border-white/10 bg-[radial-gradient(circle_at_55%_20%,rgba(32,214,255,0.32),transparent_25%),linear-gradient(145deg,rgba(8,17,31,0.35),rgba(0,0,0,0.72))] p-4 sm:p-6">
-                <div className="flex items-start justify-between">
-                  <div className="min-w-0">
-                    <p className="text-sm uppercase text-pulse">Beispiel-Fahrzeug</p>
-                    <p className="mt-2 break-words font-[var(--font-space-grotesk)] text-xl font-semibold sm:text-2xl">
-                      BMW 530d Touring
-                    </p>
+            <div className="hero-glow-pulse pointer-events-none absolute -inset-3 rounded-3xl bg-ultraviolet/15 blur-2xl sm:-inset-6 sm:blur-3xl" />
+            <div className="hero-visual-float glass-panel relative w-full max-w-full overflow-hidden rounded-3xl p-3 sm:p-5">
+              <div className="relative rounded-2xl border border-white/10 bg-[#090c1b]/90 p-3 sm:p-5">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-pulse sm:text-xs">LUVIPRO · UV Inspection</p>
+                    <p className="mt-1 text-sm font-semibold text-white sm:text-base">Fahrzeugoberflächen im Fokus</p>
                   </div>
-                  <ScanLine className="h-8 w-8 shrink-0 text-pulse sm:h-10 sm:w-10" />
+                  <ScanLine className="h-7 w-7 text-ultraviolet sm:h-9 sm:w-9" aria-hidden="true" />
                 </div>
-                <div className="mt-8 rounded-lg border border-white/10 bg-black/35 p-3 sm:mt-10 sm:p-4">
-                  <div className="mb-4 h-2 w-32 rounded-full bg-pulse/80" />
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    {["VIN-Suche", "UV-Lackprüfung", "Sichtprüfung", "Digitaler Report"].map((item) => (
-                      <div key={item} className="rounded-lg border border-white/10 bg-white/5 p-3">
-                        <p className="text-sm font-semibold text-white">{item}</p>
-                        <p className="mt-1 text-xs text-slate-400">Beispielansicht</p>
-                      </div>
-                    ))}
-                  </div>
+                <UvCarScene />
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-300 sm:text-sm">
+                  {["Lack", "Karosserie", "Digitaler Bericht"].map((item) => (
+                    <span key={item} className="rounded-full border border-pulse/20 bg-pulse/[0.07] px-3 py-1.5">{item}</span>
+                  ))}
                 </div>
-                <div className="mt-7 flex items-center gap-4">
-                  <CarFront className="h-12 w-12 text-white" />
-                  <div className="h-px flex-1 bg-gradient-to-r from-pulse via-ultraviolet to-transparent" />
-                  <Fingerprint className="h-12 w-12 text-ultraviolet" />
-                </div>
+                <p className="mt-3 text-xs text-slate-400">Illustrative UV-Animation – kein tatsächlicher Fahrzeugprüfbefund.</p>
               </div>
             </div>
           </div>
@@ -74,7 +63,7 @@ export function Hero() {
 
       <div className="section-shell relative -mt-10 grid gap-4 pb-16 sm:grid-cols-3">
         {stats.map((stat) => (
-          <div key={stat.label} className="glass-panel rounded-lg p-5">
+          <div key={stat.label} className="glass-panel cinematic-card rounded-2xl p-5">
             <p className="font-[var(--font-space-grotesk)] text-3xl font-semibold text-white">
               {stat.value}
             </p>
