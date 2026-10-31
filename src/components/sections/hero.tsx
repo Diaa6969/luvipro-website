@@ -1,84 +1,69 @@
-import { ArrowRight, BadgeCheck, CarFront, Fingerprint, ScanLine } from "lucide-react";
+import { ArrowRight, BadgeCheck, CheckCircle2, FileSearch, ScanLine, ShieldCheck } from "lucide-react";
 import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
+import { SemanticFilm } from "@/components/ui/semantic-film";
+import type { FilmScene } from "@/lib/semantic-film-clips";
 
-const stats = [
-  { value: "UV", label: "Lack- & Karosseriecheck" },
-  { value: "VIN", label: "Fahrzeugsuche über FIN / VIN" },
-  { value: "PDF", label: "Digitale Fahrzeugberichte" },
+const stats: { value: string; label: string; film: FilmScene }[] = [
+  { value: "UV", label: "Lack- & Karosseriecheck", film: "paint" },
+  { value: "VIN", label: "Fahrzeugsuche über FIN / VIN", film: "documents" },
+  { value: "PDF", label: "Digitale Fahrzeugberichte", film: "digital" },
 ];
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen bg-radial-grid pt-24 sm:pt-32">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(217,247,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(217,247,255,0.045)_1px,transparent_1px)] bg-[size:72px_72px]" />
-      <div className="section-shell relative grid min-w-0 items-center gap-10 pb-20 sm:gap-12 sm:pb-24 lg:grid-cols-[1.02fr_0.98fr]">
+    <section className="semantic-hero relative min-h-screen overflow-hidden pt-24 sm:pt-32">
+      <SemanticFilm scene="inspection" mode="hero" />
+      <div className="section-shell relative grid min-w-0 items-center gap-10 pb-20 sm:gap-12 sm:pb-24 lg:grid-cols-[1.06fr_0.94fr]">
         <Reveal>
           <div className="min-w-0 max-w-full">
-            <div className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-pulse/30 bg-pulse/10 px-4 py-2 text-sm font-medium text-frost">
-              <BadgeCheck className="h-4 w-4 text-pulse" />
+            <div className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-pulse/30 bg-[#0a0e23]/70 px-4 py-2 text-sm font-medium text-frost">
+              <BadgeCheck className="h-4 w-4 shrink-0 text-pulse" />
               <span className="min-w-0 break-words">Jedes Fahrzeug hat eine Geschichte. Wir bringen die Wahrheit ans Licht.</span>
             </div>
-            <h1 className="text-balance max-w-full font-[var(--font-space-grotesk)] text-[clamp(2.55rem,11vw,4.5rem)] font-semibold leading-[1.02] text-white sm:text-6xl lg:text-7xl">
+            <h1 className="text-balance max-w-full font-[var(--font-space-grotesk)] text-[clamp(2.55rem,11vw,4.5rem)] font-semibold leading-[1.04] text-white sm:text-6xl lg:text-7xl">
               Gebrauchtwagen checken lassen. Mit mehr Klarheit entscheiden.
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg sm:leading-8">
               Lassen Sie Ihr Wunschfahrzeug bei einer LUVIPRO Partnerwerkstatt untersuchen. Mit UV-gestützter Lackprüfung, Sichtkontrolle und verständlicher digitaler Dokumentation.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <CtaLink href="/verify#partner-map" className="gap-2">
                 Fahrzeug checken lassen <ArrowRight className="h-4 w-4" />
               </CtaLink>
-              <CtaLink href="/reports" variant="secondary">
-                Prüfbericht suchen
-              </CtaLink>
+              <CtaLink href="/reports" variant="secondary">Prüfbericht suchen</CtaLink>
             </div>
           </div>
         </Reveal>
-
         <Reveal delay={0.15}>
-          <div className="relative min-w-0 max-w-full">
-            <div className="hero-glow-pulse absolute -inset-3 rounded-lg bg-pulse/10 blur-2xl sm:-inset-6 sm:blur-3xl" />
-            <div className="hero-visual-float glass-panel relative w-full max-w-full overflow-hidden rounded-lg p-4 sm:p-5">
-              <div className="aspect-[4/3] min-w-0 rounded-lg border border-white/10 bg-[radial-gradient(circle_at_55%_20%,rgba(32,214,255,0.32),transparent_25%),linear-gradient(145deg,rgba(8,17,31,0.35),rgba(0,0,0,0.72))] p-4 sm:p-6">
-                <div className="flex items-start justify-between">
-                  <div className="min-w-0">
-                    <p className="text-sm uppercase text-pulse">Beispiel-Fahrzeug</p>
-                    <p className="mt-2 break-words font-[var(--font-space-grotesk)] text-xl font-semibold sm:text-2xl">
-                      BMW 530d Touring
-                    </p>
-                  </div>
-                  <ScanLine className="h-8 w-8 shrink-0 text-pulse sm:h-10 sm:w-10" />
+          <div className="semantic-hero-panel relative overflow-hidden p-6 sm:p-8">
+            <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-ultraviolet/25 blur-3xl" />
+            <p className="relative text-xs font-bold uppercase tracking-[0.23em] text-pulse">LUVIPRO · Der Fahrzeugcheck</p>
+            <h2 className="relative mt-4 font-[var(--font-space-grotesk)] text-2xl font-semibold text-white sm:text-3xl">Prüfung statt bloßer Vermutung.</h2>
+            <p className="relative mt-3 text-sm leading-7 text-slate-200">Eine unabhängige Partnerwerkstatt hält erkennbare Auffälligkeiten strukturiert fest.</p>
+            <div className="relative mt-8 space-y-5">
+              {[
+                { icon: ScanLine, name: "Lack & Karosserie", desc: "Oberflächen und mögliche Reparaturspuren" },
+                { icon: ShieldCheck, name: "Sichtprüfung", desc: "Umfang gemäß gewählter Inspektionsleistung" },
+                { icon: FileSearch, name: "Digitaler Bericht", desc: "Dokumentierte Erkenntnisse zur Fahrzeug-FIN" },
+              ].map(({ icon: Icon, name, desc }) => (
+                <div key={name} className="flex items-start gap-4 rounded-xl border border-white/10 bg-black/25 p-3">
+                  <Icon className="mt-1 h-6 w-6 shrink-0 text-pulse" aria-hidden="true" />
+                  <div><p className="font-semibold text-white">{name}</p><p className="mt-1 text-sm text-slate-300">{desc}</p></div>
                 </div>
-                <div className="mt-8 rounded-lg border border-white/10 bg-black/35 p-3 sm:mt-10 sm:p-4">
-                  <div className="mb-4 h-2 w-32 rounded-full bg-pulse/80" />
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    {["VIN-Suche", "UV-Lackprüfung", "Sichtprüfung", "Digitaler Report"].map((item) => (
-                      <div key={item} className="rounded-lg border border-white/10 bg-white/5 p-3">
-                        <p className="text-sm font-semibold text-white">{item}</p>
-                        <p className="mt-1 text-xs text-slate-400">Beispielansicht</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="mt-7 flex items-center gap-4">
-                  <CarFront className="h-12 w-12 text-white" />
-                  <div className="h-px flex-1 bg-gradient-to-r from-pulse via-ultraviolet to-transparent" />
-                  <Fingerprint className="h-12 w-12 text-ultraviolet" />
-                </div>
-              </div>
+              ))}
             </div>
+            <p className="relative mt-5 text-xs leading-5 text-slate-400">Hintergrund: echte Werkstattaufnahme als Illustration, kein LUVIPRO-Prüfvideo.</p>
           </div>
         </Reveal>
       </div>
-
-      <div className="section-shell relative -mt-10 grid gap-4 pb-16 sm:grid-cols-3">
+      <div className="section-shell relative -mt-7 grid gap-4 pb-16 sm:grid-cols-3">
         {stats.map((stat) => (
-          <div key={stat.label} className="glass-panel rounded-lg p-5">
-            <p className="font-[var(--font-space-grotesk)] text-3xl font-semibold text-white">
-              {stat.value}
-            </p>
-            <p className="mt-1 text-sm text-slate-300">{stat.label}</p>
+          <div key={stat.value} className="semantic-card min-h-[135px] p-5">
+            <SemanticFilm scene={stat.film} />
+            <CheckCircle2 className="h-5 w-5 text-pulse" aria-hidden="true" />
+            <p className="mt-2 font-[var(--font-space-grotesk)] text-3xl font-semibold text-white">{stat.value}</p>
+            <p className="mt-1 text-sm text-slate-200">{stat.label}</p>
           </div>
         ))}
       </div>
