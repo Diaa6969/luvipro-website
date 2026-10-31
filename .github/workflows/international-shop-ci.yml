@@ -15,6 +15,7 @@ on:
       - feature/affiliate-agb-20261029
       - fix/affiliate-public-no-demo
       - feature/customer-first-homepage-20261030
+      - preview/cinematic-uv-motion-20261031
   workflow_dispatch:
 
 permissions:
@@ -58,6 +59,8 @@ jobs:
         run: npm run test:legal-published
       - name: Check customer vehicle-inspection navigation and workshop search
         run: npm run test:vehicle-check
+      - name: Validate cinematic UV preview, cards and reduced motion
+        run: npm run test:cinematic-preview
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'
