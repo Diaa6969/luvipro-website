@@ -33,12 +33,6 @@ export const CLIPS = {
   ocrAccess: { kind: "generated", theme: "accessGate" },
 } as const;
 export type FilmScene = keyof typeof CLIPS;
-export type GeneratedTheme = typeof CLIPS[keyof typeof CLIPS] extends never ? never :
-  | "vinPulse"
-  | "reportLayers"
-  | "documentVeil"
-  | "vinOrbit"
-  | "pdfCascade"
-  | "privacyShield"
-  | "ocrSweep"
-  | "accessGate";
+export type GeneratedTheme = 
+  | "vinPulse" | "reportLayers" | "documentVeil" | "vinOrbit"
+  | "pdfCascade" | "privacyShield" | "ocrSweep" | "accessGate";
