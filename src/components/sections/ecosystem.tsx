@@ -28,7 +28,7 @@ export function Ecosystem() {
           {ecosystemItems.map((item, index) => (
             <Reveal key={item.title} delay={index * 0.05}>
               <div className="semantic-card group h-full p-6 transition">
-                <SemanticFilm scene={(["paint", "documents", "inspection", "digital", "workshop", "documents"] as const)[index]} />
+                {index === 0 ? <SemanticFilm scene="gloss" /> : index === 5 ? <SemanticFilm scene="light" /> : <SemanticFilm />}
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-pulse/10 text-pulse">
                   <item.icon className="h-6 w-6" />
                 </div>
