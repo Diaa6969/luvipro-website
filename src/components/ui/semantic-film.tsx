@@ -8,7 +8,7 @@ type FilmMode = "ambient" | "hero" | "card" | "section";
 /**
  * Silent cinematic footage behind copy, NEVER an embedded rectangular video
  * inside a card. Each scene maps to relevant footage of the actual subject
- * (paintwork, workshop inspection, diagnostic device, business documentation).
+ * (paintwork, hood, vehicle components). Empty scene means original royalty-free\n * animated light and gradient instead of repeating film or showing people.
  *
  * Footage is licensed stock, not a real LUVIPRO examination. Videos load only
  * near the viewport, pause offscreen, and respect reduced-motion/save-data.
@@ -17,7 +17,7 @@ export function SemanticFilm({
   scene,
   mode = "card",
 }: {
-  scene: FilmScene;
+  scene?: FilmScene;
   mode?: FilmMode;
 }) {
   const root = useRef<HTMLDivElement>(null);
@@ -60,7 +60,7 @@ export function SemanticFilm({
     }
   }, [inView, motionAllowed, failed]);
 
-  const load = inView && motionAllowed && !failed;
+  const load = !!scene && inView && motionAllowed && !failed;
   return (
     <div
       ref={root}
@@ -73,7 +73,7 @@ export function SemanticFilm({
           ref={player}
           key={scene}
           className="semantic-film-video"
-          src={CLIPS[scene].src}
+          src={scene ? CLIPS[scene].src : undefined}
           preload={mode === "hero" ? "metadata" : "none"}
           autoPlay
           muted
