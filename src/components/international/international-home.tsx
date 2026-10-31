@@ -100,7 +100,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               return (
                 <Reveal key={title} delay={index * 0.08}>
                   <div className="semantic-card h-full p-6">
-                    {index === 0 ? <SemanticFilm scene="surface" /> : <SemanticFilm />}
+                    <SemanticFilm />
                     <Icon className="h-9 w-9 text-pulse" />
                     <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">{title}</h3>
                     <p className="mt-3 leading-7 text-slate-300">{description}</p>
