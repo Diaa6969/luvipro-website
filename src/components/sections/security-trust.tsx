@@ -23,7 +23,7 @@ export function SecurityTrust() {
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {items.map((item, index) => (
             <Reveal key={item.title} delay={index * 0.08}>
-              <div className="h-full rounded-lg border border-white/10 bg-white/[0.045] p-6">
+              <div className="cinematic-card h-full rounded-lg border border-white/10 bg-white/[0.045] p-6">
                 <item.icon className="h-8 w-8 text-pulse" />
                 <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">
                   {item.title}
