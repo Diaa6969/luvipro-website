@@ -11,7 +11,7 @@ import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
-import { UvCarScene } from "@/components/ui/uv-car-scene";
+import { RealCarFootage } from "@/components/ui/real-car-footage";
 import { InternationalNavbar, LocaleDocument } from "./international-navbar";
 import { WorkshopFinder } from "@/components/sections/workshop-finder";
 import { internationalHomeCopy, type InternationalLocale } from "@/lib/international-home-copy";
@@ -71,14 +71,14 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                     </div>
                     <ScanLine className="h-8 w-8 text-ultraviolet" aria-hidden="true" />
                   </div>
-                  <UvCarScene label={isArabic ? "رسم متحرك توضيحي لسيارة يجري عليها مسح ضوئي بالأشعة البنفسجية" : "Illustration of an ultraviolet beam scanning the surface of a car"} />
+                  <RealCarFootage clip="studio" variant="hero" label={isArabic ? "فيديو حقيقي لسيارة داخل مرآب بإضاءة أرجوانية توضيحية" : "Authentic sports car footage with a stylized violet UV lighting effect"} uvOverlay />
                   <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
                     {s.hero.checks.slice(0, 3).map((item) => (
                       <span key={item} className="rounded-full border border-pulse/20 bg-pulse/[0.07] px-3 py-1.5">{item}</span>
                     ))}
                   </div>
                   <p className="mt-3 text-xs text-slate-400">
-                    {isArabic ? "رسم توضيحي فقط — لا يمثل نتيجة فحص حقيقية." : "Illustration only – not an actual inspection finding."}
+                    {isArabic ? "تصوير واقعي للسيارة، تأثير UV توضيحي وليس نتيجة فحص حقيقية." : "Real footage, stylized UV glow — not an actual inspection finding."}
                   </p>
                 </div>
               </div>
@@ -129,7 +129,8 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               const Icon = ecosystemIcons[index];
               return (
                 <Reveal key={title} delay={index * 0.05}>
-                  <div className="cinematic-card group h-full rounded-lg border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 hover:bg-pulse/[0.07]">
+                  <div className="cinematic-card group h-full rounded-2xl border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 hover:bg-pulse/[0.07]">
+                    <div className="mb-4"><RealCarFootage clip={(["detail", "night", "studio", "engine", "night", "detail"] as const)[index]} variant="strip" label={isArabic ? "فيديو تصوير سيارات حقيقية" : "Authentic automotive footage"} /></div>
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-pulse/10 text-pulse"><Icon className="h-6 w-6" /></div>
                     <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">{title}</h3>
                     <p className="mt-3 leading-7 text-slate-300">{description}</p>
@@ -255,8 +256,9 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
           <div className="mx-auto mt-12 grid max-w-5xl gap-5 md:grid-cols-2">
             {s.business.plans.slice(0,2).map(([name, price, features, cta, href], index) => (
               <Reveal key={name} delay={index * 0.08}>
-                <div className="glass-panel cinematic-card flex h-full flex-col rounded-lg p-6">
-                  <p className="font-[var(--font-space-grotesk)] text-2xl font-semibold">{name}</p>
+                <div className="glass-panel cinematic-card flex h-full flex-col rounded-2xl p-6">
+                  <RealCarFootage clip={index === 0 ? "detail" : "engine"} variant="card" label={isArabic ? "مشاهد فيديو حقيقية لسيارات" : "Authentic automotive close-up video"} uvOverlay />
+                  <p className="mt-5 font-[var(--font-space-grotesk)] text-2xl font-semibold">{name}</p>
                   <p className="mt-3 text-lg text-pulse">{price}</p>
                   <div className="mt-7 space-y-3">
                     {features.map((feature) => (
