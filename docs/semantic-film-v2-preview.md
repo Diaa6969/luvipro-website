@@ -1,39 +1,41 @@
-# LUVIPRO cinematic real-video backgrounds V2 — private preview
+# LUVIPRO cinematic website – no repeated people footage (preview revision 2026-10-31)
 
-**Status: preview only. No merge into production main.**
+**PREVIEW ONLY.** Production `main` is unchanged. No Supabase, checkout, legal, mobile app, data or prices changed.
 
-## What changed after user visual feedback
+## Corrected after visual feedback
 
-The earlier draft preview used a cartoon-like SVG scan, then wrongly placed unrelated night-traffic MP4s as visible thumbnails on every card. This v2 design starts from the original `main` and does **not** use the previous preview branch.
+- Removed films with **real mechanics or other people**, including hands in workshops; removed recordings of invoices, paperwork, smartphone/tablet screens and embedded text.
+- Reduced nine visible films to exactly nine **distinct** close-ups of car objects. A given film source is used at most once on each localized landing page. Other cards use handcrafted CSS UV light animation—**not a repeated video**.
+- Entire card is the video background behind the heading/price/button; no small video boxes. CSS contains a dark scrim for contrast.
+- Increased underlying atmospheric video visibility substantially from approximately 1–2% effective to roughly 25–35%, by increasing video opacity/brightness and reducing section masks. The video stays muted and doesn't prevent reading.
+- Original illustrated "demo" vehicles and random street-traffic videos are no longer used.
+- Animation performance: IntersectionObserver pause offscreen, reduced-motion and save-data disable playback, fallback on errors. Nine unique media sources is still bandwidth heavy; production should use self-hosted transcoded files, static posters and cap concurrent playback.
+- Scenes describe automotive *objects*, not an actual LUVIPRO 365 nm inspection; effects are purely aesthetic.
+- The website is built as the original Next.js repository's **draft PR #17** and Vercel Preview; do not publish to the main domain until user approves and independent legal/media QA is completed.
 
-Every film is a background layer of its entire semantic section or card. **All text, prices, CTAs and icons remain above the video** behind a dark violet scrim. The page backdrop is a real auto workshop film with low opacity plus moving soft violet/blue light; no square grid. Videos share equal fill dimensions through `object-fit:cover` and there are no arbitrary-height media thumbnails. The same structure applies to German, English, Arabic and European localized homepages.
+## MP4 source register
 
-## Subject-aware sourcing (genuine video recordings)
+Pexels video license allows general commercial website use with no attribution: https://www.pexels.com/legal-pages/license/ . However, a stock footage license **does not guarantee that visible third-party trademarks, model-specific body parts, text, number plates, identifiable people or locations are cleared**. Therefore this is a rights-*reduced-risk preview*, NOT a promise of 100% rights-cleared custom original video. Final production assets should ideally be filmed by LUVIPRO or AI-generated using a licensed video generation model with commercial usage rights, visually checked for identifiable brands, people and written text.
 
-All assets are genuine, royalty-free Pexels stock video under the [Pexels License](https://www.pexels.com/license/). Each direct MP4 was checked by a range GET in GitHub Actions and returned **206 video/mp4 + a valid MP4 header** on 2026-10-31.
-
-| Theme / place | Real film | Source |
+| Scene | Pexels clip ID | Topic (no intentionally filmed people or printed screen) |
 | --- | --- | --- |
-| Main hero / inspection steps / car examination | Mechanic inspecting the underbody with a light | https://www.pexels.com/video/mechanic-checking-under-the-car-8470382/ |
-| Standard check / paint surfaces / paint-related benefits | Close-up of a black car's reflective paintwork | https://www.pexels.com/video/close-up-video-of-a-car-paint-6159202/ |
-| Premium inspection / diagnostic cards | Mechanic using an OBD diagnostic tablet | https://www.pexels.com/video/mechanic-using-obd-scanner-tablet-6870334/ |
-| Digital report / PDF / test documentation | Mechanic viewing tablet in auto repair shop | https://www.pexels.com/video/a-man-using-ipad-6870341/ |
-| Global soft atmospheric background / workshop and partners | Genuine workshop and vehicle | https://www.pexels.com/video/a-man-is-standing-next-to-a-car-in-a-garage-20693173/ |
-| VIN/FIN and document-related cards | Person reading vehicle documents inside car | https://www.pexels.com/video/a-man-reading-a-document-6637310/ |
-| Surface condition feature / bodywork detail | Professional car detailing and car paintwork | https://www.pexels.com/video/close-up-video-of-a-car-6157904/ |
+| Global background | 11901729 | Headlight surface with sunset reflections |
+| Hero background | 4707143 | Vehicle headlight coming on |
+| Standard card | 6159202 | Close-up of vehicle paint |
+| Premium card | 8104040 | Moving car wheel close-up |
+| Surface check | 6157786 | Vehicle body paint details |
+| Eco: paint | 6159204 | Car exterior reflection |
+| Eco: headlight | 5309342 | Headlight reflecting ambient light |
+| UV / surface feature | 6157864 | Finished paintwork surface |
+| Buyer journey | 5419070 | Headlamp and evening reflection |
 
-The context mapping is in `src/lib/semantic-film-clips.ts`. We **do not call stock footage AI-generated video** and we do not claim it is footage of LUVIPRO's 365 nm UV lamp. A genuine LUVIPRO UV scan will require filming the actual product, or use of a properly licensed generative-video service that is not currently connected.
+All direct MP4 URLs are in `src/lib/semantic-film-clips.ts`. A CI smoke test checks that each is online, has a valid MP4 header and is unique; it cannot establish the absence of faces, trademarks, watermarks or written overlays. Visual review using extracted frames is required before approval. Some stock clips may contain visible brand marks even when not described; **any suspicious footage must be removed or replaced**, not hidden and assumed safe.
 
-## Browser behavior, privacy, and performance
+## Legal and technical launch gate
 
-- MP4 loads **only when near the viewport**, silent autoplay, inline loop, pauses offscreen.
-- Reduced-motion users and data-saver devices get the static cinematic fallback, no automatic video.
-- CSS uses violet grading and animated UV-toned lighting; **these lighting effects are stylistic, not scientific measurements**.
-- Videos use a third-party CDN. Before launch, check GDPR/privacy handling, preserve source license documentation, and preferably self-host compressed clips with static posters. No cookies or direct app data are sent by the media component, but browsers request the CDN, revealing IP/user-agent to that host.
-- Each film already has a dark fallback and error handling. Browser Safari/iOS + Android actual playback and contrast must be visually tested before production publishing.
-- For a future generative pipeline: define seven precise semantic prompts, generate context-specific *realistic* footage, check rights, verify 365 nm claims, compress to WebM/MP4 and replace only the manifest sources, **not the layouts**.
+1. Inspect at least two separate frames of each source for persons, logos, license plates, source-imposed text and any watermark. Inspect all nine videos at full length for edge cases; compare versions rendered on mobile and desktop.
+2. Record licence URL, author, source ID, date and archival screenshot for each selected clip. Do not imply any brand/producer endorsed LUVIPRO.
+3. Prefer replacing these stock videos with wholly bespoke, separately licensed, brand-free videos and self-hosting for production; Pexels CDN currently sees visitor requests/IP.
+4. Get explicit user visual approval on the preview before merging or production Vercel deployment.
 
-## No production changes
-
-- This branch has no Supabase, Auth, price calculation, checkout, Stripe, VIN, PDF, FlutterFlow or other data changes.
-- Do not merge until the user has checked the preview visually and approves.
+No one should call this production-safe or "100% copyright-free" merely because the Pexels licence permits commercial reuse.
