@@ -63,6 +63,13 @@ jobs:
         run: npm run test:semantic-film
       - name: Verify seven licensed vehicle/inspection video files
         run: node scripts/test-semantic-video-urls.mjs
+      - name: Prepare FFmpeg for video contact-sheet visual QA (preview only)
+        if: github.ref_name == 'preview/semantic-film-background-v2-20261031'
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
       - name: Audit video stills for people, logos and embedded text (preview only)
         if: github.ref_name == 'preview/semantic-film-background-v2-20261031'
         run: node scripts/audit-cinematic-samples.mjs
