@@ -38,7 +38,7 @@ assert.match(docs,/Pexels License/);
 assert.doesNotMatch(docs,/clips are AI generated/i);
 assert.match(read("src/app/products/page.tsx"),/audience="partner"/);
 for(const clip of ["studio","detail","night","engine"]) {
-  assert.match(footage,new RegExp(clip+": \"https://assets\\.mixkit\\.co/videos/preview/"));
+  assert.ok(footage.includes(clip+': "https://videos.pexels.com/video-files/'),"Missing real MP4 for "+clip);
 }
 for(const path of [
  "src/components/sections/problem.tsx",
