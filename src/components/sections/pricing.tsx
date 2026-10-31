@@ -61,7 +61,7 @@ export function Pricing({ id = "pricing", embedded = false, audience = "customer
                   <RealCarFootage
                     clip={plan.id === "standard" ? "detail" : "engine"}
                     variant="card"
-                    label={plan.id === "standard" ? "Reale Nahaufnahme eines Fahrzeuglacks" : "Reale Nahaufnahme aus dem Motorraum eines Sportwagens"}
+                    label={plan.id === "standard" ? "Reale Autoaufnahmen im nächtlichen Straßenverkehr" : "Reales Video von Fahrzeugen im Straßenverkehr"}
                     uvOverlay
                   />
                   <span className="absolute bottom-3 left-4 z-10 rounded-full border border-white/20 bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white sm:text-xs">
