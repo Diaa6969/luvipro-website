@@ -36,7 +36,7 @@ export function Problem() {
           {problems.map((problem, index) => (
             <Reveal key={problem.title} delay={index * 0.08}>
               <div className="semantic-card h-full p-6">
-                <SemanticFilm scene={(["paint", "documents", "workshop"] as const)[index]} />
+                {index === 0 ? <SemanticFilm scene="surface" /> : <SemanticFilm />}
                 <problem.icon className="h-9 w-9 text-pulse" />
                 <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">
                   {problem.title}
