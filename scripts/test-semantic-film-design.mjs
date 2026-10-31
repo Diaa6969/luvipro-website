@@ -49,7 +49,7 @@ const expected=["ambient","hero","standard","premium","surface","gloss","light",
 assert.equal(new Set(expected).size,expected.length);
 const deFiles=[atmosphere,hero,pricing,problem,ecosystem,flow,read("src/components/sections/uv-scanner.tsx")];
 for(const key of expected){
- assert.ok(deFiles.some(x=>x.includes(`scene="${key}"`)||x.includes(`? "${key}"`)||x.includes(`? <SemanticFilm scene="${key}"`)||x.includes(`: <SemanticFilm scene="${key}"`)), "Unused unique film: "+key);
+ assert.ok(deFiles.some(x=>x.includes(`scene="${key}"`)||x.includes(`? "${key}"`)||x.includes(`: "${key}"`)||x.includes(`? <SemanticFilm scene="${key}"`)||x.includes(`: <SemanticFilm scene="${key}"`)), "Unused unique film: "+key);
 }
 assert.match(read("src/app/products/page.tsx"),/audience="partner"/);
 console.log("PASS: 9 distinct car-part videos, no person/screen/doc clips, stronger global background, no repeats, accessible CSS-only cards.");
