@@ -2,35 +2,29 @@ import { CarFront, ScanLine, Sparkles } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { CtaLink } from "@/components/ui/cta-link";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { SemanticFilm } from "@/components/ui/semantic-film";
 
 export function UvScanner() {
   return (
     <section id="scanner" className="bg-midnight py-24">
       <div className="section-shell grid items-center gap-12 lg:grid-cols-2">
         <Reveal>
-          <div className="relative">
-            <div className="absolute -inset-3 rounded-lg bg-ultraviolet/15 blur-2xl sm:-inset-8 sm:blur-3xl" />
-            <div className="glass-panel relative rounded-lg p-6">
-              <div className="aspect-square rounded-lg border border-pulse/20 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.35),transparent_34%),linear-gradient(150deg,rgba(255,255,255,0.08),rgba(0,0,0,0.5))] p-8">
-                <div className="flex h-full flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm text-slate-200">
-                      Fahrzeugcheck mit LUVIPRO
-                    </span>
-                    <CarFront className="h-9 w-9 text-pulse" />
-                  </div>
-                  <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-full border border-pulse/50 bg-pulse/10 shadow-glow">
-                    <ScanLine className="h-20 w-20 text-pulse" />
-                  </div>
-                  <div className="grid grid-cols-3 gap-3">
-                    {["UV", "VIN", "PDF"].map((label) => (
-                      <div key={label} className="rounded-lg bg-black/30 p-3 text-center text-sm font-semibold">
-                        {label}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+          <div className="semantic-card relative flex aspect-[4/3] flex-col justify-between overflow-hidden p-6 sm:p-8">
+            <SemanticFilm scene="bodywork" mode="section" />
+            <div className="flex items-center justify-between gap-3">
+              <span className="rounded-full border border-pulse/30 bg-[#0b0d20]/80 px-4 py-2 text-sm font-semibold text-white">
+                Fahrzeugoberflächen
+              </span>
+              <CarFront className="h-8 w-8 text-pulse" aria-hidden="true" />
+            </div>
+            <div>
+              <ScanLine className="mb-4 h-12 w-12 text-pulse" aria-hidden="true" />
+              <h3 className="max-w-sm font-[var(--font-space-grotesk)] text-2xl font-semibold text-white sm:text-3xl">
+                Jede Oberfläche erzählt etwas.
+              </h3>
+              <p className="mt-4 max-w-md text-sm leading-6 text-slate-100">
+                Echte Aufnahme einer Lackoberfläche. Der UV-Lichteffekt ist rein gestalterisch und kein tatsächlicher Prüfbefund.
+              </p>
             </div>
           </div>
         </Reveal>
@@ -41,9 +35,13 @@ export function UvScanner() {
             description="Bei einem LUVIPRO Fahrzeugcheck untersucht eine Partnerwerkstatt Lackoberflächen und Karosserie, dokumentiert erkennbare Auffälligkeiten und hält die Ergebnisse für Sie in einem strukturierten Bericht fest."
           />
           <div className="mt-8 space-y-4">
-            {["Prüfung von Lackoberflächen auf mögliche Nachlackierungen und Reparaturspuren", "Sichtprüfung der Karosserie und strukturierte Dokumentation", "Fahrzeugbezogener Bericht über die FIN/VIN – mit geregeltem Zugriff"].map((item) => (
+            {[
+              "Prüfung von Lackoberflächen auf mögliche Nachlackierungen und Reparaturspuren",
+              "Sichtprüfung der Karosserie und strukturierte Dokumentation",
+              "Fahrzeugbezogener Bericht über die FIN/VIN – mit geregeltem Zugriff",
+            ].map((item) => (
               <div key={item} className="flex items-center gap-3 text-slate-200">
-                <Sparkles className="h-5 w-5 text-pulse" />
+                <Sparkles className="h-5 w-5 shrink-0 text-pulse" aria-hidden="true" />
                 {item}
               </div>
             ))}
