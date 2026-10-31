@@ -61,6 +61,8 @@ jobs:
         run: npm run test:vehicle-check
       - name: Validate cinematic UV preview, cards and reduced motion
         run: npm run test:cinematic-preview
+      - name: Verify real licensed automotive videos load from CDN
+        run: node scripts/test-cinematic-video-urls.mjs
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'
