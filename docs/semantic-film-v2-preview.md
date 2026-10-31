@@ -1,40 +1,28 @@
-# LUVIPRO cinematic website – no repeated people footage (preview revision 2026-10-31)
+# LUVIPRO Cinematic Motion – Final Release Review (31 October 2026)
 
-**PREVIEW ONLY.** Production `main` is unchanged. No Supabase, checkout, legal, mobile app, data or prices changed.
+**Scope:** visual changes in the SAME original Next.js website `Diaa6969/luvipro-website`. No database, Supabase, FlutterFlow, pricing, invoices, auth, orders or report changes.
 
-## Corrected after visual feedback
+## Visual changes requested and implemented
 
-- Removed films deliberately showing **real mechanics or other people**, including hands in workshops; removed recordings of invoices, paperwork, smartphone/tablet screens, and the paintwork scene that showed suspicious reflective lettering during frame inspection.
-- Reduced eight visible films to exactly nine **distinct** close-ups of car objects. A given film source is used at most once on each localized landing page. Other cards use handcrafted CSS UV light animation—**not a repeated video**.
-- Entire card is the video background behind the heading/price/button; no small video boxes. CSS contains a dark scrim for contrast.
-- Increased underlying atmospheric video visibility substantially from approximately 1–2% effective to roughly 25–35%, by increasing video opacity/brightness and reducing section masks. The video stays muted and doesn't prevent reading.
-- Original illustrated "demo" vehicles and random street-traffic videos are no longer used.
-- Animation performance: IntersectionObserver pause offscreen, reduced-motion and save-data disable playback, fallback on errors. Eight unique media sources is still bandwidth heavy; production should use self-hosted transcoded files, static posters and cap concurrent playback.
-- Scenes describe automotive *objects*, not an actual LUVIPRO 365 nm inspection; effects are purely aesthetic.
-- The website is built as the original Next.js repository's **draft PR #17** and Vercel Preview; do not publish to the main domain until user approves and independent legal/media QA is completed.
+- Replaced the old **Audi grille/logo** global background (Pexels 11901729) with clear footage of a blue car's unbranded side/mirror (Pexels 8033487).
+- Replaced the irrelevant **blinking turn signal** hero film (Pexels 4707143) with a detailed, real paintwork and reflection close-up (Pexels 6159204). No 3D cartoon.
+- Every foreground informational and offer card has its **own video behind text**: 3 hero statistic cards, 3 problem cards, 6 ecosystem cards, Standard and Premium price cards, 3 process cards, 3 trust cards, 2 FIN/report security cards and the UV feature card. The global background and hero also have their own distinct footage. **25 distinct sources/motifs in total.**
+- Exactly **17 distinct licensed stock footage clips** of automotive exteriors/details and **8 originally generated procedural video streams** for VIN, PDF/report and privacy illustrations. Every scene key is assigned to just one position on a landing page. No reused MP4 source.
+- Digital video effects are created by the user's browser with Canvas `captureStream(12)` (320×180, silent); they contain no existing brand, text, individual or third-party UI. These are original motion graphics, NOT AI photorealistic films or recordings of LUVIPRO inspections.
+- Cards use full-background video with dark scrim for text legibility. Global car film is deliberately clearer than v2. Both real and generated videos stop outside the viewport or when reduced-motion/data saving is enabled.
 
-## MP4 source register
+## Pexels stock clips and licensing
 
-Pexels video license allows general commercial website use with no attribution: https://www.pexels.com/legal-pages/license/ . However, a stock footage license **does not guarantee that visible third-party trademarks, model-specific body parts, text, number plates, identifiable people or locations are cleared**. Therefore this is a rights-*reduced-risk preview*, NOT a promise of 100% rights-cleared custom original video. Final production assets should ideally be filmed by LUVIPRO or AI-generated using a licensed video generation model with commercial usage rights, visually checked for identifiable brands, people and written text.
+Source file `src/lib/semantic-film-clips.ts` lists the direct MP4 and Pexels source page for all 17 stock clips. See [Pexels License](https://www.pexels.com/license/) for general commercial usage permission.
 
-| Scene | Pexels clip ID | Topic (no intentionally filmed people or printed screen) |
-| --- | --- | --- |
-| Global background | 11901729 | Headlight surface with sunset reflections |
-| Hero background | 4707143 | Vehicle headlight coming on |
-| Standard card | 6159202 | Close-up of vehicle paint |
-| Premium card | 8104040 | Moving car wheel close-up |
-| Eco: paint | 6159204 | Car exterior reflection |
-| Eco: headlight | 5309342 | Headlight reflecting ambient light |
-| UV / surface feature | 6157864 | Finished paintwork surface |
-| Buyer journey | 5419070 | Headlamp and evening reflection |
+Even commercial stock licences do not necessarily clear independent trademarks, car-design rights, model marks or licence plates. Two or more frames of each selected clip were visually reviewed using FFmpeg contact sheets and the build rejects banned sources, but this is **not a guarantee** of absence of third-party markings in all frames. The original Audi grille and indicator MP4 IDs are banned by CI. If residual brand marks appear, replace/crop their source before marketing use. Self-host compressed clips later to reduce CDN leakage of IP/UA, after privacy/copyright review.
 
-All direct MP4 URLs are in `src/lib/semantic-film-clips.ts`. A CI smoke test checks that each is online, has a valid MP4 header and is unique; it cannot establish the absence of faces, trademarks, watermarks or written overlays. Visual review using extracted frames is required before approval. Some stock clips may contain visible brand marks even when not described; **any suspicious footage must be removed or replaced**, not hidden and assumed safe.
+## Visual placement and maintenance
 
-## Legal and technical launch gate
+`src/components/ui/semantic-film.tsx` chooses an in-viewport licensed MP4 or locally generated stream according to the unique scene key. `src/components/ui/generated-clip.tsx` creates the 8 original abstract movies. `src/app/globals.css` controls full-card background, UV tint/contrast and visible site atmosphere. Every scene is declared in `src/lib/semantic-film-clips.ts` and each page references it consistently across DE, EN, AR and European locales.
 
-1. Inspect at least two separate frames of each source for persons, logos, license plates, source-imposed text and any watermark. Inspect all eight videos at full length for edge cases; compare versions rendered on mobile and desktop.
-2. Record licence URL, author, source ID, date and archival screenshot for each selected clip. Do not imply any brand/producer endorsed LUVIPRO.
-3. Prefer replacing these stock videos with wholly bespoke, separately licensed, brand-free videos and self-hosting for production; Pexels CDN currently sees visitor requests/IP.
-4. Get explicit user visual approval on the preview before merging or production Vercel deployment.
+Production deploy must be confirmed separately by **successful Vercel status on the merged `main` commit**, after green build and relevant tests. Record PR, SHA and rollback commit. No user data or business logic touched.
 
-No one should call this production-safe or "100% copyright-free" merely because the Pexels licence permits commercial reuse.
+## Performance caveat
+
+Seventeen genuine MP4s increase transfer on a full long-page scroll. Viewport-only loading and Save-Data/reduced-motion support reduce this cost. For production optimization, progressively encode verified short 480p/720p loops and self-host static poster/video derivatives, and test mobile Safari/Android performance. There are no new cookies or JS trackers in the animation implementation.
