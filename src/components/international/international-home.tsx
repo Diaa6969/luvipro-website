@@ -71,7 +71,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
                     </div>
                     <ScanLine className="h-8 w-8 text-ultraviolet" aria-hidden="true" />
                   </div>
-                  <RealCarFootage clip="studio" variant="hero" label={isArabic ? "فيديو حقيقي لسيارة داخل مرآب بإضاءة أرجوانية توضيحية" : "Authentic sports car footage with a stylized violet UV lighting effect"} uvOverlay />
+                  <RealCarFootage clip="studio" variant="hero" label={isArabic ? "لقطات حقيقية لسيارات في حركة المرور ليلاً مع إضاءة بنفسجية" : "Authentic night traffic footage with a stylized violet UV lighting effect"} uvOverlay />
                   <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
                     {s.hero.checks.slice(0, 3).map((item) => (
                       <span key={item} className="rounded-full border border-pulse/20 bg-pulse/[0.07] px-3 py-1.5">{item}</span>
