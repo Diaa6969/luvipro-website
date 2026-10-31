@@ -7,7 +7,7 @@ export function FinalCta() {
     <section className="bg-midnight py-24">
       <div className="section-shell">
         <Reveal>
-          <div className="glass-panel rounded-lg p-8 text-center sm:p-12">
+          <div className="glass-panel cinematic-card rounded-lg p-8 text-center sm:p-12">
             <ShieldCheck className="mx-auto h-12 w-12 text-pulse" />
             <h2 className="mx-auto mt-6 max-w-4xl font-[var(--font-space-grotesk)] text-3xl font-semibold text-white sm:text-5xl">
               Lassen Sie Ihr nächstes Auto prüfen, bevor Sie es kaufen.
