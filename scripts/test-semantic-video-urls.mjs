@@ -2,7 +2,8 @@
 import {readFileSync} from "node:fs";
 const source=readFileSync("src/lib/semantic-film-clips.ts","utf8");
 const urls=[...source.matchAll(/src: "(https:\/\/videos\.pexels\.com\/video-files\/[^"]+\.mp4)"/g)].map(m=>m[1]);
-if(urls.length!==7)throw Error("Expected 7 semantically mapped stock videos, got "+urls.length);
+if(urls.length!==9)throw Error("Expected 9 object-only unique stock videos, got "+urls.length);
+if(new Set(urls).size !== urls.length)throw Error("A video source is repeated; every visible clip must be unique");
 let failed=false;
 const checks=await Promise.all(urls.map(async(url)=>{
  try{
@@ -19,4 +20,4 @@ const checks=await Promise.all(urls.map(async(url)=>{
  }catch(err){console.error("BROKEN_MP4",url,String(err));failed=true;return false;}
 }));
 if(failed||checks.some(x=>!x))process.exit(1);
-console.log("All seven semantic vehicle/inspection videos verified.");
+console.log("All nine unique people-free candidate car-object MP4 sources have valid headers.");
