@@ -52,14 +52,14 @@ export function Hero() {
                 </div>
               ))}
             </div>
-            <p className="relative mt-5 text-xs leading-5 text-slate-400">Hintergrund: echte Werkstattaufnahme als Illustration, kein LUVIPRO-Prüfvideo.</p>
+            <p className="relative mt-5 text-xs leading-5 text-slate-400">Hintergrund: reale Aufnahme eines Fahrzeugs als Illustration, kein LUVIPRO-Prüfvideo.</p>
           </div>
         </Reveal>
       </div>
       <div className="section-shell relative -mt-7 grid gap-4 pb-16 sm:grid-cols-3">
-        {stats.map((stat) => (
+        {stats.map((stat, index) => (
           <div key={stat.value} className="semantic-card min-h-[135px] p-5">
-            <SemanticFilm />
+            <SemanticFilm scene={(["statUV","statVIN","statPDF"] as const)[index]} />
             <CheckCircle2 className="h-5 w-5 text-pulse" aria-hidden="true" />
             <p className="mt-2 font-[var(--font-space-grotesk)] text-3xl font-semibold text-white">{stat.value}</p>
             <p className="mt-1 text-sm text-slate-200">{stat.label}</p>

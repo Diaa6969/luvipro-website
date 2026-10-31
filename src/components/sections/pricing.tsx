@@ -57,7 +57,7 @@ export function Pricing({ id = "pricing", embedded = false, audience = "customer
           {INSPECTION_SERVICES.map((plan, index) => (
             <Reveal key={plan.id} delay={index * 0.08}>
               <div className={`semantic-card flex h-full flex-col p-6 sm:p-8 ${plan.id === "premium" ? "border-pulse/40" : ""}`}>
-                <SemanticFilm scene={plan.id === "standard" ? "standard" : "premium"} />
+                <SemanticFilm scene={plan.id === "standard" ? "priceStandard" : "pricePremium"} />
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-[var(--font-space-grotesk)] text-2xl font-semibold">{plan.name}</p>
                   {plan.id === "premium" && <span className="rounded-full bg-pulse/15 px-3 py-1 text-xs font-semibold text-pulse">Erweitert</span>}

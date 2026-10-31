@@ -25,7 +25,7 @@ export function SecurityTrust() {
           {items.map((item, index) => (
             <Reveal key={item.title} delay={index * 0.08}>
               <div className="semantic-card h-full p-6">
-                <SemanticFilm />
+                <SemanticFilm scene={(["trustPrivacy","trustIntegrity","trustPartner"] as const)[index]} />
                 <item.icon className="h-8 w-8 text-pulse" />
                 <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">
                   {item.title}

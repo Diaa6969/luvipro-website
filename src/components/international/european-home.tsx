@@ -115,7 +115,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
             [FileCheck2,t.pdfTitle,t.pdfText],
           ].map(([Icon,title,body],i)=>{
             const Symbol = Icon as typeof ScanLine;
-            return <div key={i} className={"semantic-card "+panel}>{i === 0 ? <SemanticFilm scene="gloss" /> : <SemanticFilm />}<Symbol className="size-9 text-pulse"/><h3 className="mt-5 text-xl font-semibold">{title as string}</h3><p className="mt-3 text-sm leading-7 text-slate-300">{body as string}</p></div>;
+            return <div key={i} className={"semantic-card "+panel}><SemanticFilm scene={(["ecoPaint","ecoVIN","ecoPDF"] as const)[i]} /><Symbol className="size-9 text-pulse"/><h3 className="mt-5 text-xl font-semibold">{title as string}</h3><p className="mt-3 text-sm leading-7 text-slate-300">{body as string}</p></div>;
           })}
         </div>
       </section>
@@ -128,7 +128,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
               ["Premium","119,99 €","19% VAT"],
             ].map(([label,amount,tax])=>
               <div key={label} className={"semantic-card "+panel}>
-                <SemanticFilm scene={label === "Standard" ? "standard" : "premium"} />
+                <SemanticFilm scene={label === "Standard" ? "priceStandard" : "pricePremium"} />
                 <p className="text-xl font-semibold">{label}</p>
                 <p className="mt-5 font-[var(--font-space-grotesk)] text-4xl font-bold">{amount}</p>
                 <p className="mt-2 text-xs text-slate-400">{tax}</p>
@@ -152,7 +152,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
         </div>
       </section>
       <section className="section-shell py-20">
-        <div className={"semantic-card "+panel}><SemanticFilm /><FileLock2 className="size-9 text-pulse"/><h2 className="mt-5 text-3xl font-semibold">{t.trustTitle}</h2><p className="mt-4 max-w-3xl text-base leading-8 text-slate-300">{t.trustText}</p></div>
+        <div className={"semantic-card "+panel}><SemanticFilm scene="ocrAccess" /><FileLock2 className="size-9 text-pulse"/><h2 className="mt-5 text-3xl font-semibold">{t.trustTitle}</h2><p className="mt-4 max-w-3xl text-base leading-8 text-slate-300">{t.trustText}</p></div>
       </section>
       <EuropeanFooter locale={locale} />
     </main>

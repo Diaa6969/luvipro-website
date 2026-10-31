@@ -10,7 +10,7 @@ export function UvScanner() {
       <div className="section-shell grid items-center gap-12 lg:grid-cols-2">
         <Reveal>
           <div className="semantic-card relative flex aspect-[4/3] flex-col justify-between overflow-hidden p-6 sm:p-8">
-            <SemanticFilm scene="paintwork" mode="section" />
+            <SemanticFilm scene="uvSection" mode="section" />
             <div className="flex items-center justify-between gap-3">
               <span className="rounded-full border border-pulse/30 bg-[#0b0d20]/80 px-4 py-2 text-sm font-semibold text-white">
                 Fahrzeugoberflächen

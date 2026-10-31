@@ -17,9 +17,9 @@ export function OcrVerification() {
             {[
               { icon: ScanText, title: "FIN eindeutig zuordnen" },
               { icon: LockKeyhole, title: "Zugriffsrechte berücksichtigen" },
-            ].map((item) => (
+            ].map((item, index) => (
               <div key={item.title} className="semantic-card p-5">
-                <SemanticFilm />
+                <SemanticFilm scene={(["ocrVIN","ocrAccess"] as const)[index]} />
                 <item.icon className="h-7 w-7 text-pulse" />
                 <p className="mt-4 font-semibold text-white">{item.title}</p>
               </div>
