@@ -31,12 +31,12 @@ create or replace function public.luvipro_affiliate_protect_legal_acceptance()
 returns trigger language plpgsql
 set search_path = pg_catalog, public, pg_temp as $$
 begin
- if old.legal_agb_accepted_at is not null and
+ if tg_op='UPDATE' and old.legal_agb_accepted_at is not null and
    (new.legal_agb_accepted_at is distinct from old.legal_agb_accepted_at
     or new.legal_agb_version is distinct from old.legal_agb_version) then
    raise exception 'Original application legal acceptance is immutable';
  end if;
- if old.individual_agreement_accepted_at is not null and
+ if tg_op='UPDATE' and old.individual_agreement_accepted_at is not null and
    (new.individual_agreement_accepted_at is distinct from old.individual_agreement_accepted_at
     or new.individual_agreement_ref is distinct from old.individual_agreement_ref) then
    raise exception 'Concluded individual terms are immutable; use a separate signed amendment';
@@ -52,7 +52,7 @@ end; $$;
 drop trigger if exists luvipro_affiliate_protect_legal_acceptance_before
  on public.luvipro_affiliate_applications;
 create trigger luvipro_affiliate_protect_legal_acceptance_before
- before update on public.luvipro_affiliate_applications
+ before insert or update on public.luvipro_affiliate_applications
  for each row execute function public.luvipro_affiliate_protect_legal_acceptance();
 revoke execute on function public.luvipro_affiliate_protect_legal_acceptance()
  from public,anon,authenticated;

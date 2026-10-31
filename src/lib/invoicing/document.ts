@@ -1,6 +1,6 @@
 import "server-only";
 import { PDFDocument, StandardFonts, rgb, type PDFFont } from "pdf-lib";
-import { calculateInvoicePricing, invoiceReference, moneyEUR, type InvoiceKind } from "./prices";
+import { calculateInvoicePricing, promoInvoicePricing, invoiceReference, moneyEUR, type InvoiceKind } from "./prices";
 
 export type InvoiceParty = {
   name: string;
@@ -21,6 +21,7 @@ export type InvoiceData = {
   invoiceNumber: string;
   kind: InvoiceKind;
   quantity: number;
+  promoSnapshot?: Record<string,unknown>; // trusted immutable DB snapshot only
   invoiceDate: string; // yyyy-mm-dd
   serviceDate: string; // actual supply or performance date
   issuer: InvoiceIssuer;
@@ -60,6 +61,7 @@ export function validateInvoice(d: InvoiceData) {
   if (d.kind !== "device" && !d.demo && !d.issuer.taxNumberOrVatId) {
     throw new Error("Inspection must be invoiced by the actual supplying workshop");
   }
+  if(d.promoSnapshot){const pricing=promoInvoicePricing(d.promoSnapshot);if(pricing.kind!==d.kind||d.promoSnapshot.quantity!==d.quantity)throw Error("Invoice snapshot mismatch");return pricing;}
   return calculateInvoicePricing(d.kind, d.quantity);
 }
 

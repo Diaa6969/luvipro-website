@@ -77,3 +77,20 @@ export function invoiceReference(invoiceNumber: string) {
   if (!/^[A-Z0-9][A-Z0-9-]{5,34}$/.test(invoiceNumber)) throw new Error("Invalid invoice number");
   return invoiceNumber; // Unique number is also the bank transfer Verwendungszweck.
 }
+
+/** Validates an immutable SERVER/DATABASE price snapshot; never accept one from a browser. */
+export function promoInvoicePricing(raw:Record<string,unknown>):InvoicePricing {
+ const kind=raw.product_kind;
+ if(kind!=="device"&&kind!=="inspection_standard"&&kind!=="inspection_premium")throw Error("Invalid snapshot product");
+ const integer=(key:string)=>{const v=raw[key];if(typeof v!=="string"||!/^\d{1,13}$/.test(v))throw Error("Invalid snapshot amount");const n=Number(v);if(!Number.isSafeInteger(n))throw Error("Unsafe snapshot amount");return n;};
+ const quantity=raw.quantity;
+ if(!Number.isInteger(quantity)||Number(quantity)<1||Number(quantity)>10||(kind!=="device"&&quantity!==1)||raw.vat_bps!==1900||raw.currency!=="EUR")throw Error("Unsupported snapshot tax/quantity");
+ const before=integer("goods_net_before_discount_cents"),discount=integer("discount_net_cents"),after=integer("goods_net_after_discount_cents"),unit=integer("unit_net_cents"),shipping=integer("shipping_net_cents");
+ const net=integer("net_cents"),vat=integer("vat_cents"),gross=integer("gross_cents");
+ const tax=(n:number)=>Number((BigInt(n)*BigInt(1900)+BigInt(5000))/BigInt(10000));
+ if(before!==unit*Number(quantity)||unit<=0||after<=0||discount>before||after!==before-discount||net!==after+shipping||vat!==tax(after)+tax(shipping)||gross!==net+vat||(kind!=="device"&&shipping!==0))throw Error("Snapshot totals do not reconcile");
+ const line=(description:string,n:number,q=1)=>({description,quantity:q,taxRatePercent:19 as const,netCents:n,vatCents:tax(n),grossCents:n+tax(n)});
+ const description=kind==="device"?"LUVIPRO LU3656060 - UV-Pruefgeraet":kind==="inspection_standard"?"Fahrzeugpruefung Standard":"Fahrzeugpruefung Premium";
+ const lines=[line(description+(discount?" (Rabatt bereits beruecksichtigt)":""),after,Number(quantity)),...(shipping?[line("Versand innerhalb Deutschlands (je Bestellung)",shipping)]:[])];
+ return {kind,lines,netCents:net,vatCents:vat,grossCents:gross};
+}

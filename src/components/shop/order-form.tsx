@@ -23,16 +23,26 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady, bankReady
   const [notice, setNotice] = useState<{ type: "info" | "error" | "success"; text: string } | null>(null);
   const [reference, setReference] = useState("");
   const [requestKey, setRequestKey] = useState(() => crypto.randomUUID());
-  const deviceTotals = calculateInvoicePricing("device", quantity);
+  const [promoCode,setPromoCode]=useState("");
+  const [promoBusy,setPromoBusy]=useState(false);
+  const [promoQuote,setPromoQuote]=useState<null|{quote_id:string;expires_at:string;net_cents:string;vat_cents:string;gross_cents:string;discount_net_cents:string}>(null);
+  const originalTotals = calculateInvoicePricing("device", quantity);
+  const deviceTotals=promoQuote?{...originalTotals,netCents:Number(promoQuote.net_cents),vatCents:Number(promoQuote.vat_cents),grossCents:Number(promoQuote.gross_cents)}:originalTotals;
+  async function applyPromo(){
+   if(promoBusy||pending)return;setPromoBusy(true);setNotice(null);setPromoQuote(null);
+   try{const response=await fetch("/api/store/promo-quote",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({product:"device",quantity,code:promoCode})});const result=await response.json();if(!response.ok)throw Error(result.error||"Rabatt nicht verfügbar.");setPromoQuote(result);}
+   catch(error){setNotice({type:"error",text:error instanceof Error?error.message:"Rabatt nicht verfügbar."});}finally{setPromoBusy(false);}
+  }
 
   function selectMode(next: Mode) {
-    setMode(next);
+    setMode(next);setPromoQuote(null);setPromoCode("");
     setNotice(null);
     setReference("");
     setRequestKey(crypto.randomUUID());
   }
 
   function changeQuantity(amount: number) {
+    setPromoQuote(null);
     setQuantity((current) => Math.min(DEVICE.maxQuantity, Math.max(DEVICE.minQuantity, current + amount)));
   }
 
@@ -63,6 +73,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady, bankReady
       setNotice({ type: "error", text: "Bitte prüfen und bestätigen Sie die notwendigen Hinweise." });
       return;
     }
+    if(mode==="bank"&&promoCode&&(!promoQuote||Date.parse(promoQuote.expires_at)<=Date.now())){setNotice({type:"error",text:"Rabatt bitte vor der Bestellung erneut prüfen."});return;}
     setPending(true);
     setNotice(null);
     try {
@@ -70,7 +81,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady, bankReady
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...inquiry, requestKey }),
+        body: JSON.stringify({ ...inquiry, requestKey, ...(mode==="bank"&&promoCode?{promoQuoteId:promoQuote?.quote_id,promoCode}:{}) }),
       });
       const result: { error?: string; url?: string; reference?: string } = await response.json();
       if (!response.ok) throw new Error(result.error || "Die Anfrage konnte nicht verarbeitet werden.");
@@ -86,7 +97,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady, bankReady
       setReference(result.reference ?? "");
       setNotice({ type: "success", text: mode === "bank" ? "Ihre Banküberweisungs-Bestellung wurde aufgenommen. Zahlungsinformationen mit eindeutiger Referenz wurden an Ihre E-Mail-Adresse gesendet. Bitte erst anhand dieser Angaben überweisen." : "Vielen Dank! Ihre unverbindliche Produktanfrage wurde vom E-Mail-Dienst zur Zustellung an LUVIPRO angenommen. Wir melden uns bei Ihnen." });
       formElement.reset();
-      setQuantity(1);
+      setQuantity(1);setPromoQuote(null);setPromoCode("");
       setRequestKey(crypto.randomUUID());
     } catch (error) {
       setNotice({ type: "error", text: error instanceof Error ? error.message : "Bitte versuchen Sie es erneut." });
@@ -143,6 +154,8 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady, bankReady
         )}
 
         <form onSubmit={submit} className="space-y-7">
+      <Link href="/inspections/checkout?product=device" className="mb-5 inline-block text-cyan-300 underline">Mit bestehendem Konto und Promo Code bestellen · ohne Zahlung</Link>
+
           <input className="hidden" type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
           <section>
             <h2 className="mb-5 text-xl font-bold text-white">1. Unternehmen & Kontakt</h2>
@@ -179,6 +192,7 @@ export function OrderForm({ initialMode, paymentsReady, preorderReady, bankReady
             <label className={`${labelClass} mt-5`}>Ihre Nachricht (optional)<textarea className={controlClass} name="note" rows={4} maxLength={1000} placeholder="Fragen, Lieferwunsch oder weitere Informationen" /></label>
           </section>
 
+          {mode==="bank"&&<section className="rounded-xl border border-white/15 p-4"><label className={labelClass}>Promo Code (optional)<input className={controlClass} maxLength={32} value={promoCode} onChange={e=>{setPromoCode(e.target.value.toUpperCase());setPromoQuote(null);}}/></label><button type="button" disabled={!promoCode||promoBusy||pending} onClick={applyPromo} className="mt-3 rounded-lg border border-violet-400 px-4 py-2 disabled:opacity-40">{promoBusy?"Wird geprüft…":"Rabatt prüfen"}</button>{promoQuote&&<p role="status" className="mt-3 text-sm text-emerald-200">Netto-Rabatt {moneyEUR(Number(promoQuote.discount_net_cents))}; Gesamt inkl. Versand/USt. {moneyEUR(Number(promoQuote.gross_cents))}. Preisbindung bis {new Date(promoQuote.expires_at).toLocaleTimeString("de-DE")}. Noch keine Bestellung oder Zahlung.</p>}<p className="mt-2 text-xs text-slate-400">Anmeldung mit Ihrem bestehenden LUVIPRO-Konto erforderlich. <Link href="/affiliate/login" className="underline">Anmelden</Link></p></section>}
           <section className="space-y-4 border-t border-white/10 pt-6">
             <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-slate-300">
               <input name="privacyAccepted" type="checkbox" required className="mt-1 h-4 w-4 accent-cyan-400" />

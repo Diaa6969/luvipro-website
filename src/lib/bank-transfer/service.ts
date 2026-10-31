@@ -2,7 +2,6 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { sendHostingerMail } from "@/lib/hostinger-smtp";
 import { configuredDeviceIssuer, renderInvoicePDF, type InvoiceData } from "@/lib/invoicing/document";
-import { calculateInvoicePricing } from "@/lib/invoicing/prices";
 import { bankPaymentReminder, bankPaymentRequest, assertBankOrder, isValidGermanIban, type BankOrder, type BankDetails } from "./logic";
 import type { ShopInquiry } from "@/lib/store";
 
@@ -83,6 +82,9 @@ export async function createBankOrder(d: ShopInquiry, requestKey: string, ipHash
   const order = await getBankOrder(info.order_id);
   assertBankOrder(order);
 
+  return sendBankOrderInstructions(order);
+}
+async function sendBankOrderInstructions(order:BankOrder){
   if (order.payment_mail_status === "pending") {
     const claimed = await patchOrder(order.id, "pending", { payment_mail_status: "sending" });
     if (claimed) {
@@ -109,6 +111,18 @@ export async function createBankOrder(d: ShopInquiry, requestKey: string, ipHash
   }
   return { reference: order.invoice_number, status: "instructions_sent" as const };
 }
+
+export async function createPromoBankOrder(d:ShopInquiry,requestKey:string,ipHash:string,actor:string,quoteId:string){
+ if(!isBankTransferReady())throw Error("Payments disabled");
+ const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+ if(!uuid.test(actor)||!uuid.test(quoteId)||!uuid.test(requestKey))throw Error("Invalid quote/session");
+ // The order route is a DEVICE checkout. Never silently purchase a different product.
+ const quotes=await db<{product_kind:string;customer_uid:string}[]>(`luvipro_promo_quotes?id=eq.${quoteId}&select=product_kind,customer_uid&limit=1`);
+ if(quotes[0]?.product_kind!=="device"||quotes[0].customer_uid!==actor)throw Error("Own device quote required");
+ const result=await db<{order_id:string}>("rpc/luvipro_promo_order_create_v1",{p_actor:actor,p_quote:quoteId,p_request_key:requestKey,p_ip_hash:ipHash,p_billing:{company:d.company,contact:d.contact,address:d.street,postal_code:d.postalCode,city:d.city,phone:d.phone,terms_accepted:d.termsAccepted,privacy_accepted:d.privacyAccepted}});
+ const order=await getBankOrder(result.order_id);assertBankOrder(order);return sendBankOrderInstructions(order);
+}
+
 export async function confirmBankPayment(id: string, actorId: string, bankReference: string, paidAt: string) {
   if (!/^[0-9a-f-]{36}$/.test(actorId) ||
       bankReference.trim().length < 5 || bankReference.trim().length > 120 ||
@@ -163,10 +177,10 @@ export async function deliverBankOrder(id: string, deliveredAt: string) {
   if (invoiceRows[0]?.delivery_state !== "reserved") {
     throw new Error("Invoice previously generated or under manual review");
   }
-  const totals = calculateInvoicePricing("device", order.quantity);
-  assertBankOrder(order);
+  const totals = assertBankOrder(order);
   const inv: InvoiceData = {
-    invoiceNumber: order.invoice_number, kind: "device", quantity: order.quantity,
+    invoiceNumber: order.invoice_number, kind: order.product_kind??"device", quantity: order.quantity,
+    ...(order.promo_snapshot?{promoSnapshot:order.promo_snapshot}:{}),
     invoiceDate: today, serviceDate: deliveredAt, paid: true, demo: false,
     issuer,
     customer: {

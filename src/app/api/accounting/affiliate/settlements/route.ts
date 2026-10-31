@@ -1,7 +1,8 @@
 import { NextRequest,NextResponse } from "next/server";
 import { isSameOrigin } from "@/lib/accounting/admin-auth";
-import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
-import { affiliateDb,affiliateConfigured } from "@/lib/affiliate/server";
+import { isAuthorizedAffiliateAdmin as isAuthorizedFinanceAdmin } from "@/lib/affiliate/admin-access";
+import { affiliateDb,affiliateBackendConfigured } from "@/lib/affiliate/server";
+import { financeAdminActor } from "@/lib/affiliate/admin-actor";
 export const runtime="nodejs";
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const DATE=/^20\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/;
@@ -11,26 +12,14 @@ function val(data:FormData,key:string,max=200){
  return v.trim();
 }
 function id(v:string){if(!UUID.test(v))throw Error("Invalid id");return v;}
-async function actor(req:NextRequest){
- const bearer=req.headers.get("authorization")||"";
- if(/^Bearer [\w.-]{40,4000}$/.test(bearer)){
-  const host=process.env.SUPABASE_URL||"",key=process.env.SUPABASE_SERVICE_ROLE_KEY||"";
-  const response=await fetch(host+"/auth/v1/user",{
-   headers:{"Authorization":bearer,"apikey":key},cache:"no-store",signal:AbortSignal.timeout(5000)
-  });
-  if(!response.ok)throw Error("Invalid admin");
-  const u=await response.json() as {id?:string};return id(u.id||"");
- }
- return id(process.env.FINANCE_ADMIN_OPERATOR_UID||"");
-}
 export async function POST(req:NextRequest){
- if(!affiliateConfigured())return NextResponse.json({error:"Affiliate finance not enabled"},{status:503});
+ if(!affiliateBackendConfigured())return NextResponse.json({error:"Affiliate finance not enabled"},{status:503});
  if(!req.headers.has("authorization")&&!isSameOrigin(req))return NextResponse.json({error:"Forbidden origin"},{status:403});
  if(!(await isAuthorizedFinanceAdmin(req)))return NextResponse.json({error:"Unauthorized"},{status:401});
  const len=Number(req.headers.get("content-length")||"0");
  if(!Number.isSafeInteger(len)||len<1||len>12000)return NextResponse.json({error:"Payload too large"},{status:413});
  try{
-  const f=await req.formData(),action=val(f,"action",36),admin=await actor(req);
+  const f=await req.formData(),action=val(f,"action",36),admin=await financeAdminActor(req);
   if(action==="save_tax"){
    const affiliate=id(val(f,"affiliate_id",36));
    const mode=val(f,"vat_mode",30);

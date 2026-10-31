@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import ts from 'typescript';
+import { createRequire } from 'node:module';
+const require=createRequire(import.meta.url);
+function load(file,deps){const m={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;new Function('require','module','exports',code)(n=>{if(n in deps)return deps[n];throw Error('Unexpected dependency '+n);},m,m.exports);return m.exports;}
+const prices=load('src/lib/invoicing/prices.ts',{'@/lib/store':{DEVICE:{unitPriceNetCents:300000,shippingNetCentsGermany:2999}},'@/lib/inspection-pricing':{INSPECTION_SERVICES:[{id:'standard',name:'Standard',priceCents:5999},{id:'premium',name:'Premium',priceCents:11999}]}});
+const s={product_kind:'device',quantity:1,currency:'EUR',unit_net_cents:'300000',goods_net_before_discount_cents:'300000',discount_net_cents:'30000',goods_net_after_discount_cents:'270000',shipping_net_cents:'2999',net_cents:'272999',vat_cents:'51870',gross_cents:'324869',vat_bps:1900};
+const p=prices.promoInvoicePricing(s);assert.equal(p.grossCents,324869);assert.equal(p.lines[0].netCents,270000);assert.equal(p.lines[1].netCents,2999);
+for(const bad of [{...s,gross_cents:'324870'},{...s,vat_cents:'57570'},{...s,goods_net_after_discount_cents:'300000'},{...s,quantity:2},{...s,currency:'USD'},{...s,discount_net_cents:'30000.00'},{...s,goods_net_after_discount_cents:'0'},{...s,vat_bps:0}])assert.throws(()=>prices.promoInvoicePricing(bad));
+const standard={...s,product_kind:'inspection_standard',unit_net_cents:'5041',goods_net_before_discount_cents:'5041',discount_net_cents:'504',goods_net_after_discount_cents:'4537',shipping_net_cents:'0',net_cents:'4537',vat_cents:'862',gross_cents:'5399'};assert.equal(prices.promoInvoicePricing(standard).grossCents,5399);
+const logic=load('src/lib/bank-transfer/logic.ts',{'@/lib/invoicing/prices':prices});const order={invoice_number:'LUV-2026-9900001',quantity:1,promo_snapshot:s,product_kind:'device',net_cents:272999,vat_cents:51870,gross_cents:324869};assert.equal(logic.assertBankOrder(order).grossCents,324869);assert.throws(()=>logic.assertBankOrder({...order,gross_cents:360569}));assert.throws(()=>logic.assertBankOrder({...order,product_kind:'inspection_standard'}));
+const document=load('src/lib/invoicing/document.ts',{'server-only':{},'pdf-lib':require('pdf-lib'),'./prices':prices});
+const party={name:'SYNTHETIC TEST ONLY',address1:'SYNTHETIC STREET 123',postalCode:'12345',city:'SYNTHETIC CITY',country:'DE',email:'synthetic@example.invalid'};
+const invoice={invoiceNumber:'LUV-2026-9900001',kind:'device',quantity:1,promoSnapshot:s,invoiceDate:'2026-10-30',serviceDate:'2026-10-30',issuer:{...party,taxNumberOrVatId:'SYNTHETIC-TEST-TAX'},customer:party,paid:true,demo:true};
+assert.equal(document.validateInvoice(invoice).grossCents,324869);assert.throws(()=>document.validateInvoice({...invoice,quantity:2}));
+const bytes=await document.renderInvoicePDF(invoice);assert.equal(Buffer.from(bytes).subarray(0,5).toString(),'%PDF-');
+const pdf=await require('pdf-lib').PDFDocument.load(bytes);assert.equal(pdf.getPageCount(),1);
+const outputPath=process.env.LUVIPRO_SYNTHETIC_PDF_PATH || path.join(os.tmpdir(),'luvipro_synthetic_discounted_device_invoice.pdf');
+fs.mkdirSync(path.dirname(outputPath),{recursive:true});
+fs.writeFileSync(outputPath,bytes);
+console.log('Promo pricing / trusted order / discounted invoice: 19 assertions PASS; one synthetic preview PDF generated; no network or payments.');
