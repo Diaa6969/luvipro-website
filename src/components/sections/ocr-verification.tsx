@@ -1,6 +1,7 @@
 import { FileScan, LockKeyhole, ScanText } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { SemanticFilm } from "@/components/ui/semantic-film";
 
 export function OcrVerification() {
   return (
@@ -16,8 +17,9 @@ export function OcrVerification() {
             {[
               { icon: ScanText, title: "FIN eindeutig zuordnen" },
               { icon: LockKeyhole, title: "Zugriffsrechte berücksichtigen" },
-            ].map((item) => (
-              <div key={item.title} className="rounded-lg border border-white/10 bg-white/[0.045] p-5">
+            ].map((item, index) => (
+              <div key={item.title} className="semantic-card p-5">
+                <SemanticFilm scene={(["ocrVIN","ocrAccess"] as const)[index]} />
                 <item.icon className="h-7 w-7 text-pulse" />
                 <p className="mt-4 font-semibold text-white">{item.title}</p>
               </div>

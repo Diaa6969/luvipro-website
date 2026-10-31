@@ -14,6 +14,7 @@ on:
       - feature/affiliate-transfer-confirmation-reminders
       - feature/affiliate-agb-20261029
       - fix/affiliate-public-no-demo
+      - preview/semantic-film-background-v2-20261031
       - feature/customer-first-homepage-20261030
   workflow_dispatch:
 
@@ -58,6 +59,20 @@ jobs:
         run: npm run test:legal-published
       - name: Check customer vehicle-inspection navigation and workshop search
         run: npm run test:vehicle-check
+      - name: Validate semantic footage placement behind readable text
+        run: npm run test:semantic-film
+      - name: Verify seventeen unique licensed vehicle/inspection video files
+        run: node scripts/test-semantic-video-urls.mjs
+      - name: Prepare FFmpeg for video contact-sheet visual QA (preview only)
+        if: github.ref_name == 'preview/semantic-film-background-v2-20261031'
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+      - name: Audit video stills for people, logos and embedded text (preview only)
+        if: github.ref_name == 'preview/semantic-film-background-v2-20261031'
+        run: node scripts/audit-cinematic-samples.mjs
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'

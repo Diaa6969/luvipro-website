@@ -1,6 +1,7 @@
 import { CarFront, FileCheck2, MapPinned, ScanSearch, Search, ShieldCheck, Wrench } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { SemanticFilm } from "@/components/ui/semantic-film";
 
 const ecosystemItems = [
   { icon: ScanSearch, title: "Lack & Karosserie", text: "Partnerwerkstätten prüfen Lackoberflächen und halten auffällige Stellen nachvollziehbar fest." },
@@ -26,7 +27,8 @@ export function Ecosystem() {
         <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {ecosystemItems.map((item, index) => (
             <Reveal key={item.title} delay={index * 0.05}>
-              <div className="group h-full rounded-lg border border-white/10 bg-white/[0.045] p-6 transition hover:border-pulse/40 hover:bg-pulse/[0.07]">
+              <div className="semantic-card group h-full p-6 transition">
+                <SemanticFilm scene={(["ecoPaint","ecoVIN","ecoInspection","ecoPDF","ecoPartner","ecoTrust"] as const)[index]} />
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-pulse/10 text-pulse">
                   <item.icon className="h-6 w-6" />
                 </div>

@@ -1,6 +1,7 @@
 import { BadgeEuro, Car, UserCheck, Wrench } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { SemanticFilm } from "@/components/ui/semantic-film";
 
 const flows = [
   { icon: UserCheck, title: "Für Autokäufer", steps: ["Partnerwerkstatt finden", "Fahrzeugcheck anfragen", "Ergebnisse und vorhandene Berichte prüfen"] },
@@ -23,7 +24,8 @@ export function HowItWorks() {
         <div className="mt-14 grid gap-5 lg:grid-cols-3">
           {flows.map((flow, index) => (
             <Reveal key={flow.title} delay={index * 0.08}>
-              <div className="glass-panel h-full rounded-lg p-6">
+              <div className="semantic-card h-full p-6">
+                <SemanticFilm scene={(["howBuyer","howSeller","howWorkshop"] as const)[index]} />
                 <div className="flex items-center justify-between">
                   <flow.icon className="h-9 w-9 text-pulse" />
                   <Car className="h-6 w-6 text-white/30" />
