@@ -1,22 +1,29 @@
-# LUVIPRO authentic automotive video preview – licensing and deployment
+# LUVIPRO authentic automotive video preview — licence and validation
 
-The previous custom SVG illustration was rejected in the review. This **preview-only** branch replaces the visible hero artwork and the Standard/Premium and customer-benefit cards with actual video recordings of vehicles. There is **no production merge**.
+This remains a **Vercel preview-only branch**; it has NOT been merged into production main.
 
-## Royalty-free source videos – commercial usage reviewed 2026-10-31
+The original stylized SVG car was replaced with actual footage captured by cameras. Footage depicts real automobiles/traffic, not LUVIPRO UV inspections. The purple lighting effect is a CSS post-production illustration only.
 
-All footage is genuine stock automotive camera footage from Mixkit under **Mixkit Stock Video Free License**, not a 3D illustration and not the Mixkit *Restricted (personal use only)* license. Each of these specific video pages explicitly states commercial use:
+## Stock media under the Pexels License (commercial use)
 
-1. Garage hero (studio): https://mixkit.co/free-stock-video/parked-red-sports-car-66/ — garage pan of red parked sports car.
-2. Standard + surface close-up (detail): https://mixkit.co/free-stock-video/closeup-of-red-sports-car-49/ — camera pan of vehicle exterior details.
-3. Premium + automotive components (engine): https://mixkit.co/free-stock-video/closeup-of-sports-car-engine-65/ — real close-up of a motor.
-4. Background supporting cards (night): https://mixkit.co/free-stock-video/rear-view-of-a-car-through-the-city-42033/ — rear view of car driving on streets after dark.
+Pexels expressly permits using its licensed videos for commercial websites without attribution; do not imply any car manufacturer, driver or filmmaker endorses LUVIPRO.
 
-All MP4 files are requested from the Mixkit assets host only if their component scrolls into the viewport. They are muted, looped, inline and disabled with `prefers-reduced-motion`; static UV-toned fallbacks show if files fail. The clips are tinted/graded for LUVIPRO and **are not footage of a LUVIPRO device or real UV inspections**. UI text must not imply that the depicted car was actually inspected.
+Sources:
 
-### Operational tradeoff
+- **Night traffic/hero**: [Night traffic](https://www.pexels.com/video/night-traffic-5258413/) — `https://videos.pexels.com/video-files/5258413/5258413-hd_1920_1080_25fps.mp4`
+- **City junction/cinematic cards**: [Night traffic on a junction](https://www.pexels.com/video/night-traffic-on-junction-in-city-10433645/) — `https://videos.pexels.com/video-files/10433645/10433645-hd_1920_1080_25fps.mp4`
+- **Real traffic video**: [Pexels traffic video 1192116](https://www.pexels.com/video/1192116/) — `https://videos.pexels.com/video-files/1192116/1192116-sd_640_360_30fps.mp4`
 
-The video CDN is externally hosted; this avoids uploading binary assets through the text-only GitHub connector, but introduces a third-party dependency and direct requests to the assets CDN. Before full production deployment, self-host compressed verified MP4/WebM assets on a suitable video/CDN host (with retained licensing records), test video actual playback on Safari / Android, consider GDPR/privacy disclosures about media host and implement static posters. Do not represent an MP4 URL format as guaranteed until remote checks and browser playback succeed.
+Official licence: https://www.pexels.com/license/ (also https://www.pexels.com/legal-pages/license/).
 
-Avoid Mixkit video pages that say **Restricted License / Personal Use only** (for example 47829, 47831 or 17134); those have not been used. Verify each asset's official license record on the linked item page.
+The previous Mixkit MP4 candidate links all returned **403** from GitHub CI and have been removed from the site code. Actual Pexels MP4 candidates listed here were verified as HTTP **206 video/mp4** with correct MP4 file headers in GitHub Actions 2026-10-31.
 
-Performance guidelines: lazy only on viewport, one rendition per asset, no audio, no 4K video, no animated SVG car, and do not autoplay for users requesting reduced motion.
+**Caveats before approval:** Footage is generic automotive ambience, NOT genuine LUVIPRO device use, UV fluorescence, mechanical diagnostics or a workshop. To feature authentic UV scans we need first-party footage or rights-cleared real footage from an actual inspection. The Pexels CDN introduces an external request on playback; for long-term production use, retain asset licence records, self-host compressed video files or a trusted video CDN, check privacy disclosures, and perform visual playback checks on Safari/Android. No automatic sound, no 4K streams, media lazy-loaded only when in viewport, pauses offscreen and disables with reduced-motion preference.
+
+## Visual coverage
+
+- DE, EN, AR, European translated hero videos.
+- Standard and Premium price cards with distinct visible video loops.
+- Six German benefit cards and core translated feature cards with video crops.
+- Remaining cards gain a stronger visible UV light sheen and hover/focus motion.
+- This branch is a **draft PR** and production main remains unchanged until explicitly approved by the user.
