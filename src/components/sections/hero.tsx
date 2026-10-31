@@ -11,7 +11,7 @@ const stats = [
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen bg-radial-grid pt-24 sm:pt-32">
+    <section className="relative min-h-screen pt-24 sm:pt-32">
       <div className="section-shell relative grid min-w-0 items-center gap-10 pb-20 sm:gap-12 sm:pb-24 lg:grid-cols-[1.02fr_0.98fr]">
         <Reveal>
           <div className="min-w-0 max-w-full">
