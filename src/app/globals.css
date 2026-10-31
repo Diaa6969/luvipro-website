@@ -122,17 +122,6 @@ body {
     linear-gradient(145deg, #02040a 0%, #07101e 48%, #03040a 100%);
 }
 
-.cinematic-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.48;
-  background-image:
-    linear-gradient(rgba(217, 247, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(217, 247, 255, 0.04) 1px, transparent 1px);
-  background-size: 72px 72px;
-  animation: grid-drift 22s linear infinite;
-}
-
 .cinematic-glow {
   position: absolute;
   width: 46vw;
@@ -245,12 +234,6 @@ body {
   100% {
     transform: translateX(320%) skewX(-18deg);
     opacity: 0;
-  }
-}
-
-@keyframes grid-drift {
-  to {
-    background-position: 72px 72px;
   }
 }
 
@@ -367,4 +350,183 @@ body {
   .glass-panel:hover {
     transform: none;
   }
+}
+
+/* 2026-10-31 — Meaningful film design V2. Real inspection and paintwork
+   footage BEHIND ALL CARD COPY, not small unrelated video thumbnails. */
+.cinematic-page .bg-radial-grid { background-image: none !important; }
+.cinematic-page section.bg-obsidian { background-color: rgba(4, 7, 17, .70); }
+.cinematic-page section.bg-midnight { background-color: rgba(7, 11, 23, .75); }
+.semantic-atmosphere {
+  background: linear-gradient(160deg, #04050e, #080a1b 47%, #02040b);
+  overflow: hidden;
+}
+.semantic-ambient-aurora {
+  position: absolute;
+  width: min(95vw, 1300px);
+  height: min(60vw, 630px);
+  background: radial-gradient(ellipse, rgba(125, 58, 231, .29) 0%, rgba(73, 37, 151, .12) 36%, transparent 70%);
+  filter: blur(60px);
+  border-radius: 50%;
+  opacity: .65;
+  pointer-events: none;
+  animation: luvi-atmosphere-drift 21s ease-in-out infinite alternate;
+}
+.semantic-ambient-aurora-left { left: -32%; top: 4%; }
+.semantic-ambient-aurora-right { right: -40%; bottom: -12%; animation-delay: -9s; animation-duration: 26s; background: radial-gradient(ellipse, rgba(20, 138, 202, .21), transparent 74%); }
+.semantic-ambient-beam {
+  position: absolute;
+  width: 100vw; height: 8vh; top: 55%; left: -60%;
+  opacity: .2; filter: blur(20px);
+  transform: rotate(-17deg);
+  background: linear-gradient(90deg, transparent, rgba(144, 84, 248, .43), rgba(41, 213, 255, .27), transparent);
+  animation: luvi-atmosphere-light 19s ease-in-out infinite alternate;
+}
+@keyframes luvi-atmosphere-drift {
+  from { transform: translate3d(-3%, 3%, 0) scale(.91); }
+  to { transform: translate3d(12%, -5%, 0) scale(1.12); }
+}
+@keyframes luvi-atmosphere-light {
+  from { translate: -12% -5vh; opacity: .11; }
+  to { translate: 90% 9vh; opacity: .25; }
+}
+
+.semantic-film {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+  background: #0a101d;
+}
+.semantic-film-video {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+  opacity: .47;
+  filter: contrast(1.12) brightness(.69) saturate(.68) hue-rotate(7deg);
+  transform: scale(1.02);
+  transition: transform 750ms ease, filter 750ms ease;
+}
+.semantic-film-still {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(134deg, rgba(11, 10, 28, .98), rgba(38, 20, 65, .65) 46%, rgba(8, 21, 33, .96));
+}
+.semantic-film-contrast {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(125deg, rgba(5, 8, 19, .89) 0%, rgba(6, 10, 22, .79) 58%, rgba(5, 9, 22, .57) 100%),
+    linear-gradient(0deg, rgba(6, 7, 21, .73), transparent 55%);
+}
+.semantic-film-light {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(112deg, transparent 0%, rgba(117, 54, 232, .08) 37%, rgba(129, 62, 251, .14) 57%, rgba(19, 202, 247, .05) 82%, transparent 100%);
+  background-size: 250% 100%;
+  animation: luvi-semantic-sweep 12s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+@keyframes luvi-semantic-sweep {
+  from { background-position: -85% 0; opacity: .37; }
+  to { background-position: 95% 0; opacity: .78; }
+}
+.semantic-film-ambient .semantic-film-video {
+  opacity: .29;
+  filter: blur(3px) contrast(1.22) brightness(.58) saturate(.45);
+}
+.semantic-film-ambient .semantic-film-contrast {
+  background: rgba(4, 5, 15, .80);
+}
+.semantic-film-hero .semantic-film-video {
+  opacity: .85;
+  filter: contrast(1.15) brightness(.75) saturate(.72);
+}
+.semantic-film-hero .semantic-film-contrast {
+  background:
+    linear-gradient(90deg, rgba(3, 5, 16, .98) 0%, rgba(4, 7, 19, .88) 39%, rgba(4, 7, 19, .42) 82%, rgba(4, 7, 19, .53)),
+    linear-gradient(0deg, rgba(3, 5, 16, .7), transparent 47%);
+}
+.semantic-film-card .semantic-film-video {
+  opacity: .51;
+  filter: contrast(1.2) brightness(.74) saturate(.55);
+}
+.semantic-film-card .semantic-film-contrast {
+  background:
+    linear-gradient(112deg, rgba(5, 8, 20, .91), rgba(5, 8, 20, .78) 56%, rgba(7, 9, 22, .57)),
+    linear-gradient(0deg, rgba(5, 7, 21, .6), transparent 66%);
+}
+.semantic-film-section .semantic-film-video { opacity: .54; }
+.semantic-film-section .semantic-film-contrast { background: linear-gradient(90deg, rgba(5, 8, 20, .88), rgba(5, 9, 20, .63)); }
+
+.cinematic-page .semantic-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(147, 104, 241, .32);
+  background: rgba(6, 11, 25, .92);
+  box-shadow: 0 13px 42px rgba(28, 10, 69, .25), inset 0 1px rgba(181, 127, 251, .10);
+  transition: transform 330ms cubic-bezier(.22,.75,.2,1), border-color 330ms ease, box-shadow 330ms ease;
+}
+.cinematic-page .semantic-card > :not(.semantic-film) {
+  position: relative;
+  z-index: 2;
+}
+.cinematic-page .semantic-card :is(h1,h2,h3,h4,p,span,a,button) {
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .42);
+}
+.cinematic-page .semantic-card:focus-within {
+  border-color: rgba(165, 117, 245, .72);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cinematic-page .semantic-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(158, 104, 246, .66);
+    box-shadow: 0 21px 62px rgba(102, 52, 178, .22), 0 0 28px rgba(18, 170, 228, .07);
+  }
+  .cinematic-page .semantic-card:hover .semantic-film-video {
+    transform: scale(1.06);
+    filter: contrast(1.14) brightness(.83) saturate(.86);
+  }
+}
+.semantic-hero {
+  position: relative;
+  isolation: isolate;
+  background: #050815 !important;
+}
+.semantic-hero > .section-shell { position: relative; z-index: 2; }
+.semantic-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 78% 49%, rgba(103, 31, 183, .11), transparent 60%);
+  z-index: 1;
+  pointer-events: none;
+}
+.semantic-hero-panel {
+  border: 1px solid rgba(175, 128, 255, .32);
+  border-radius: 20px;
+  background: rgba(12, 12, 27, .67);
+  box-shadow: 0 25px 60px rgba(8, 5, 22, .36);
+  backdrop-filter: blur(13px);
+  -webkit-backdrop-filter: blur(13px);
+}
+@media (max-width: 640px) {
+  .semantic-film-hero .semantic-film-video { opacity: .48; object-position: center; }
+  .semantic-film-hero .semantic-film-contrast { background: rgba(4, 7, 19, .78); }
+  .semantic-film-card .semantic-film-video { opacity: .36; }
+  .semantic-film-ambient .semantic-film-video { opacity: .16; }
+  .semantic-ambient-aurora { filter: blur(40px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .semantic-film-light, .semantic-ambient-aurora, .semantic-ambient-beam {
+    animation: none !important;
+  }
+  .cinematic-page .semantic-card, .semantic-film-video { transition: none !important; transform: none !important; }
 }
