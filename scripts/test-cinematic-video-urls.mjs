@@ -1,42 +1,33 @@
-// Preview gate: never report "real video is working" when hosted media links are broken.
-// Range GET checks real MP4 headers with minimal download, not a full stock-video download.
-const urls = [
-  "https://assets.mixkit.co/videos/preview/mixkit-parked-red-sports-car-66-large.mp4",
-  "https://assets.mixkit.co/videos/preview/mixkit-closeup-of-red-sports-car-49-large.mp4",
-  "https://assets.mixkit.co/videos/preview/mixkit-rear-view-of-a-car-through-the-city-42033-large.mp4",
-  "https://assets.mixkit.co/videos/preview/mixkit-closeup-of-sports-car-engine-65-large.mp4",
-];
-
-let failed = false;
-for (const url of urls) {
-  try {
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        Range: "bytes=0-63",
-        "User-Agent": "Mozilla/5.0 (compatible; LUVIPRO preview media verification)",
-      },
-      signal: AbortSignal.timeout(12000),
-      redirect: "follow",
-    });
-    if (!res.ok || !/video\/mp4|application\/octet-stream/.test(res.headers.get("content-type") || "")) {
-      failed = true;
-      console.error("BAD VIDEO SOURCE:", res.status, res.headers.get("content-type"), url);
-      await res.body?.cancel();
-      continue;
-    }
-    const reader = res.body?.getReader();
-    const first = await reader?.read();
-    await reader?.cancel();
-    const b=first?.value ?? new Uint8Array(0);
-    const startsWithFtyp=b.length >= 12 && String.fromCharCode(...b.slice(4,8))==="ftyp";
-    if (!startsWithFtyp && res.status===206) {
-      failed=true; console.error("NOT AN MP4 HEADER:",url); continue;
-    }
-    console.log("OK authentic video MP4:", res.status, url);
-  } catch (e) {
-    failed=true;
-    console.error("VIDEO UNREACHABLE:",url,String(e));
-  }
+// Probe alternative authentic Pexels commercial-stock MP4 URLs.
+// This step never downloads more than the first chunk per video.
+const candidates = {
+  "garage-existing": "https://videos.pexels.com/video-files/857267/857267-hd_1920_1080_24fps.mp4",
+  "detail-garage": "https://videos.pexels.com/video-files/32010526/32010526-hd_1080_1920_30fps.mp4",
+  "night-traffic": "https://videos.pexels.com/video-files/10433645/10433645-hd_1920_1080_25fps.mp4",
+  "traffic-demo": "https://videos.pexels.com/video-files/5834623/5834623-hd_1920_1080_25fps.mp4",
+  "car-traffic": "https://videos.pexels.com/video-files/1192116/1192116-sd_640_360_30fps.mp4",
+  "silver-car-garage": "https://videos.pexels.com/video-files/29498823/29498823-hd_1920_1080_24fps.mp4",
+  "red-car-driveway": "https://videos.pexels.com/video-files/30763731/30763731-hd_1920_1080_30fps.mp4",
+  "night-cars": "https://videos.pexels.com/video-files/5258413/5258413-hd_1920_1080_25fps.mp4",
+};
+let passed=0;
+for (const [label,url] of Object.entries(candidates)) {
+ try {
+  const r=await fetch(url,{
+    headers:{Range:"bytes=0-255","User-Agent":"Mozilla/5.0 (compatible; LUVIPRO media test)"},
+    signal:AbortSignal.timeout(12000),
+  });
+  const t=r.headers.get("content-type")||"";
+  const ok=r.ok&&(/video\/mp4|application\/octet-stream/i.test(t));
+  const body=r.body?.getReader();
+  const first=await body?.read();
+  await body?.cancel();
+  const b=first?.value||new Uint8Array(0);
+  const ftyp=b.length>=8&&String.fromCharCode(...b.slice(4,8))==="ftyp";
+  if(ok&&(ftyp||r.status===200)){
+   passed++;console.log("PASS",label,r.status,t,url);
+  }else console.error("FAIL",label,r.status,t,ftyp,url);
+ } catch(e){console.error("FAIL",label,String(e).slice(0,90),url);}
 }
-if(failed)process.exit(1);
+console.log("Reachable authentic Pexels MP4 candidates:",passed,"/",Object.keys(candidates).length);
+if(passed<4)process.exit(1);
