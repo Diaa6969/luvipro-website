@@ -453,13 +453,13 @@ body {
     linear-gradient(0deg, rgba(3, 5, 16, .7), transparent 47%);
 }
 .semantic-film-card .semantic-film-video {
-  opacity: .51;
-  filter: contrast(1.2) brightness(.74) saturate(.55);
+  opacity: .91;
+  filter: contrast(1.13) brightness(.70) saturate(.73);
 }
 .semantic-film-card .semantic-film-contrast {
   background:
-    linear-gradient(112deg, rgba(5, 8, 20, .91), rgba(5, 8, 20, .78) 56%, rgba(7, 9, 22, .57)),
-    linear-gradient(0deg, rgba(5, 7, 21, .6), transparent 66%);
+    linear-gradient(110deg, rgba(4, 7, 19, .79) 0%, rgba(4, 7, 19, .65) 54%, rgba(5, 9, 21, .43)),
+    linear-gradient(0deg, rgba(4, 7, 20, .52), transparent 65%);
 }
 .semantic-film-section .semantic-film-video { opacity: .54; }
 .semantic-film-section .semantic-film-contrast { background: linear-gradient(90deg, rgba(5, 8, 20, .88), rgba(5, 9, 20, .63)); }
@@ -520,7 +520,7 @@ body {
 @media (max-width: 640px) {
   .semantic-film-hero .semantic-film-video { opacity: .48; object-position: center; }
   .semantic-film-hero .semantic-film-contrast { background: rgba(4, 7, 19, .78); }
-  .semantic-film-card .semantic-film-video { opacity: .36; }
+  .semantic-film-card .semantic-film-video { opacity: .67; }
   .semantic-film-ambient .semantic-film-video { opacity: .16; }
   .semantic-ambient-aurora { filter: blur(40px); }
 }
