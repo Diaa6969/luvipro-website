@@ -1,55 +1,62 @@
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-const read=(p)=>readFileSync(p,"utf8");
-const film=read("src/components/ui/semantic-film.tsx");
+const read=path=>readFileSync(path,"utf8");
 const manifest=read("src/lib/semantic-film-clips.ts");
+const film=read("src/components/ui/semantic-film.tsx");
+const generated=read("src/components/ui/generated-clip.tsx");
 const css=read("src/app/globals.css");
-const atmosphere=read("src/components/ui/animated-atmosphere.tsx");
-const hero=read("src/components/sections/hero.tsx");
-const pricing=read("src/components/sections/pricing.tsx");
-const ecosystem=read("src/components/sections/ecosystem.tsx");
-const problem=read("src/components/sections/problem.tsx");
-const flow=read("src/components/sections/how-it-works.tsx");
-const trust=read("src/components/sections/security-trust.tsx");
+const cards={
+ hero:read("src/components/sections/hero.tsx"),
+ problem:read("src/components/sections/problem.tsx"),
+ ecosystem:read("src/components/sections/ecosystem.tsx"),
+ pricing:read("src/components/sections/pricing.tsx"),
+ how:read("src/components/sections/how-it-works.tsx"),
+ trust:read("src/components/sections/security-trust.tsx"),
+ ocr:read("src/components/sections/ocr-verification.tsx"),
+ uv:read("src/components/sections/uv-scanner.tsx"),
+};
+const scenes=[...manifest.matchAll(/^  (\w+): \{ kind: "(stock|generated)"/gm)];
+assert.equal(scenes.length,25,"Exactly 25 unique scenic videos");
+assert.equal(new Set(scenes.map(x=>x[1])).size,25);
+assert.equal(scenes.filter(x=>x[2]==="stock").length,17);
+assert.equal(scenes.filter(x=>x[2]==="generated").length,8);
+const ids=[...manifest.matchAll(/videos\.pexels\.com\/video-files\/(\d+)\//g)].map(x=>x[1]);
+assert.equal(ids.length,17);
+assert.equal(new Set(ids).size,17);
+for(const unwanted of ["11901729","4707143","8470382","6870334","6870341","20693173","6637310","6159183","4822920","6159285"])
+  assert.ok(!ids.includes(unwanted),"Unwanted logo/indicator/person footage remains: "+unwanted);
+assert.match(manifest,/  ambient: \{ kind: "stock", src: "https:\/\/videos\.pexels\.com\/video-files\/8033487\//);
+assert.match(manifest,/  hero: \{ kind: "stock", src: "https:\/\/videos\.pexels\.com\/video-files\/6159204\//);
+assert.match(film,/clip\?\.kind === "stock"/);
+assert.match(film,/clip\?\.kind === "generated"/);
+assert.match(film,/GeneratedClip theme=\{clip\.theme\}/);
+assert.match(film,/prefers-reduced-motion: reduce/);
+assert.match(film,/IntersectionObserver/);
+assert.match(film,/saveData/);
+assert.match(generated,/captureStream\(12\)/);
+assert.match(generated,/requestAnimationFrame/);
+assert.match(generated,/<video ref=\{node\}/);
+assert.match(css,/\.semantic-film-ambient \.semantic-film-video \{\s*opacity: \.87/);
+assert.doesNotMatch(css,/\.cinematic-grid \{/);
+assert.match(cards.hero,/\["statUV","statVIN","statPDF"\]/);
+assert.match(cards.problem,/\["problemPaint","problemDocs","problemChain"\]/);
+assert.match(cards.ecosystem,/\["ecoPaint","ecoVIN","ecoInspection","ecoPDF","ecoPartner","ecoTrust"\]/);
+assert.match(cards.pricing,/priceStandard" : "pricePremium"/);
+assert.match(cards.how,/\["howBuyer","howSeller","howWorkshop"\]/);
+assert.match(cards.trust,/\["trustPrivacy","trustIntegrity","trustPartner"\]/);
+assert.match(cards.ocr,/\["ocrVIN","ocrAccess"\]/);
+assert.match(cards.uv,/scene="uvSection" mode="section"/);
+for(const [name,txt] of Object.entries(cards))
+ assert.ok(!txt.includes("<SemanticFilm />"),"Card without video in "+name);
 const enar=read("src/components/international/international-home.tsx");
 const eu=read("src/components/international/european-home.tsx");
-const manifestIds=[...manifest.matchAll(/videos\.pexels\.com\/video-files\/(\d+)\//g)].map(m=>m[1]);
-assert.equal(manifestIds.length,8,"Exactly eight unique pre-vetted car-only clips");
-assert.equal(new Set(manifestIds).size,8,"A clip must never repeat in the manifest");
-for(const banned of ["8470382","6870334","6870341","20693173","6637310","6157904"]){
- assert.ok(!manifestIds.includes(banned),"Clip has person/screen/printed text concern: "+banned);
-}
-assert.match(manifest,/Pexels Free License/);
-assert.match(film,/scene\?: FilmScene/);
-assert.match(film,/const load = !!scene && inView && motionAllowed && !failed/);
-assert.match(film,/IntersectionObserver/);
-assert.match(film,/prefers-reduced-motion: reduce/);
-assert.match(film,/saveData/);
-assert.match(film,/muted/);
-assert.match(css,/\.semantic-film-card \.semantic-film-contrast/);
-assert.match(css,/\.semantic-film-ambient \.semantic-film-video \{\s*opacity: \.87/);
-assert.match(css,/\.cinematic-page section\.bg-obsidian \{ background-color: rgba\(4, 7, 17, \.46\)/);
-assert.doesNotMatch(css,/\.cinematic-grid \{/);
-assert.doesNotMatch(atmosphere,/cinematic-grid/);
-assert.match(atmosphere,/<SemanticFilm scene="ambient" mode="ambient" \/>/);
-assert.match(hero,/<SemanticFilm scene="hero" mode="hero" \/>/);
-assert.doesNotMatch(hero,/BMW 530d|bg-radial-grid/);
-assert.match(pricing,/scene=\{plan\.id === "standard" \? "standard" : "premium"\}/);
-assert.match(problem,/<SemanticFilm \/>/);
-assert.match(ecosystem,/index === 0 \? <SemanticFilm scene="gloss" \/> : index === 5 \? <SemanticFilm scene="light"/);
-assert.match(flow,/index === 0 \? <SemanticFilm scene="wheel" \/>/);
-assert.match(trust,/<SemanticFilm \/>/);
-assert.match(read("src/components/sections/uv-scanner.tsx"),/scene="paintwork" mode="section"/);
-assert.match(read("src/components/sections/ocr-verification.tsx"),/<SemanticFilm \/>/);
-assert.match(enar,/<SemanticFilm scene="hero" mode="hero" \/>/);
-assert.match(enar,/scene=\{index === 0 \? "standard" : "premium"\}/);
-assert.match(eu,/<SemanticFilm scene="hero" mode="hero" \/>/);
-assert.match(eu,/scene=\{label === "Standard" \? "standard" : "premium"\}/);
-const expected=["ambient","hero","standard","premium","gloss","light","paintwork","wheel"];
-assert.equal(new Set(expected).size,expected.length);
-const deFiles=[atmosphere,hero,pricing,problem,ecosystem,flow,read("src/components/sections/uv-scanner.tsx")];
-for(const key of expected){
- assert.ok(deFiles.some(x=>x.includes(`scene="${key}"`)||x.includes(`? "${key}"`)||x.includes(`: "${key}"`)||x.includes(`? <SemanticFilm scene="${key}"`)||x.includes(`: <SemanticFilm scene="${key}"`)), "Unused unique film: "+key);
-}
+for(const t of [enar,eu])assert.ok(!t.includes("<SemanticFilm />"),"Unfilled translated card");
+assert.match(enar,/\["statUV","statVIN","statPDF"\]/);
+assert.match(enar,/\["problemPaint","problemDocs","problemChain"\]/);
+assert.match(enar,/\["ecoPaint","ecoVIN","ecoInspection","ecoPDF","ecoPartner","ecoTrust"\]/);
+assert.match(enar,/\["howBuyer","howSeller","howWorkshop"\]/);
+assert.match(enar,/\["trustPrivacy","trustIntegrity","trustPartner"\]/);
+assert.match(eu,/\["ecoPaint","ecoVIN","ecoPDF"\]/);
+assert.match(eu,/scene="ocrAccess"/);
 assert.match(read("src/app/products/page.tsx"),/audience="partner"/);
-console.log("PASS: 8 distinct car-part videos, no person/screen/doc clips, stronger global background, no repeats, accessible CSS-only cards.");
+console.log("PASS: 25 unique video scenes, real car videos without Audi/indicator, original generated legal-safe digital videos, no empty cards.");
