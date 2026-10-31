@@ -14,8 +14,8 @@ const trust=read("src/components/sections/security-trust.tsx");
 const enar=read("src/components/international/international-home.tsx");
 const eu=read("src/components/international/european-home.tsx");
 const manifestIds=[...manifest.matchAll(/videos\.pexels\.com\/video-files\/(\d+)\//g)].map(m=>m[1]);
-assert.equal(manifestIds.length,9,"Exactly nine unique pre-vetted car-only clips");
-assert.equal(new Set(manifestIds).size,9,"A clip must never repeat in the manifest");
+assert.equal(manifestIds.length,8,"Exactly eight unique pre-vetted car-only clips");
+assert.equal(new Set(manifestIds).size,8,"A clip must never repeat in the manifest");
 for(const banned of ["8470382","6870334","6870341","20693173","6637310","6157904"]){
  assert.ok(!manifestIds.includes(banned),"Clip has person/screen/printed text concern: "+banned);
 }
@@ -35,7 +35,7 @@ assert.match(atmosphere,/<SemanticFilm scene="ambient" mode="ambient" \/>/);
 assert.match(hero,/<SemanticFilm scene="hero" mode="hero" \/>/);
 assert.doesNotMatch(hero,/BMW 530d|bg-radial-grid/);
 assert.match(pricing,/scene=\{plan\.id === "standard" \? "standard" : "premium"\}/);
-assert.match(problem,/index === 0 \? <SemanticFilm scene="surface"/);
+assert.match(problem,/<SemanticFilm \/>/);
 assert.match(ecosystem,/index === 0 \? <SemanticFilm scene="gloss" \/> : index === 5 \? <SemanticFilm scene="light"/);
 assert.match(flow,/index === 0 \? <SemanticFilm scene="wheel" \/>/);
 assert.match(trust,/<SemanticFilm \/>/);
@@ -45,11 +45,11 @@ assert.match(enar,/<SemanticFilm scene="hero" mode="hero" \/>/);
 assert.match(enar,/scene=\{index === 0 \? "standard" : "premium"\}/);
 assert.match(eu,/<SemanticFilm scene="hero" mode="hero" \/>/);
 assert.match(eu,/scene=\{label === "Standard" \? "standard" : "premium"\}/);
-const expected=["ambient","hero","standard","premium","surface","gloss","light","paintwork","wheel"];
+const expected=["ambient","hero","standard","premium","gloss","light","paintwork","wheel"];
 assert.equal(new Set(expected).size,expected.length);
 const deFiles=[atmosphere,hero,pricing,problem,ecosystem,flow,read("src/components/sections/uv-scanner.tsx")];
 for(const key of expected){
  assert.ok(deFiles.some(x=>x.includes(`scene="${key}"`)||x.includes(`? "${key}"`)||x.includes(`: "${key}"`)||x.includes(`? <SemanticFilm scene="${key}"`)||x.includes(`: <SemanticFilm scene="${key}"`)), "Unused unique film: "+key);
 }
 assert.match(read("src/app/products/page.tsx"),/audience="partner"/);
-console.log("PASS: 9 distinct car-part videos, no person/screen/doc clips, stronger global background, no repeats, accessible CSS-only cards.");
+console.log("PASS: 8 distinct car-part videos, no person/screen/doc clips, stronger global background, no repeats, accessible CSS-only cards.");
