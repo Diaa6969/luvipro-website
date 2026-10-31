@@ -93,7 +93,7 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
           <div className={panel}>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pulse">LUVIPRO · UV / FIN / VIN</p>
             <div className="my-5">
-              <RealCarFootage clip="studio" variant="hero" label="Authentic sports car footage with a stylized violet lighting effect" uvOverlay />
+              <RealCarFootage clip="studio" variant="hero" label="Authentic night-time automotive footage with stylized violet lighting" uvOverlay />
             </div>
             <div className="grid grid-cols-3 gap-2 text-center text-sm">
               {["UV Check","VIN / FIN","PDF"].map(x=><div key={x} className="rounded-xl border border-white/10 bg-black/20 p-3 font-semibold">{x}</div>)}
