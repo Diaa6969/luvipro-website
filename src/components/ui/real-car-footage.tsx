@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 
 type Footage = "studio" | "detail" | "night" | "engine";
 
-// Verified Mixkit Video Free License for each source (commercial website use).
-// Source pages and licensing notes: docs/cinematic-real-footage.md
+// Authentic Pexels automotive/traffic footage (Pexels License, commercial use).
+// CDN sources below returned HTTP 206 + MP4 headers in GitHub CI on 2026-10-31.
+// Footage is illustrative; it is NOT a recording of a LUVIPRO inspection.
 const clips: Record<Footage, string> = {
-  studio: "https://assets.mixkit.co/videos/preview/mixkit-parked-red-sports-car-66-large.mp4",
-  detail: "https://assets.mixkit.co/videos/preview/mixkit-closeup-of-red-sports-car-49-large.mp4",
-  night: "https://assets.mixkit.co/videos/preview/mixkit-rear-view-of-a-car-through-the-city-42033-large.mp4",
-  engine: "https://assets.mixkit.co/videos/preview/mixkit-closeup-of-sports-car-engine-65-large.mp4",
+  studio: "https://videos.pexels.com/video-files/5258413/5258413-hd_1920_1080_25fps.mp4",
+  detail: "https://videos.pexels.com/video-files/10433645/10433645-hd_1920_1080_25fps.mp4",
+  night: "https://videos.pexels.com/video-files/5258413/5258413-hd_1920_1080_25fps.mp4",
+  engine: "https://videos.pexels.com/video-files/1192116/1192116-sd_640_360_30fps.mp4",
 };
 
 export function RealCarFootage({
