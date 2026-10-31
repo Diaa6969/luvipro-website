@@ -38,7 +38,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
 
       {/* Hero: identical visual structure to the German homepage. */}
       <section className="semantic-hero relative min-h-screen overflow-hidden pt-24 sm:pt-32">
-        <SemanticFilm scene="inspection" mode="hero" />
+        <SemanticFilm scene="hero" mode="hero" />
         <div className="section-shell relative grid min-w-0 items-center gap-10 pb-20 sm:gap-12 sm:pb-24 lg:grid-cols-[1.02fr_0.98fr]">
           <Reveal>
             <div className="min-w-0 max-w-full">
@@ -81,9 +81,9 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
           </Reveal>
         </div>
         <div className="section-shell relative -mt-10 grid gap-4 pb-16 sm:grid-cols-3">
-          {s.hero.stats.map(([value, label], i) => (
+          {s.hero.stats.map(([value, label]) => (
             <div key={value} className="semantic-card p-5">
-              <SemanticFilm scene={(["paint", "documents", "digital"] as const)[i]} />
+              <SemanticFilm />
               <p className="font-[var(--font-space-grotesk)] text-3xl font-semibold text-white">{value}</p>
               <p className="mt-1 text-sm text-slate-300">{label}</p>
             </div>
@@ -100,7 +100,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               return (
                 <Reveal key={title} delay={index * 0.08}>
                   <div className="semantic-card h-full p-6">
-                    <SemanticFilm scene={(["paint","documents","workshop"] as const)[index]} />
+                    {index === 0 ? <SemanticFilm scene="surface" /> : <SemanticFilm />}
                     <Icon className="h-9 w-9 text-pulse" />
                     <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">{title}</h3>
                     <p className="mt-3 leading-7 text-slate-300">{description}</p>
@@ -127,7 +127,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               return (
                 <Reveal key={title} delay={index * 0.05}>
                   <div className="semantic-card group h-full p-6">
-                    <SemanticFilm scene={(["paint","documents","inspection","digital","workshop","documents"] as const)[index]} />
+                    {index === 0 ? <SemanticFilm scene="gloss" /> : index === 5 ? <SemanticFilm scene="light" /> : <SemanticFilm />}
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-pulse/10 text-pulse"><Icon className="h-6 w-6" /></div>
                     <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">{title}</h3>
                     <p className="mt-3 leading-7 text-slate-300">{description}</p>
@@ -148,7 +148,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
             <div className="relative">
               <div className="absolute -inset-3 rounded-lg bg-ultraviolet/15 blur-2xl sm:-inset-8 sm:blur-3xl" />
               <div className="semantic-card relative rounded-lg p-6">
-                <SemanticFilm scene="bodywork" mode="section" />
+                <SemanticFilm scene="paintwork" mode="section" />
                 <div className="aspect-square rounded-lg border border-pulse/20 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.35),transparent_34%),linear-gradient(150deg,rgba(255,255,255,0.08),rgba(0,0,0,0.5))] p-8">
                   <div className="flex h-full flex-col justify-between">
                     <div className="flex items-center justify-between">
@@ -230,7 +230,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               return (
                 <Reveal key={title} delay={index * 0.08}>
                   <div className="semantic-card h-full p-6">
-                    <SemanticFilm scene={(["inspection","documents","workshop"] as const)[index]} />
+                    {index === 0 ? <SemanticFilm scene="wheel" /> : <SemanticFilm />}
                     <div className="flex items-center justify-between"><Icon className="h-9 w-9 text-pulse" /><Car className="h-6 w-6 text-white/30" /></div>
                     <h3 className="mt-7 font-[var(--font-space-grotesk)] text-2xl font-semibold">{title}</h3>
                     <ol className="mt-6 space-y-4">
@@ -256,7 +256,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
             {s.business.plans.slice(0,2).map(([name, price, features, cta, href], index) => (
               <Reveal key={name} delay={index * 0.08}>
                 <div className="semantic-card flex h-full flex-col p-6">
-                  <SemanticFilm scene={index === 0 ? "paint" : "diagnostic"} />
+                  <SemanticFilm scene={index === 0 ? "standard" : "premium"} />
                   <p className="font-[var(--font-space-grotesk)] text-2xl font-semibold">{name}</p>
                   <p className="mt-3 text-lg text-pulse">{price}</p>
                   <div className="mt-7 space-y-3">
@@ -295,7 +295,7 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
               return (
                 <Reveal key={title} delay={index * 0.08}>
                   <div className="semantic-card h-full p-6">
-                    <SemanticFilm scene={(["documents","digital","workshop"] as const)[index]} />
+                    <SemanticFilm />
                     <Icon className="h-8 w-8 text-pulse" />
                     <h3 className="mt-6 font-[var(--font-space-grotesk)] text-xl font-semibold">{title}</h3>
                     <p className="mt-3 leading-7 text-slate-300">{description}</p>
