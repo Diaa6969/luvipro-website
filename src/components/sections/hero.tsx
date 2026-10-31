@@ -2,18 +2,17 @@ import { ArrowRight, BadgeCheck, CheckCircle2, FileSearch, ScanLine, ShieldCheck
 import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
 import { SemanticFilm } from "@/components/ui/semantic-film";
-import type { FilmScene } from "@/lib/semantic-film-clips";
 
-const stats: { value: string; label: string; film: FilmScene }[] = [
-  { value: "UV", label: "Lack- & Karosseriecheck", film: "paint" },
-  { value: "VIN", label: "Fahrzeugsuche über FIN / VIN", film: "documents" },
-  { value: "PDF", label: "Digitale Fahrzeugberichte", film: "digital" },
+const stats = [
+  { value: "UV", label: "Lack- & Karosseriecheck" },
+  { value: "VIN", label: "Fahrzeugsuche über FIN / VIN" },
+  { value: "PDF", label: "Digitale Fahrzeugberichte" },
 ];
 
 export function Hero() {
   return (
     <section className="semantic-hero relative min-h-screen overflow-hidden pt-24 sm:pt-32">
-      <SemanticFilm scene="inspection" mode="hero" />
+      <SemanticFilm scene="hero" mode="hero" />
       <div className="section-shell relative grid min-w-0 items-center gap-10 pb-20 sm:gap-12 sm:pb-24 lg:grid-cols-[1.06fr_0.94fr]">
         <Reveal>
           <div className="min-w-0 max-w-full">
@@ -60,7 +59,7 @@ export function Hero() {
       <div className="section-shell relative -mt-7 grid gap-4 pb-16 sm:grid-cols-3">
         {stats.map((stat) => (
           <div key={stat.value} className="semantic-card min-h-[135px] p-5">
-            <SemanticFilm scene={stat.film} />
+            <SemanticFilm  />
             <CheckCircle2 className="h-5 w-5 text-pulse" aria-hidden="true" />
             <p className="mt-2 font-[var(--font-space-grotesk)] text-3xl font-semibold text-white">{stat.value}</p>
             <p className="mt-1 text-sm text-slate-200">{stat.label}</p>
