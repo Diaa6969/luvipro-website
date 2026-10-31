@@ -11,7 +11,7 @@ if(records.length !== 9) throw Error("Expected 9 clips");
 const dir=mkdtempSync(join(tmpdir(),"luvi-visual-audit-"));
 function ff(args){
  const r=spawnSync("ffmpeg",["-hide_banner","-loglevel","error","-nostdin","-y",...args],{timeout:40000,encoding:"utf8"});
- if(r.status!==0)throw Error((r.stderr||"ffmpeg failure").slice(0,350));
+ if(r.status!==0)throw Error(("ffmpeg status="+r.status+" error="+String(r.error||"")+" stderr="+String(r.stderr||"")+" args="+args.join(" ")).slice(0,1100));
 }
 try{
  for(let i=0;i<records.length;i++){
