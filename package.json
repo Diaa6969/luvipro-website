@@ -20,7 +20,8 @@
     "test:language-navigation": "node scripts/test-language-navigation.mjs",
     "test:legal-published": "node scripts/test-legal-published.mjs",
     "test:vehicle-check": "node scripts/test-vehicle-check-journey.mjs",
-    "test:customer-home": "node scripts/test-customer-first-homepage.mjs"
+    "test:customer-home": "node scripts/test-customer-first-homepage.mjs",
+    "test:semantic-film": "node scripts/test-semantic-film-design.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",
