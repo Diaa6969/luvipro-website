@@ -2,6 +2,7 @@ import { ArrowRight, Check, ScanLine } from "lucide-react";
 import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { RealCarFootage } from "@/components/ui/real-car-footage";
 import { DEVICE, formatEuro } from "@/lib/store";
 import { INSPECTION_SERVICES, INSPECTION_PRICING_NOTE } from "@/lib/inspection-pricing";
 import { calculateInvoicePricing, moneyEUR } from "@/lib/invoicing/prices";
@@ -56,6 +57,17 @@ export function Pricing({ id = "pricing", embedded = false, audience = "customer
           {INSPECTION_SERVICES.map((plan, index) => (
             <Reveal key={plan.id} delay={index * 0.08}>
               <div className={`glass-panel cinematic-card flex h-full flex-col rounded-2xl p-6 sm:p-7 ${plan.id === "premium" ? "border-pulse/40" : ""}`}>
+                <div className="relative -mx-1 mb-6 overflow-hidden rounded-xl border border-white/10">
+                  <RealCarFootage
+                    clip={plan.id === "standard" ? "detail" : "engine"}
+                    variant="card"
+                    label={plan.id === "standard" ? "Reale Nahaufnahme eines Fahrzeuglacks" : "Reale Nahaufnahme aus dem Motorraum eines Sportwagens"}
+                    uvOverlay
+                  />
+                  <span className="absolute bottom-3 left-4 z-10 rounded-full border border-white/20 bg-black/60 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white sm:text-xs">
+                    {plan.id === "standard" ? "LACK & KAROSSERIE" : "FAHRZEUG & DOKUMENTATION"}
+                  </span>
+                </div>
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-[var(--font-space-grotesk)] text-2xl font-semibold">{plan.name}</p>
                   {plan.id === "premium" && <span className="rounded-full bg-pulse/15 px-3 py-1 text-xs font-semibold text-pulse">Erweitert</span>}
