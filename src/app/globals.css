@@ -510,3 +510,101 @@ body {
   .uv-car-sweep-rect { transform: translateX(420px); }
   .uv-car-scan-ray { transform: translateX(420px); opacity: .55; }
 }
+
+/* Real automotive film: high-contrast footage across hero AND every
+   inspection/benefit card, with a violet UV lighting grade. */
+.real-car-footage {
+  background: radial-gradient(ellipse at 50% 36%, #302145 0%, #0c1020 48%, #040511 100%);
+  border: 1px solid rgba(138, 92, 246, .34);
+  min-height: 96px;
+  backface-visibility: hidden;
+}
+.real-car-footage-hero {
+  aspect-ratio: 16 / 9;
+  min-height: 185px;
+  box-shadow: inset 0 0 52px rgba(103, 44, 204, .32), 0 14px 60px rgba(12, 4, 34, .38);
+}
+.real-car-footage-card { aspect-ratio: 2.8 / 1; min-height: 125px; }
+.real-car-footage-strip { aspect-ratio: 3.8 / 1; min-height: 86px; }
+.real-car-fallback {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 65% 45%, rgba(92, 42, 152, .34), transparent 66%), linear-gradient(135deg, #090e20, #1d1534, #07111d);
+  opacity: 1;
+}
+.real-car-video {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 52%;
+  display: block;
+  opacity: 0;
+  filter: contrast(1.09) saturate(.84) brightness(.92);
+  transition: opacity 620ms ease-out, filter 700ms ease-out, transform 900ms ease-out;
+}
+.real-car-footage.has-footage .real-car-video { opacity: 1; }
+.real-car-tint {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(125deg, rgba(23, 6, 58, .42), rgba(27, 18, 62, .06) 42%, rgba(8, 12, 42, .27)), linear-gradient(0deg, rgba(3, 5, 18, .44), transparent 51%);
+  mix-blend-mode: normal;
+}
+.real-car-vignette {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  box-shadow: inset 0 0 55px 7px rgba(2, 4, 15, .36);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.real-car-uv-sweep {
+  position: absolute;
+  z-index: 4;
+  inset-block: -20%;
+  left: -55%;
+  width: 28%;
+  transform: skewX(-17deg) translateX(0);
+  background: linear-gradient(90deg, transparent, rgba(130, 47, 241, .18) 35%, rgba(182, 130, 255, .38) 48%, rgba(44, 210, 246, .16) 60%, transparent);
+  border-right: 1px solid rgba(154, 106, 255, .52);
+  filter: blur(3px);
+  pointer-events: none;
+  animation: luvipro-live-footage-scan 7.8s ease-in-out infinite;
+}
+@keyframes luvipro-live-footage-scan {
+  0%, 10% { transform: skewX(-17deg) translateX(0); opacity: 0; }
+  18% { opacity: .96; }
+  64% { opacity: .95; }
+  76%, 100% { transform: skewX(-17deg) translateX(710%); opacity: 0; }
+}
+/* Make ALL cards visibly reactive rather than subtle changes on just one. */
+.cinematic-page .cinematic-card {
+  border-color: rgba(148, 107, 239, .25);
+  box-shadow: 0 10px 30px rgba(46, 21, 101, .11), inset 0 1px rgba(202, 160, 255, .09);
+}
+.cinematic-page .cinematic-card::after {
+  opacity: .75;
+  animation-duration: 8s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cinematic-page .cinematic-card:hover .real-car-video {
+    filter: contrast(1.14) saturate(1.1) brightness(1.02);
+    transform: scale(1.035);
+  }
+  .cinematic-page .cinematic-card:hover {
+    border-color: rgba(171, 117, 255, .6);
+    box-shadow: 0 24px 68px rgba(89, 46, 159, .25), 0 0 28px rgba(32, 214, 255, .06);
+  }
+}
+@media (max-width: 640px) {
+  .real-car-footage-hero { min-height: 170px; }
+  .real-car-footage-card { min-height: 110px; }
+  .real-car-footage-strip { min-height: 78px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .real-car-uv-sweep { animation: none !important; opacity: 0 !important; }
+  .real-car-video { transition: none !important; transform: none !important; }
+}
