@@ -25,7 +25,7 @@ export function HowItWorks() {
           {flows.map((flow, index) => (
             <Reveal key={flow.title} delay={index * 0.08}>
               <div className="semantic-card h-full p-6">
-                <SemanticFilm scene={(["inspection", "documents", "workshop"] as const)[index]} />
+                {index === 0 ? <SemanticFilm scene="wheel" /> : <SemanticFilm />}
                 <div className="flex items-center justify-between">
                   <flow.icon className="h-9 w-9 text-pulse" />
                   <Car className="h-6 w-6 text-white/30" />
