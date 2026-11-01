@@ -14,6 +14,12 @@ export async function bounded(req:Request,max:number):Promise<Uint8Array>{
 export function rpcAction(input:Record<string,unknown>):{name:string;params:Record<string,unknown>;public:boolean}|null{
  const id=input.id;const offset=Number(input.offset??0);
  if(!Number.isInteger(offset)||offset<0||offset>100000)return null;
+ if(input.action==='report_offer')return UUID.test(String(id))?{name:'luvipro_marketplace_report_offer_v1',params:{p_listing:id},public:true}:null;
+ if(input.action==='assist'){
+  if(!['search','description'].includes(String(input.kind))||typeof(input.text??'')!=='string'||String(input.text??'').length>1000)return null;
+  if(input.kind==='description'&&!UUID.test(String(id)))return null;
+  return {name:'luvipro_marketplace_assist_v1',params:{p_action:input.kind,p_input:input.text??'',p_listing:id??null},public:false};
+ }
  if(input.action==='read'&&['search','detail','mine','eligible','review','vehicles'].includes(String(input.mode)))
  return {name:'luvipro_marketplace_read_v1',params:{p_mode:input.mode,p_id:id??null,p_filters:input.filters??{},p_offset:offset},public:['search','detail'].includes(String(input.mode))};
  if(input.action==='save')return {name:'luvipro_marketplace_save_v1',params:{p_id:id??null,p_revision:input.revision??null,p_vehicle:input.vehicle_id??null,p_report:input.inspection_id??null,p_data:input.data},public:false};

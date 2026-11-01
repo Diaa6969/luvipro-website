@@ -1,0 +1,15 @@
+# Marketplace continuation — 1 November 2026
+
+Production: migration `20261101181328 marketplace_assist_and_offers_v1`; Edge `marketplace-v1` version 3.
+
+New settings and usage tables have RLS and no direct client/service-role table grants. Three fixed RPCs provide Admin-only revision-checked configuration, published eligible-listing report access metadata, and authenticated rate-limited deterministic search/description assistance. No external AI requests, payment activation, entitlement grants or inspection rewrites. Usage stores lengths/counts, never prompt text. Boost packages remain provisional and disabled; no verified competitor price claim.
+
+Original FlutterFlow custom widgets saved: MarketplaceDetailPanel (existing entitlement entry), MarketplaceSellerPanel (explicit description review), MarketplaceCollectionPanel (reviewable filters), LuviproAdminCenterPanel (settings within existing Admin Center). Source checkpoints are in `C:\LUVIPRO_Workspace\readiness\ux_marketplace_20261101`. Saving is verified separately from full authenticated runtime behavior.
+
+Website branch adds corresponding assistance, report authorization metadata, unified grouped listing form, debounced revision-checked draft saves, explicit text review, private preview, exact decimal price parsing and native share/clipboard fallback. Failed autosaves stop until input changes or explicit retry. Submission saves pending edits first. Existing upload reservations, completion checks and progress remain intact. Production Marketplace visibility guard remains unchanged; no public release or live payments.
+
+Validation: 33 isolated PostgreSQL checks; 9 type-checked Edge validation tests; 22 behavioral Edge tests with `--no-check`; 5 actual anonymous HTTP checks; 14 exact-price cases; TypeScript and Next production build passed. Full Edge type check is BLOCKED by the existing SupabaseAuthClient.getUser declaration error in unchanged handler.ts; behavioral mocks do not verify real authenticated sessions. Production Admin config read verified through PostgreSQL execution-role claims with rollback, not an Auth login. Initial read-only transaction probe was rejected because configuration reads lock the singleton; a normal rollback transaction succeeded without updates.
+
+FlutterFlow Test Mode accessibility control remains unavailable after a fresh build; no repeated inner-frame recovery attempts. New positive eligible-listing, photo upload and signed-media/client flows are NOT verified by these tests. Existing public catalog is empty. No synthetic published listings or real financial writes were created.
+
+Containment: `docs/sql/marketplace-assist-offers-containment.sql` disables the three new RPCs without deleting tables or records. Edge rollback bundle (version 2) is saved as `marketplace_edge_before_assist.json` in the readiness directory. Restore that bundle using the existing verify_jwt=false setting and its own unchanged live Auth checks. Revert website commit/Preview separately; restore custom-widget checkpoints through the original editor. This is containment, not a full database-restore claim.
