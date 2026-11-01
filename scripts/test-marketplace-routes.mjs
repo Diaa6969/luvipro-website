@@ -16,13 +16,13 @@ try{
  assert.equal((await mod.exports.POST(req('{}',{origin:'https://other.invalid'}))).status,403);assert.equal(calls.length,0);checks++;
  assert.equal((await mod.exports.POST(req('{}',{'content-length':'5000000'}))).status,413);assert.equal(calls.length,0);checks++;
  assert.equal((await mod.exports.POST(req('x'.repeat(4259841),{'content-length':'0'}))).status,413);assert.equal(calls.length,0);checks++;
- const search=await mod.exports.POST(req(JSON.stringify({action:'read',mode:'search'})));assert.equal(search.status,200);assert.equal(search.headers.get('cache-control'),'no-store');assert.equal(calls[0].options.headers.Authorization,'Bearer SYNTHETIC_PUBLIC_ANON');checks++;
+ const search=await mod.exports.POST(req(JSON.stringify({action:'read',mode:'search'})));assert.equal(search.status,200);assert.equal(search.headers.get('cache-control'),'no-store');assert.equal(calls[0].options.headers.Authorization,undefined);checks++;
  calls=[];await mod.exports.POST(req(JSON.stringify({action:'admin'}),{cookie:'luvipro_affiliate_session='+synthetic,authorization:'Bearer FORGED'}));assert.equal(calls[0].url,'https://synthetic.supabase.co/functions/v1/marketplace-v1');assert.equal(calls[0].options.headers.Authorization,'Bearer '+synthetic);assert.equal(calls[0].options.headers.apikey,'SYNTHETIC_PUBLIC_ANON');checks++;
  globalThis.fetch=async()=>Response.json({error:'authentication_required'},{status:401});assert.equal((await mod.exports.POST(req('{"action":"save"}'))).status,401);checks++;
  for(const body of [{action:'read',mode:'search'},{action:'read',mode:'detail',id:'synthetic'},{action:'report_offer',id:'synthetic'},{action:'photo',id:'synthetic'}]){
   calls=[];globalThis.fetch=async(url,options)=>{calls.push({url,options});return calls.length===1?Response.json({error:'invalid_session'},{status:401}):Response.json(null);};
   const response=await mod.exports.POST(req(JSON.stringify(body),{cookie:'luvipro_affiliate_session='+synthetic}));
-  assert.equal(response.status,200);assert.equal(calls.length,2);assert.equal(calls[0].options.headers.Authorization,'Bearer '+synthetic);assert.equal(calls[1].options.headers.Authorization,'Bearer SYNTHETIC_PUBLIC_ANON');assert.equal(new TextDecoder().decode(calls[1].options.body),JSON.stringify(body));checks++;
+  assert.equal(response.status,200);assert.equal(calls.length,2);assert.equal(calls[0].options.headers.Authorization,'Bearer '+synthetic);assert.equal(calls[1].options.headers.Authorization,undefined);assert.equal(new TextDecoder().decode(calls[1].options.body),JSON.stringify(body));checks++;
  }
  for(const body of [{action:'save'},{action:'admin'},{action:'read',mode:'mine'},{action:'assist',kind:'search'},{action:'photos'}]){
   calls=[];globalThis.fetch=async(url,options)=>{calls.push({url,options});return Response.json({error:'invalid_session'},{status:401});};
