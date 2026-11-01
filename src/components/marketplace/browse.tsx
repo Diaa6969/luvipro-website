@@ -1,8 +1,8 @@
 'use client';
 import {useEffect,useState} from 'react';import Link from 'next/link';
 import {market,Listing,money,panel,input,button} from './client';import {MarketPhoto} from './photo';
-export function MarketBrowse(){
- const [filters,setFilters]=useState<Record<string,unknown>>({});const [items,setItems]=useState<Listing[]>([]);const [offset,setOffset]=useState(0);const [total,setTotal]=useState(0);const [busy,setBusy]=useState(true);const [error,setError]=useState('');
+export function MarketBrowse({dealerId}:{dealerId?:string}={}){
+ const [filters,setFilters]=useState<Record<string,unknown>>(dealerId?{dealer_id:dealerId}:{});const [items,setItems]=useState<Listing[]>([]);const [offset,setOffset]=useState(0);const [total,setTotal]=useState(0);const [busy,setBusy]=useState(true);const [error,setError]=useState('');
  async function search(page=0){setBusy(true);setError('');try{const x=await market({action:'read',mode:'search',filters,offset:page});setItems(x.items||[]);setTotal(x.total||0);setOffset(page);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
  useEffect(()=>{void search();},[]); // Searches are explicit; no stale responses from per-keystroke requests.
  const set=(k:string,v:string)=>setFilters(f=>{const next={...f};if(v)next[k]=v;else delete next[k];return next;});

@@ -1,6 +1,7 @@
 'use client';
+import {useSearchParams} from 'next/navigation';
 import {marketplacePriceCents} from '@/lib/marketplace-price';
-import {useEffect,useRef,useState} from 'react';import Link from 'next/link';
+import {Suspense,useEffect,useRef,useState} from 'react';import Link from 'next/link';
 import {market,Listing,equipment,panel,input,button} from './client';import {MarketPhoto} from './photo';
 const fields:Record<string,[string,string][]>={
  'Fahrzeug':[['brand','Marke'],['model','Modell'],['variant','Modellvariante'],['category','Fahrzeugkategorie'],['first_registration','Erstzulassung (JJJJ-MM)'],['year','Baujahr'],['condition','Fahrzeugzustand'],['hsn','HSN'],['tsn','TSN']],
@@ -11,12 +12,14 @@ const fields:Record<string,[string,string][]>={
 };
 type Eligible={vehicle_id:string;inspection_id:string;brand:string;model:string;year:number;mileage:number};
 type Photo={id:string;category:string;position:number};
-export function MarketEditor({id}:{id?:string}){
+export function MarketEditor({id}:{id?:string}){return <Suspense fallback={<p role="status">Fahrzeugdaten werden geladen …</p>}><MarketEditorContent id={id}/></Suspense>;}
+function MarketEditorContent({id}:{id?:string}){
+ const selectedReport=useSearchParams().get('inspectionId');
  const uploadJobs=useRef<{file:File;id:string;category:string;done:boolean}[]>([]);
  const [pendingUploads,setPendingUploads]=useState(0);const [ready,setReady]=useState(false);const [loadError,setLoadError]=useState('');
  const [listing,setListing]=useState<Listing|null>(null);const [data,setData]=useState<Record<string,unknown>>({seller_type:'private',equipment:[]});const [eligible,setEligible]=useState<Eligible[]>([]);const [report,setReport]=useState('');const [dirty,setDirty]=useState(false);const [saveFailed,setSaveFailed]=useState(false);const [priceInput,setPriceInput]=useState('');const [proposal,setProposal]=useState<string|null>(null);const [preview,setPreview]=useState(false);const [photos,setPhotos]=useState<Photo[]>([]);const [category,setCategory]=useState('front');const [busy,setBusy]=useState(false);const [progress,setProgress]=useState<number|null>(null);const [message,setMessage]=useState('');
  async function photoList(lid:string){const x=await market({action:'photos',id:lid});setPhotos(x.items||[]);}
- useEffect(()=>{let active=true;setReady(false);setLoadError('');(async()=>{try{const e=await market({action:'read',mode:'eligible'});if(active)setEligible(e.items||[]);if(id){const x=await market({action:'read',mode:'mine',id});const l=x.items?.[0];if(!l)throw Error('Eigenes Inserat nicht gefunden.');if(active){setListing(l);setData(l.data||{});setPriceInput(l.data?.price_cents?String(Number(l.data.price_cents)/100):'');setReport(l.inspection_id||'');await photoList(l.id);}}}catch(e){if(active)setLoadError((e as Error).message);}finally{if(active)setReady(true);}})();return()=>{active=false;};},[id]);
+ useEffect(()=>{let active=true;setReady(false);setLoadError('');(async()=>{try{const e=await market({action:'read',mode:'eligible'});if(active){setEligible(e.items||[]);if(!id&&selectedReport){const vehicle=(e.items||[]).find((v:Eligible)=>v.inspection_id===selectedReport);if(!vehicle)throw Error('Fahrzeug derzeit nicht zum Inserieren berechtigt.');setReport(vehicle.inspection_id);setData(d=>({...d,brand:vehicle.brand,model:vehicle.model,year:vehicle.year,mileage:vehicle.mileage}));setDirty(true);}}if(id){const x=await market({action:'read',mode:'mine',id});const l=x.items?.[0];if(!l)throw Error('Eigenes Inserat nicht gefunden.');if(active){setListing(l);setData(l.data||{});setPriceInput(l.data?.price_cents?String(Number(l.data.price_cents)/100):'');setReport(l.inspection_id||'');await photoList(l.id);}}}catch(e){if(active)setLoadError((e as Error).message);}finally{if(active)setReady(true);}})();return()=>{active=false;};},[id,selectedReport]);
  const change=(k:string,v:unknown)=>{setDirty(true);setSaveFailed(false);setData(d=>({...d,[k]:v}));};
  async function save(){setBusy(true);setMessage('');try{const payload={...data,price_cents:priceInput.trim()?marketplacePriceCents(priceInput):''};const chosen=eligible.find(e=>e.inspection_id===report);const x=await market({action:'save',id:listing?.id,revision:listing?.revision,vehicle_id:chosen?.vehicle_id??listing?.vehicle_id??null,inspection_id:report||null,data:payload});setListing(x);setDirty(false);setMessage('Entwurf gespeichert. Veröffentlichung erfolgt erst nach Admin-Prüfung.');return x as Listing;}catch(e){setSaveFailed(true);setMessage((e as Error).message);return null;}finally{setBusy(false);}}
  useEffect(()=>{if(!dirty||busy||saveFailed)return;const timer=setTimeout(()=>void save(),2000);return()=>clearTimeout(timer);},[data,report,priceInput,dirty,busy,saveFailed]);

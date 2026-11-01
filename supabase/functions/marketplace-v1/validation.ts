@@ -14,6 +14,8 @@ export async function bounded(req:Request,max:number):Promise<Uint8Array>{
 export function rpcAction(input:Record<string,unknown>):{name:string;params:Record<string,unknown>;public:boolean}|null{
  const id=input.id;const offset=Number(input.offset??0);
  if(!Number.isInteger(offset)||offset<0||offset>100000)return null;
+ if(input.action==='autopilot')return {name:'luvipro_marketplace_autopilot_v1',params:{p_offset:offset},public:false};
+ if(input.action==='dealer')return UUID.test(String(id))?{name:'luvipro_marketplace_dealer_v1',params:{p_dealer:id},public:true}:null;
  if(input.action==='report_offer')return UUID.test(String(id))?{name:'luvipro_marketplace_report_offer_v1',params:{p_listing:id},public:true}:null;
  if(input.action==='assist'){
   if(!['search','description'].includes(String(input.kind))||typeof(input.text??'')!=='string'||String(input.text??'').length>1000)return null;
