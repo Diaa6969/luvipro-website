@@ -129,4 +129,3 @@ END$$;
 REVOKE ALL ON FUNCTION public.luvipro_marketplace_assist_v1(text,text,uuid) FROM PUBLIC,anon,service_role;
 GRANT EXECUTE ON FUNCTION public.luvipro_marketplace_assist_v1(text,text,uuid) TO authenticated;
 COMMIT;
-
