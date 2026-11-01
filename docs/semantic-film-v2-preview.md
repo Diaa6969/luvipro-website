@@ -30,3 +30,7 @@ Seventeen genuine MP4s increase transfer on a full long-page scroll. Viewport-on
 ## Production release trigger / Vercel status
 
 The cinematic revisions were merged after green CI to `main` as PR #17. On 31 Oct 2026 the initial Vercel production deployment was rejected with **Deployment rate limited — retry in 24 hours**. A documentation-only commit was made to request one fresh production deployment without modifying application behavior. The GitHub SHA and resulting Vercel status must be verified separately; successful GitHub merge alone is not a public deployment.
+
+## Release retry — 2026-11-01
+
+A user-requested redeploy was retriggered through GitHub `main` after the previous Vercel status reported `Deployment rate limited — retry in 24 hours`. This change modifies only this release log, not site functionality. Verify the actual Vercel deployment status for the new commit before claiming the site is live. If a new deploy remains rate limited, further empty commits should be avoided until the platform limit resets; a Vercel dashboard redeploy after the reset is the next appropriate action.
