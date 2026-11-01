@@ -16,6 +16,12 @@ export function rpcAction(input:Record<string,unknown>):{name:string;params:Reco
  if(!Number.isInteger(offset)||offset<0||offset>100000)return null;
  if(input.action==='autopilot')return {name:'luvipro_marketplace_autopilot_v1',params:{p_offset:offset},public:false};
  if(input.action==='dealer')return UUID.test(String(id))?{name:'luvipro_marketplace_dealer_v1',params:{p_dealer:id},public:true}:null;
+ if(input.action==='check_partners')return UUID.test(String(id))?{name:'luvipro_marketplace_check_partners_v1',params:{p_listing:id},public:false}:null;
+ if(input.action==='buyer_check'){
+  if(!['list','history','create','seller_accept','assign_partner','partner_accept','propose_slot','confirm_slot','complete','reject','cancel'].includes(String(input.transition))||typeof(input.note??'')!=='string'||String(input.note??'').length>1000)return null;
+  for(const value of [id,input.listing_id,input.partner_uid,input.request_key])if(value!=null&&!UUID.test(String(value)))return null;
+  return {name:'luvipro_marketplace_buyer_check_v1',params:{p_action:input.transition,p_id:id??null,p_listing:input.listing_id??null,p_partner:input.partner_uid??null,p_revision:input.revision??null,p_note:input.note??'',p_slot:input.slot??null,p_confirm:input.confirm===true,p_request:input.request_key??null,p_product:input.product??'inspection_standard'},public:false};
+ }
  if(input.action==='report_offer')return UUID.test(String(id))?{name:'luvipro_marketplace_report_offer_v1',params:{p_listing:id},public:true}:null;
  if(input.action==='assist'){
   if(!['search','description'].includes(String(input.kind))||typeof(input.text??'')!=='string'||String(input.text??'').length>1000)return null;
