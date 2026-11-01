@@ -14,6 +14,7 @@ test=r'''
  q=(ROOT/'supabase/migrations/20261101211330_marketplace_buyer_check_v1.sql').read_text(encoding='utf-8')
  for a,b in roles.items():q=re.sub(r'\b'+a+r'\b',b,q)
  sql(q);ok('Buyer Check migration applies without changing orders or inspections')
+ patch=(ROOT/'supabase/migrations/20261101214150_marketplace_buyer_admin_scope_v1.sql').read_text(encoding='utf-8');sql(patch)
  def action(uid,kind,record=None,**kw):
   fail=kw.pop('fail',False)
   params=dict(p_action=kind,**kw)
@@ -52,6 +53,7 @@ test=r'''
  action(other,'complete',r,p_confirm=True,p_note='Synthetic inspection completed',fail=True);ok('future appointment cannot be prematurely completed')
  for uid in [buyer,seller,other]:assert len(action(uid,'list')['items'])==1
  ok('buyer, seller and selected workshop can access own request')
+ assert not action(admin,'list')['items'];assert len(action(admin,'admin_list',p_note='Synthetic Admin Center review')['items'])==1;action(buyer,'admin_list',p_note='Synthetic forged Admin review',fail=True);ok('Admin review requires explicit logged Admin scope; personal inbox stays personal')
  outsider=str(uuid.uuid4());sql(f"INSERT INTO auth.users(id,email_confirmed_at)VALUES('{outsider}',now())")
  assert not action(outsider,'list')['items'];action(outsider,'cancel',r,p_note='Synthetic unauthorized cancel',fail=True);ok('unrelated customer isolated from reads and transitions')
  run(buyer,'SELECT * FROM public.luvipro_marketplace_buyer_checks',True);run(other,'SELECT * FROM public.luvipro_marketplace_buyer_check_events',True);ok('raw request and audit tables inaccessible to clients')
