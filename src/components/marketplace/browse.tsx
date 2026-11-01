@@ -12,7 +12,7 @@ export function MarketBrowse(){
  <input aria-label="Kilometer bis" type="number" min="0" placeholder="Kilometer bis" className={input} onChange={e=>set('max_mileage',e.target.value)}/>
  <select aria-label="Kraftstoff" className={input} onChange={e=>set('fuel',e.target.value)}><option value="">Alle Kraftstoffe</option>{['Benzin','Diesel','Elektro','Hybrid','Plug-in-Hybrid','LPG','CNG','Andere'].map(x=><option key={x}>{x}</option>)}</select>
  <select aria-label="Getriebe" className={input} onChange={e=>set('transmission',e.target.value)}><option value="">Alle Getriebe</option><option>Automatik</option><option>Schaltgetriebe</option></select>
- <select aria-label="Sortierung" className={input} onChange={e=>set('sort',e.target.value)}><option value="newest">Neueste zuerst</option><option value="price_asc">Preis aufsteigend</option><option value="price_desc">Preis absteigend</option></select>
+ <select aria-label="Sortierung" className={input} onChange={e=>set('sort',e.target.value)}><option value="newest">Neueste zuerst</option><option value="oldest">Älteste zuerst</option><option value="mileage_asc">Kilometerstand aufsteigend</option><option value="mileage_desc">Kilometerstand absteigend</option><option value="registration_desc">Erstzulassung: neueste zuerst</option><option value="registration_asc">Erstzulassung: älteste zuerst</option><option value="price_asc">Preis aufsteigend</option><option value="price_desc">Preis absteigend</option></select>
  <button className={button} disabled={busy}>{busy?'Suche läuft …':'Fahrzeuge entdecken'}</button></form>
  {error&&<p role="alert" className="my-4 text-rose-300">{error} <Link href="/affiliate/login">Anmelden</Link></p>}
  <p className="my-5 text-slate-300">{total} veröffentlichte Fahrzeuge</p>

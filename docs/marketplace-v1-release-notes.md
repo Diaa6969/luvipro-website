@@ -43,3 +43,6 @@ These are approval items, not a declaration of legal compliance:
 ## Rollback / containment
 
 Use `docs/sql/marketplace-containment-rollback.sql` to revoke access to the new module while retaining its records. Keep the publication guard and private bucket. Restore the prior FlutterFlow navigation/website revision and the saved Edge source only where that does not reopen a confirmed vulnerability. Do not drop tables, buckets, original reports or Auth accounts. Original backups remain untouched. Full operational Supabase restoration is not claimed.
+
+## 2026-11-01 UX sorting correction
+The public search now supports newest/oldest publication, both price/mileage/registration directions and existing distance ordering. JSON aggregation explicitly preserves ordered pages. Future reapproval retains the original publication timestamp; existing records are not rewritten. Focused disposable PostgreSQL checks: 15 pass, including private-field exclusion, real role execution and specific rollback retaining records. Production applied and anonymous eight non-location sort calls verified against the actual empty public catalog. No fake public listing was created. Specific rollback: docs/sql/marketplace-sorting-rollback.sql. Native/website selectors updated; no paid feature activation.
