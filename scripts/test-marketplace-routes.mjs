@@ -19,6 +19,15 @@ try{
  const search=await mod.exports.POST(req(JSON.stringify({action:'read',mode:'search'})));assert.equal(search.status,200);assert.equal(search.headers.get('cache-control'),'no-store');assert.equal(calls[0].options.headers.Authorization,'Bearer SYNTHETIC_PUBLIC_ANON');checks++;
  calls=[];await mod.exports.POST(req(JSON.stringify({action:'admin'}),{cookie:'luvipro_affiliate_session='+synthetic,authorization:'Bearer FORGED'}));assert.equal(calls[0].url,'https://synthetic.supabase.co/functions/v1/marketplace-v1');assert.equal(calls[0].options.headers.Authorization,'Bearer '+synthetic);assert.equal(calls[0].options.headers.apikey,'SYNTHETIC_PUBLIC_ANON');checks++;
  globalThis.fetch=async()=>Response.json({error:'authentication_required'},{status:401});assert.equal((await mod.exports.POST(req('{"action":"save"}'))).status,401);checks++;
+ for(const body of [{action:'read',mode:'search'},{action:'read',mode:'detail',id:'synthetic'},{action:'report_offer',id:'synthetic'},{action:'photo',id:'synthetic'}]){
+  calls=[];globalThis.fetch=async(url,options)=>{calls.push({url,options});return calls.length===1?Response.json({error:'invalid_session'},{status:401}):Response.json(null);};
+  const response=await mod.exports.POST(req(JSON.stringify(body),{cookie:'luvipro_affiliate_session='+synthetic}));
+  assert.equal(response.status,200);assert.equal(calls.length,2);assert.equal(calls[0].options.headers.Authorization,'Bearer '+synthetic);assert.equal(calls[1].options.headers.Authorization,'Bearer SYNTHETIC_PUBLIC_ANON');assert.equal(new TextDecoder().decode(calls[1].options.body),JSON.stringify(body));checks++;
+ }
+ for(const body of [{action:'save'},{action:'admin'},{action:'read',mode:'mine'},{action:'assist',kind:'search'},{action:'photos'}]){
+  calls=[];globalThis.fetch=async(url,options)=>{calls.push({url,options});return Response.json({error:'invalid_session'},{status:401});};
+  assert.equal((await mod.exports.POST(req(JSON.stringify(body),{cookie:'luvipro_affiliate_session='+synthetic}))).status,401);assert.equal(calls.length,1);checks++;
+ }
  globalThis.fetch=async()=>{throw Error('SYNTHETIC PRIVATE SERVER DETAIL');};const unavailable=await mod.exports.POST(req('{}'));assert.equal(unavailable.status,503);assert.ok(!(await unavailable.text()).includes('PRIVATE SERVER'));checks++;
  console.log(JSON.stringify({passed:checks,failed:0,scope:'Actual Next Marketplace proxy with mocked upstream; no network or business writes'}));
 }finally{globalThis.fetch=savedFetch;for(const[k,v]of Object.entries({SUPABASE_URL:savedUrl,SUPABASE_ANON_KEY:savedAnon})){if(v===undefined)delete process.env[k];else process.env[k]=v;}}
