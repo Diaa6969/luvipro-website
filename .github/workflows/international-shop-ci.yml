@@ -17,6 +17,7 @@ on:
       - fix/affiliate-public-no-demo
       - preview/semantic-film-background-v2-20261031
       - feature/customer-first-homepage-20261030
+      - feature/site-wide-31-languages-20261102
   workflow_dispatch:
 
 permissions:
