@@ -1,11 +1,11 @@
 import { NextRequest,NextResponse } from "next/server";
-import { AFFILIATE_COOKIE,claimExistingAffiliate } from "@/lib/affiliate/account";
-import { affiliateConfigured,acceptAffiliateSubmissionRate } from "@/lib/affiliate/server";
+import { AFFILIATE_COOKIE,verifyAffiliateToken } from "@/lib/affiliate/account";
+import { affiliateBackendConfigured,affiliateDb,acceptAffiliateSubmissionRate } from "@/lib/affiliate/server";
 import { isSameOrigin } from "@/lib/accounting/admin-auth";
 
 export const runtime="nodejs";
 export async function POST(req:NextRequest){
- if(!affiliateConfigured())return NextResponse.json({error:"Partnerkonto noch nicht freigeschaltet"},{status:503});
+ if(!affiliateBackendConfigured())return NextResponse.json({error:"Partnerkonto noch nicht freigeschaltet"},{status:503});
  const n=Number(req.headers.get("content-length")||"0");
  if(!isSameOrigin(req)||n>3000||n<=0)return NextResponse.json({error:"Ungültige Anfrage"},{status:403});
  try{
@@ -23,8 +23,11 @@ export async function POST(req:NextRequest){
   if(!response.ok)throw Error("Credentials rejected");
   const tokens=await response.json() as {access_token?:string;expires_in?:number};
   if(!tokens.access_token)throw Error("No token");
-  await claimExistingAffiliate(tokens.access_token);
-  const next=NextResponse.redirect(new URL("/affiliate/dashboard",req.url),303);
+  const user=await verifyAffiliateToken(tokens.access_token);
+  const lookup=await affiliateDb("luvipro_affiliate_applications?select=id&owner_uid=eq."+user.id+"&limit=2");
+  const owned=await lookup.json() as {id:string}[];
+  if(!Array.isArray(owned)||owned.length>1)throw Error("Ambiguous owner");
+  const next=NextResponse.redirect(new URL(owned.length===1?"/affiliate/dashboard":"/affiliate",req.url),303);
   next.cookies.set(AFFILIATE_COOKIE,tokens.access_token,{
     httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"strict",
     path:"/",maxAge:Math.min(3000,Math.max(60,Number(tokens.expires_in)||3000))

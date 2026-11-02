@@ -1,6 +1,6 @@
 import {NextRequest,NextResponse} from "next/server";
 import {PDFDocument,StandardFonts,rgb,type PDFPage,type PDFFont} from "pdf-lib";
-import {affiliateDb,affiliateConfigured} from "@/lib/affiliate/server";
+import {affiliateDb,affiliateBackendConfigured} from "@/lib/affiliate/server";
 import {affiliateCurrentSession,claimExistingAffiliate} from "@/lib/affiliate/account";
 import {isAuthorizedFinanceAdmin} from "@/lib/accounting/admin-request";
 export const runtime="nodejs";
@@ -14,7 +14,7 @@ type Document={
 const euro=(n:number)=>new Intl.NumberFormat("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n/100)+" EUR";
 const latin=(s:string)=>s.normalize("NFC").replace(/[^\x20-\xFF\u20ac]/g,"?").trim();
 export async function GET(req:NextRequest){
- if(!affiliateConfigured())return NextResponse.json({error:"Not enabled"},{status:503});
+ if(!affiliateBackendConfigured())return NextResponse.json({error:"Not enabled"},{status:503});
  const id=req.nextUrl.searchParams.get("id")||"";
  if(!/^[0-9a-f-]{36}$/i.test(id))return NextResponse.json({error:"Invalid document"},{status:400});
  try{

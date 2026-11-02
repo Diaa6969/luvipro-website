@@ -203,7 +203,7 @@ begin
  return v_id;
 end; $$;
 revoke execute on function public.luvipro_affiliate_issue_selfbilling(uuid,text,text,uuid) from public,anon,authenticated;
-grant execute on function public.luvipro_affiliate_issue_selfbilling(uuid,text,text) to service_role;
+grant execute on function public.luvipro_affiliate_issue_selfbilling(uuid,text,text,uuid) to service_role;
 
 create or replace function public.luvipro_affiliate_record_manual_transfer(
  p_payout uuid,p_ref text,p_transferred_on date,p_operator uuid
