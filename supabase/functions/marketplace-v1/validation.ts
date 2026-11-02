@@ -15,6 +15,7 @@ export function rpcAction(input:Record<string,unknown>):{name:string;params:Reco
  const id=input.id;const offset=Number(input.offset??0);
  if(!Number.isInteger(offset)||offset<0||offset>100000)return null;
  if(input.action==='autopilot')return {name:'luvipro_marketplace_autopilot_v1',params:{p_offset:offset},public:false};
+ if(input.action==='dealer_profile'){if(!['mine','admin_list','save','submit','approve','suspend'].includes(String(input.transition))||(id!=null&&!UUID.test(String(id))))return null;return {name:'luvipro_marketplace_dealer_profile_v1',params:{p_action:input.transition,p_location:id??null,p_data:input.payload??null,p_revision:input.revision??null,p_note:input.note??'',p_confirm:input.confirm===true},public:false};}
  if(input.action==='dealer')return UUID.test(String(id))?{name:'luvipro_marketplace_dealer_v1',params:{p_dealer:id},public:true}:null;
  if(input.action==='buyer_quote')return UUID.test(String(id))?{name:'luvipro_marketplace_buyer_quote_v1',params:{p_request:id},public:false}:null;
  if(input.action==='check_partners')return UUID.test(String(id))?{name:'luvipro_marketplace_check_partners_v1',params:{p_listing:id},public:false}:null;

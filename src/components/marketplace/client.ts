@@ -3,7 +3,7 @@ export async function market(action:Record<string,unknown>){
  const r=await fetch('/api/marketplace',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(action)});
  const data=await r.json();if(!r.ok)throw Error(r.status===401?'Bitte mit Ihrem bestehenden LUVIPRO-Konto anmelden.':data.error||'Aktion fehlgeschlagen.');return data;
 }
-export type Dealer={id:string;company_name:string;city:string;postal_code:string;street:string;house_number:string;country:string};
+export type Dealer={business_description?:string|null;website_url?:string|null;logo_url?:string|null;id:string;company_name:string;city:string;postal_code:string;street:string;house_number:string;country:string};
 export type Listing={dealer?:Dealer|null;id:string;status:string;revision?:number;vehicle_id?:string;inspection_id?:string;data?:Record<string,unknown>;vehicle?:Record<string,unknown>;photos?:{id:string;category:string;position:number}[];report?:{reference:string;inspected_at:string;status:string;brand:string;model:string;year:number;mileage:number}};
 export const money=(n:unknown)=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(n||0)/100);
 export const panel='rounded-2xl border border-violet-400/20 bg-slate-950/80 p-5 shadow-xl backdrop-blur';
