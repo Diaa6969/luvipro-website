@@ -103,7 +103,13 @@ export function interpretVehicleWish(raw:string):SearchInterpretation {
  // Model suggestions are scoped STRICTLY to the already-detected manufacturer.
  // The list contains nameplates, not technical specs or inspection findings.
  if(brand){
+  const genericVehicleWords=new Set([
+   ...Object.values(FUEL).flat(),...Object.values(TRANSMISSION).flat(),
+   'Diesel','Benzin','Hybrid','Automatik','Elektro','Petrol','Electric','Manual',
+   'CNG','LPG','Auto','Car','Cabrio','Limousine','SUV','Kombi','Neuwagen',
+  ].map(normalizeVehicleWish));
   const model=modelsForBrand(brand)
+   .filter(name=>!genericVehicleWords.has(normalizeVehicleWish(name)))
    .filter(name=>name.length>=2 && (name.length>=3 || /[0-9]/.test(name)) && normalizeVehicleWish(name)!==normalizeVehicleWish(brand) && normalizeVehicleWish(name)!==normalizeVehicleWish(brand.split('-')[0]))
    .sort((a,b)=>b.length-a.length)
    .find(name=>contains(t,[name])||contains(t,[name.replace(/[-_.]/g,' ')]));
