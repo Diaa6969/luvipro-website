@@ -30,7 +30,7 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  </details><form className={panel+' grid gap-3 sm:grid-cols-3'} onSubmit={e=>{e.preventDefault();void search();}}>
  <select aria-label="Marke" title="Automarke auswählen" value={String(filters.brand??'')} className={input} onChange={e=>set('brand',e.target.value)}>
  <option value="">Alle Marken</option>
- {filters.brand&&!CAR_BRANDS.some(brand=>brand.toLowerCase()===String(filters.brand).toLowerCase())&&<option value={String(filters.brand)}>{String(filters.brand)}</option>}
+ {Boolean(filters.brand)&&!CAR_BRANDS.some(brand=>brand.toLowerCase()===String(filters.brand).toLowerCase())&&<option value={String(filters.brand)}>{String(filters.brand)}</option>}
  {Array.from(new Set(CAR_BRANDS.map(brand=>brand[0]!.toUpperCase()))).map(letter=>
  <optgroup key={letter} label={letter}>{CAR_BRANDS.filter(brand=>brand[0]!.toUpperCase()===letter).map(brand=><option key={brand} value={brand}>{brand}</option>)}</optgroup>
  )}
