@@ -54,7 +54,7 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
   setCustomModel(false);
  }}>
   <option value="">Alle Marken</option>
-  {filters.brand&&!CAR_BRANDS.includes(String(filters.brand) as typeof CAR_BRANDS[number])&&!customBrand&&<option value={String(filters.brand)}>{String(filters.brand)}</option>}
+  {Boolean(filters.brand)&&!CAR_BRANDS.includes(String(filters.brand) as typeof CAR_BRANDS[number])&&!customBrand&&<option value={String(filters.brand)}>{String(filters.brand)}</option>}
   {Array.from(new Set(CAR_BRANDS.map(b=>b[0]!.toUpperCase()))).map(letter=><optgroup key={letter} label={letter}>
    {CAR_BRANDS.filter(brand=>brand[0]!.toUpperCase()===letter).map(brand=><option key={brand} value={brand}>{brand}</option>)}
   </optgroup>)}
@@ -65,7 +65,7 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
   if(e.target.value==='__other__'){setCustomModel(true);chooseModel('');}else{setCustomModel(false);chooseModel(e.target.value);}
  }}>
   <option value="">Alle Modelle</option>
-  {filters.model&&!modelsForBrand(String(filters.brand)).includes(String(filters.model))&&!customModel&&<option value={String(filters.model)}>{String(filters.model)}</option>}
+  {Boolean(filters.model)&&!modelsForBrand(String(filters.brand)).includes(String(filters.model))&&!customModel&&<option value={String(filters.model)}>{String(filters.model)}</option>}
   {modelsForBrand(String(filters.brand??'')).map(model=><option key={model} value={model}>{model}</option>)}
   <option value="__other__">Anderes Modell manuell eingeben …</option>
  </select>
