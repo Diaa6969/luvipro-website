@@ -34,6 +34,13 @@ export function LanguagePicker({
     if(segments.length===0||segments.length===1&&siteLocales.some(([x])=>x===segments[0]))return localeHome(code);
     // Transactional routes such as Marketplace, report purchase, Affiliate,
     // account, and Admin stay on the SAME page during language changes.
+    // Keep vehicle inspectionId, order product, search parameters and anchors intact.
+    // The language dialog is client-only, so the active URL is available here.
+    if (typeof window !== "undefined") {
+      const next = new URL(window.location.href);
+      next.searchParams.set("lang", code);
+      return next.pathname + next.search + next.hash;
+    }
     return pathname+'?lang='+encodeURIComponent(code);
   }
   const title = current === "ar" ? "اختر اللغة" : current === "de" ? "Sprache wählen" : "Choose language";
