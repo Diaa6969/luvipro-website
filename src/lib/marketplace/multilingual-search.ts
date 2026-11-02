@@ -104,7 +104,7 @@ export function interpretVehicleWish(raw:string):SearchInterpretation {
  // The list contains nameplates, not technical specs or inspection findings.
  if(brand){
   const model=modelsForBrand(brand)
-   .filter(name=>name.length>=2 && (name.length>=3 || /[0-9]/.test(name)))
+   .filter(name=>name.length>=2 && (name.length>=3 || /[0-9]/.test(name)) && normalizeVehicleWish(name)!==normalizeVehicleWish(brand) && normalizeVehicleWish(name)!==normalizeVehicleWish(brand.split('-')[0]))
    .sort((a,b)=>b.length-a.length)
    .find(name=>contains(t,[name])||contains(t,[name.replace(/[-_.]/g,' ')]));
   if(model)filters.model=model;
