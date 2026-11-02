@@ -8,6 +8,7 @@ import { BrandLogo } from "@/components/ui/brand-logo";
 import { CtaLink } from "@/components/ui/cta-link";
 import { internationalHomeCopy, type InternationalLocale } from "@/lib/international-home-copy";
 import { LanguagePicker } from "@/components/ui/language-picker";
+import {setPreferredSiteLocale} from "@/lib/site-locales";
 
 
 export function LocaleDocument({ locale }: { locale: InternationalLocale }) {
@@ -15,6 +16,7 @@ export function LocaleDocument({ locale }: { locale: InternationalLocale }) {
     const html = document.documentElement;
     const previousLang = html.lang;
     const previousDir = html.dir;
+    setPreferredSiteLocale(locale);
     html.lang = locale;
     html.dir = locale === "ar" ? "rtl" : "ltr";
     return () => {
