@@ -7,6 +7,9 @@ import { createPortal } from "react-dom";
 import { CtaLink } from "@/components/ui/cta-link";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { LanguagePicker } from "@/components/ui/language-picker";
+import {useSiteLocale} from "@/components/ui/site-locale-bridge";
+import {siteTranslation} from "@/lib/site-translation";
+import {marketCopy} from "@/lib/marketplace/market-copy";
 
 const navItems = [
   { label: "Marketplace", href: "/marketplace" },
@@ -37,6 +40,19 @@ const legalLinks = [
 
 
 export function Navbar() {
+  const locale=useSiteLocale();const t=siteTranslation(locale);const mc=marketCopy(locale);
+  const label=(href:string,original:string)=>{
+   if(locale==='de')return original;
+   if(href==='/')return t.navHome;
+   if(href==='/marketplace')return 'Marketplace';
+   if(href==='/reports')return t.navReports;
+   if(href==='/products')return t.navDevice;
+   if(href==='/partner-workshops'||href==='/verify#partner-map')return t.partnerCta;
+   if(href==='/#pricing')return t.prices;
+   if(href==='/contact')return t.navContact;
+   return original;
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const menuId = useId();
@@ -105,7 +121,7 @@ export function Navbar() {
                     onClick={closeMenu}
                     className="block rounded-lg border border-white/10 bg-white/[0.06] px-4 py-4 text-lg font-semibold text-slate-100 shadow-[0_0_28px_rgba(139,92,246,0.08)] transition hover:border-pulse/35 hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
                   >
-                    {link.label}
+                    {label(link.href,link.label)}
                   </Link>
                 ))}
 
@@ -158,10 +174,10 @@ export function Navbar() {
             <CtaLink href="/reports" variant="secondary">
               Prüfbericht suchen
             </CtaLink>
-            <CtaLink href="/verify#partner-map">Fahrzeug checken lassen</CtaLink>
+            <CtaLink href="/verify#partner-map">{locale==='de'?'Fahrzeug checken lassen':t.partnerCta}</CtaLink>
           </div>
 
-          <div className="ms-auto shrink-0 xl:ms-0"><LanguagePicker current="de" compact /></div>
+          <div className="ms-auto shrink-0 xl:ms-0"><LanguagePicker current={locale} compact /></div>
 
           <button
             type="button"
