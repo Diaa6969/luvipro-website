@@ -9,6 +9,7 @@ import { BrandLogo } from "@/components/ui/brand-logo";
 import { LanguagePicker } from "@/components/ui/language-picker";
 import {useSiteLocale} from "@/components/ui/site-locale-bridge";
 import {siteTranslation} from "@/lib/site-translation";
+import {localizedSiteHref} from "@/lib/site-locales";
 import {marketCopy} from "@/lib/marketplace/market-copy";
 
 const navItems = [
@@ -117,7 +118,7 @@ export function Navbar() {
                 {mobileLinks.map((link) => (
                   <Link
                     key={link.href}
-                    href={link.href}
+                    href={localizedSiteHref(locale,link.href)}
                     onClick={closeMenu}
                     className="block rounded-lg border border-white/10 bg-white/[0.06] px-4 py-4 text-lg font-semibold text-slate-100 shadow-[0_0_28px_rgba(139,92,246,0.08)] transition hover:border-pulse/35 hover:bg-pulse/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
                   >
@@ -136,7 +137,7 @@ export function Navbar() {
                     {legalLinks.map((link) => (
                       <Link
                         key={link.href}
-                        href={link.href}
+                        href={localizedSiteHref(locale,link.href)}
                         onClick={closeMenu}
                         className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-300 transition hover:border-pulse/45 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse"
                       >
@@ -162,7 +163,7 @@ export function Navbar() {
             {navItems.map((item) => (
               <Link
                 key={`${item.label}-${item.href}`}
-                href={item.href}
+                href={localizedSiteHref(locale,item.href)}
                 className="text-sm font-medium text-slate-300 transition hover:text-white"
               >
                 {label(item.href,item.label)}
