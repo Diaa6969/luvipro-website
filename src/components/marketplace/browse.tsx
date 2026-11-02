@@ -7,7 +7,6 @@ import {modelsForBrand} from '@/lib/marketplace/car-models';
 import {useSiteLocale} from '@/components/ui/site-locale-bridge';
 import {marketCopy} from '@/lib/marketplace/market-copy';
 import {marketplaceSearchHint} from '@/lib/marketplace/search-hints';
-import {getPreferredSiteLocale, type SiteLocale} from '@/lib/site-locales';
 export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  const locale=useSiteLocale();const txt=marketCopy(locale);
  const [filters,setFilters]=useState<Record<string,unknown>>(dealerId?{dealer_id:dealerId}:{});const [applied,setApplied]=useState<Record<string,unknown>>(dealerId?{dealer_id:dealerId}:{});const [items,setItems]=useState<Listing[]>([]);const [offset,setOffset]=useState(0);const [total,setTotal]=useState(0);const [busy,setBusy]=useState(true);const [error,setError]=useState('');
@@ -32,14 +31,6 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
   return next;
  });
 
- const [hintLocale,setHintLocale]=useState<SiteLocale>('de');
- useEffect(()=>{
-  const refresh=()=>setHintLocale(getPreferredSiteLocale());
-  refresh();
-  window.addEventListener('storage',refresh);
-  window.addEventListener('pageshow',refresh);
-  return ()=>{window.removeEventListener('storage',refresh);window.removeEventListener('pageshow',refresh);};
- },[]);
  const [customBrand,setCustomBrand]=useState(false);const [customModel,setCustomModel]=useState(false);const [wish,setWish]=useState('');const [assistNotice,setAssistNotice]=useState('');const [recognized,setRecognized]=useState<string[]>([]);const [assisting,setAssisting]=useState(false);
  async function suggest(){
   setAssisting(true);
@@ -57,7 +48,7 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
   }finally{setAssisting(false);}
  }
  return <><details className={panel+' mb-5'} open><summary className="cursor-pointer font-semibold">{txt.wishTitle}</summary><p className="my-3 text-slate-300">{txt.wishHelp}</p>
- <textarea aria-label={txt.wishTitle} dir={locale==='ar'?'rtl':'auto'} lang={locale} className={input} maxLength={1000} value={wish} onChange={e=>setWish(e.target.value)} placeholder={marketplaceSearchHint(hintLocale)}/>
+ <textarea aria-label={txt.wishTitle} dir={locale==='ar'?'rtl':'auto'} lang={locale} className={input} maxLength={1000} value={wish} onChange={e=>setWish(e.target.value)} placeholder={marketplaceSearchHint(locale)}/>
  <button className={button+' mt-3'} disabled={assisting||busy||wish.trim().length<3} onClick={()=>void suggest()}>{assisting?txt.loading:txt.wishButton}</button>
  {assistNotice&&<div role="status" aria-live="polite" className="mt-4 rounded-lg border border-cyan-400/25 p-3 text-sm"><p>{assistNotice}</p>{recognized.length>0&&<p className="mt-2 text-slate-300">{txt.recognized}: {recognized.join(' · ')}</p>}</div>}
  </details><form className={panel+' grid gap-3 sm:grid-cols-3'} onSubmit={e=>{e.preventDefault();void search();}}>
