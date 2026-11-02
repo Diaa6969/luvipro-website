@@ -75,6 +75,26 @@ assert.match(browseSource,/aria-label="Erstzulassung bis"/,'first registration t
 assert.match(browseSource,/step="100"/,'price must change in €100 increments');
 assert.match(browseSource,/step="1000"/,'mileage must change in 1,000 km increments');
 assert.match(browseSource,/rounded\*100/,'price normalization must be stored as cents');
+
+const siteLocalesSource=readFileSync(resolve('src/lib/site-locales.ts'),'utf8');
+const siteLocalesJs=ts.transpileModule(siteLocalesSource,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}});
+const {siteLocales}=await import('data:text/javascript;base64,'+Buffer.from(siteLocalesJs.outputText).toString('base64'));
+const hintsSource=readFileSync(resolve('src/lib/marketplace/search-hints.ts'),'utf8');
+const hintsJs=ts.transpileModule(hintsSource,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}});
+const {MARKETPLACE_SEARCH_HINTS,marketplaceSearchHint}=await import('data:text/javascript;base64,'+Buffer.from(hintsJs.outputText).toString('base64'));
+assert.equal(Object.keys(MARKETPLACE_SEARCH_HINTS).length,siteLocales.length,'all site languages must have a search hint');
+for(const [locale] of siteLocales){
+ assert.ok(marketplaceSearchHint(locale).length>20,'missing or too short Suchwunsch hint for '+locale);
+ assert.ok(marketplaceSearchHint(locale).includes('BMW'),'example should contain an actual searchable vehicle make for '+locale);
+}
+assert.match(marketplaceSearchHint('de'),/BMW Diesel Automatik bis 20\.000 €/,'German must be default example');
+assert.match(marketplaceSearchHint('ar'),/أبحث عن/,'Arabic search example must not be mixed-language text');
+assert.match(browseSource,/placeholder=\{marketplaceSearchHint\(hintLocale\)\}/,'Suchwunsch textarea must use localized hint');
+assert.match(browseSource,/getPreferredSiteLocale\(\)/,'Marketplace must follow the user-selected language');
+const pickerSource=readFileSync(resolve('src/components/ui/language-picker.tsx'),'utf8');
+assert.match(pickerSource,/onClick=\{\(\) => setPreferredSiteLocale\(code\)\}/,'site language picker must remember selection');
+assert.match(siteLocalesSource,/return stored && isSiteLocale\(stored\) \? stored : 'de'/,'German must remain the default for unknown or missing preferences');
+
 assert.match(browseSource,/value=\{customBrand\?'__other__':String\(filters\.brand\?\?''\)\}/,'brand select must be bound to interpreted brand or manual mode');
 assert.match(browseSource,/await search\(0,next\)/,'interpreted filters must execute immediately');
 console.log('Multilingual Suchwunsch: '+cases.length+' language and safety cases passed.');
