@@ -127,7 +127,7 @@ export function Navbar() {
 
               </nav>
 
-              <div className="mt-8 max-w-xs"><LanguagePicker current="de" /></div>
+              <div className="mt-8 max-w-xs"><LanguagePicker current={locale} /></div>
 
               <div className="mt-auto pt-10">
                 <div className="rounded-lg border border-ultraviolet/20 bg-ultraviolet/10 p-4">
@@ -165,7 +165,7 @@ export function Navbar() {
                 href={item.href}
                 className="text-sm font-medium text-slate-300 transition hover:text-white"
               >
-                {item.label}
+                {label(item.href,item.label)}
               </Link>
             ))}
           </div>
