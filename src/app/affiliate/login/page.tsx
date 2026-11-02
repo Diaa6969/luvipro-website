@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import {SitePhrase} from '@/components/ui/site-phrase';
 import Link from "next/link";
 import { affiliateBackendConfigured } from "@/lib/affiliate/server";
 export const metadata:Metadata={title:"Affiliate Login | LUVIPRO",robots:{index:false,follow:false,nocache:true}};
@@ -9,14 +10,14 @@ export default async function AffiliateLogin({searchParams}:{searchParams:Promis
   <Link href="/affiliate" className="text-pulse">← Affiliate-Programm</Link>
   <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.04] p-7 sm:p-10">
    <p className="text-xs font-semibold uppercase tracking-widest text-pulse">LUVIPRO Partnerkonto</p>
-   <h1 className="mt-3 text-3xl font-bold">Mit vorhandenem Konto anmelden</h1>
+   <h1 className="mt-3 text-3xl font-bold"><SitePhrase id="login"/></h1>
    <p className="mt-4 text-sm leading-7 text-slate-300">Nutzen Sie dieselbe E-Mail-Adresse und dasselbe Passwort wie in der LUVIPRO App – egal ob Sie Privatkunde oder Werkstattpartner sind. Es wird kein zweites Konto angelegt. Nach der Anmeldung sehen Sie Ihren Bewerbungsstatus oder können Ihre erste Affiliate-Bewerbung einreichen. Eine bestehende Affiliate-Freigabe ist für die Anmeldung nicht erforderlich.</p>
    {!enabled&&<p role="status" className="mt-5 rounded-lg border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">Die Anmeldung zum Affiliate-Bereich ist derzeit nicht freigeschaltet. Die Teilnahmebedingungen sind bereits verfügbar; hier werden erst nach Aktivierung der gesicherten Anbindung echte Partnerkonten zugelassen.</p>}
    {params.error==="1"&&<p role="alert" className="mt-5 rounded-lg bg-rose-500/10 p-4 text-sm text-rose-100">Anmeldung nicht möglich. Bitte prüfen Sie die E-Mail-Adresse und das Passwort Ihres bestehenden LUVIPRO-Kontos. Eine Affiliate- oder Gewerbe-Freigabe ist für die Anmeldung nicht erforderlich.</p>}
    <form action="/api/affiliate/session" method="POST" className="mt-7 space-y-5">
-    <label className="block text-sm">E-Mail-Adresse<input required disabled={!enabled} autoComplete="email" type="email" name="email" maxLength={200} className="mt-2 block w-full rounded-xl border border-white/15 bg-[#10182a] p-3 text-white"/></label>
-    <label className="block text-sm">Passwort<input required disabled={!enabled} autoComplete="current-password" type="password" name="password" maxLength={256} className="mt-2 block w-full rounded-xl border border-white/15 bg-[#10182a] p-3 text-white"/></label>
-    <button disabled={!enabled} className="w-full rounded-xl bg-violet-600 p-4 font-bold disabled:cursor-not-allowed disabled:opacity-40">Mein Affiliate-Konto öffnen</button>
+    <label className="block text-sm"><SitePhrase id="email"/><input required disabled={!enabled} autoComplete="email" type="email" name="email" maxLength={200} className="mt-2 block w-full rounded-xl border border-white/15 bg-[#10182a] p-3 text-white"/></label>
+    <label className="block text-sm"><SitePhrase id="password"/><input required disabled={!enabled} autoComplete="current-password" type="password" name="password" maxLength={256} className="mt-2 block w-full rounded-xl border border-white/15 bg-[#10182a] p-3 text-white"/></label>
+    <button disabled={!enabled} className="w-full rounded-xl bg-violet-600 p-4 font-bold disabled:cursor-not-allowed disabled:opacity-40"><SitePhrase id="affiliateAccount"/></button>
    </form>
    <p className="mt-5 text-xs text-slate-400">Bitte beachten Sie die <Link href="/affiliate/agb" className="text-pulse underline">Affiliate-Teilnahmebedingungen</Link>. Noch nicht für Affiliate freigegeben? <Link href="/affiliate" className="text-pulse underline">Gewerbe-Nachweis einreichen.</Link> Bestehende Nutzer- und Werkstattfunktionen bleiben unverändert.</p>
   </div>
