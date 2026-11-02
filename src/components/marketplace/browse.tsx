@@ -5,7 +5,7 @@ import {interpretVehicleWish} from '@/lib/marketplace/multilingual-search';
 import {CAR_BRANDS} from '@/lib/marketplace/car-brands';
 import {modelsForBrand} from '@/lib/marketplace/car-models';
 import {useSiteLocale} from '@/components/ui/site-locale-bridge';
-import {marketCopy} from '@/lib/marketplace/market-copy';
+import {marketCopy,marketOption} from '@/lib/marketplace/market-copy';
 import {marketplaceSearchHint} from '@/lib/marketplace/search-hints';
 export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  const locale=useSiteLocale();const txt=marketCopy(locale);
@@ -83,9 +83,9 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  <select aria-label={txt.firstTo} value={String(filters.first_to??'').slice(0,4)} className={input} onChange={e=>chooseYear('first_to',e.target.value)}>
   <option value="">{txt.firstTo}</option>{years.map(year=><option key={year} value={year}>{year}</option>)}
  </select>
- <select aria-label={txt.fuel} value={String(filters.fuel??'')} className={input} onChange={e=>set('fuel',e.target.value)}><option value="">{txt.fuel}</option>{['Benzin','Diesel','Elektro','Hybrid','Plug-in-Hybrid','LPG','CNG','Andere'].map(x=><option key={x}>{x}</option>)}</select>
- <select aria-label={txt.gear} value={String(filters.transmission??'')} className={input} onChange={e=>set('transmission',e.target.value)}><option value="">{txt.gear}</option><option>Automatik</option><option>Schaltgetriebe</option></select>
- <select aria-label={txt.sort} value={String(filters.sort??'newest')} className={input} onChange={e=>set('sort',e.target.value)}><option value="newest">Neueste zuerst</option><option value="oldest">Älteste zuerst</option><option value="mileage_asc">Kilometerstand aufsteigend</option><option value="mileage_desc">Kilometerstand absteigend</option><option value="registration_desc">Erstzulassung: neueste zuerst</option><option value="registration_asc">Erstzulassung: älteste zuerst</option><option value="price_asc">Preis aufsteigend</option><option value="price_desc">Preis absteigend</option></select>
+ <select aria-label={txt.fuel} value={String(filters.fuel??'')} className={input} onChange={e=>set('fuel',e.target.value)}><option value="">{txt.fuel}</option>{['Benzin','Diesel','Elektro','Hybrid','Plug-in-Hybrid','LPG','CNG','Andere'].map(x=><option key={x} value={x}>{marketOption(locale,({Benzin:'petrol',Diesel:'diesel',Elektro:'electric',Hybrid:'hybrid','Plug-in-Hybrid':'plugIn',Andere:'other'} as Record<string,string>)[x]||x)}</option>)}</select>
+ <select aria-label={txt.gear} value={String(filters.transmission??'')} className={input} onChange={e=>set('transmission',e.target.value)}><option value="">{txt.gear}</option><option value="Automatik">{marketOption(locale,'automatic')}</option><option value="Schaltgetriebe">{marketOption(locale,'manual')}</option></select>
+ <select aria-label={txt.sort} value={String(filters.sort??'newest')} className={input} onChange={e=>set('sort',e.target.value)}><option value="newest">{marketOption(locale,'newest')}</option><option value="oldest">{marketOption(locale,'oldest')}</option><option value="mileage_asc">{marketOption(locale,'mileage_asc')}</option><option value="mileage_desc">{marketOption(locale,'mileage_desc')}</option><option value="registration_desc">{marketOption(locale,'registration_desc')}</option><option value="registration_asc">{marketOption(locale,'registration_asc')}</option><option value="price_asc">{marketOption(locale,'price_asc')}</option><option value="price_desc">{marketOption(locale,'price_desc')}</option></select>
  <button className={button} disabled={busy}>{busy?txt.loading:txt.find}</button></form>
  <div className="my-3 flex flex-wrap gap-2">{Object.entries(filters).filter(([k,v])=>['city','equipment'].includes(k)&&Boolean(v)).map(([k,v])=><button key={k} className={button} onClick={()=>set(k,'')}>{String(Array.isArray(v)?v.join(', '):v)} ×</button>)}</div>{error&&<p role="alert" className="my-4 text-rose-300">{error} <Link href="/affiliate/login">Anmelden</Link></p>}
  <SponsoredSlots filters={applied}/><p className="my-5 text-slate-300">{total} {txt.results}</p>
