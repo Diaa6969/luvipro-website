@@ -82,6 +82,8 @@ jobs:
       - name: Audit video stills for people, logos and embedded text (preview only)
         if: github.ref_name == 'preview/semantic-film-background-v2-20261031'
         run: node scripts/audit-cinematic-samples.mjs
+      - name: Verify multilingual Marketplace Suchwunsch and Arabic filter extraction
+        run: node scripts/test-marketplace-multilingual-suchwunsch.mjs
       - name: Verify production build (payments disabled)
         env:
           STORE_PREORDERS_ENABLED: 'false'
