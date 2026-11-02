@@ -1,5 +1,6 @@
 /** Public, no-cost multilingual filter extraction. Does not read inspection reports. */
 import {CAR_BRANDS,CAR_BRAND_ALIASES} from './car-brands';
+import {modelsForBrand} from './car-models';
 
 export type SearchFilters = Record<string,string|number|string[]>;
 export type SearchInterpretation = {filters:SearchFilters;recognized:string[];notice:string};
@@ -98,6 +99,16 @@ export function interpretVehicleWish(raw:string):SearchInterpretation {
  const t=normalizeVehicleWish(raw.slice(0,1000));const filters:SearchFilters={};
  if(t.length<3)return {filters,recognized:[],notice:'Mindestens 3 Zeichen eingeben. / اكتب ثلاثة أحرف على الأقل.'};
  const brand=matchOne(t,ALL_BRANDS);if(brand)filters.brand=brand;
+
+ // Model suggestions are scoped STRICTLY to the already-detected manufacturer.
+ // The list contains nameplates, not technical specs or inspection findings.
+ if(brand){
+  const model=modelsForBrand(brand)
+   .filter(name=>name.length>=2 && (name.length>=3 || /[0-9]/.test(name)))
+   .sort((a,b)=>b.length-a.length)
+   .find(name=>contains(t,[name])||contains(t,[name.replace(/[-_.]/g,' ')]));
+  if(model)filters.model=model;
+ }
  const fuel=matchOne(t,FUEL);if(fuel)filters.fuel=fuel;
  const gearbox=matchOne(t,TRANSMISSION);if(gearbox)filters.transmission=gearbox;
  const price=amount(t,PRICE_UNITS,100000000);if(price!==null)filters.max_price=Math.round(price*100);
@@ -113,7 +124,7 @@ export function interpretVehicleWish(raw:string):SearchInterpretation {
  const city=matchOne(t,CITY);if(city)filters.city=city;
  const features=Object.entries(EQUIPMENT).filter(([,aliases])=>aliases.some(a=>contains(t,[a])&&!negated(t,a))).map(([name])=>name);
  if(features.length)filters.equipment=features;
- const labels:Record<string,string>={brand:'Marke',fuel:'Kraftstoff',transmission:'Getriebe',max_price:'Preis bis',max_mileage:'Kilometer bis',city:'Ort',first_from:'Erstzulassung ab',equipment:'Ausstattung'};
+ const labels:Record<string,string>={brand:'Marke',model:'Modell',fuel:'Kraftstoff',transmission:'Getriebe',max_price:'Preis bis',max_mileage:'Kilometer bis',city:'Ort',first_from:'Erstzulassung ab',equipment:'Ausstattung'};
  const recognized=Object.entries(filters).map(([k,v])=>{const value=k==='max_price'?new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(v)/100):k==='first_from'?String(v).slice(0,4):Array.isArray(v)?v.join(', '):String(v);return (labels[k]||k)+': '+value;});
  const accidentRequested=/(?:unfallfrei|ohne unf[aä]ll?e?|without accidents?|accident.free|sin accidentes|بدون حوادث|بلا حوادث|بدون حادث|sans accident|без дтп)/u.test(t);
  const caveat=accidentRequested?' Unfallfreiheit wird nicht automatisch als Filter behauptet. / لا يمكن ضمان خلو السيارة من الحوادث من البحث وحده.':'';
