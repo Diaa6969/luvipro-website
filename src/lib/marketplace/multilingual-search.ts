@@ -1,4 +1,6 @@
 /** Public, no-cost multilingual filter extraction. Does not read inspection reports. */
+import {CAR_BRANDS,CAR_BRAND_ALIASES} from './car-brands';
+
 export type SearchFilters = Record<string,string|number|string[]>;
 export type SearchInterpretation = {filters:SearchFilters;recognized:string[];notice:string};
 const eastern='٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹';
@@ -23,6 +25,11 @@ const BRAND:Record<string,string[]>={
  Kia:['kia','كيا','киа'],Tesla:['tesla','تسلا','тесла'],
  Honda:['honda','هوندا','хонда'],Nissan:['nissan','نيسان','ниссан'],
  Mazda:['mazda','مازدا','мазда'],Fiat:['fiat','فيات','фиат'],Dacia:['dacia','داسيا'],Mini:['mini','ميني']};
+// Shared make list powers BOTH the selection field and natural-language wishes.
+// Preserve existing Arabic/Russian/Chinese synonyms while recognizing every known make.
+const ALL_BRANDS:Record<string,string[]> = Object.fromEntries(
+ CAR_BRANDS.map(brand=>[brand,[brand,...(BRAND[brand]||[]),...(CAR_BRAND_ALIASES[brand]||[])]])
+);
 const FUEL:Record<string,string[]>={
  'Plug-in-Hybrid':['plug-in hybrid','plug in hybrid','phev','هجين قابل للشحن','插电混动'],
  Benzin:['benzin','benzine','benzina','benzyna','gasolina','gasoline','petrol','essence','bensin','bensiini','benzină','بنزين','بترول','بنزین','бензин','βενζινη','汽油','ガソリン','휘발유','पेट्रोल'],
@@ -90,7 +97,7 @@ function matchOne(t:string,map:Record<string,string[]>):string|undefined {
 export function interpretVehicleWish(raw:string):SearchInterpretation {
  const t=normalizeVehicleWish(raw.slice(0,1000));const filters:SearchFilters={};
  if(t.length<3)return {filters,recognized:[],notice:'Mindestens 3 Zeichen eingeben. / اكتب ثلاثة أحرف على الأقل.'};
- const brand=matchOne(t,BRAND);if(brand)filters.brand=brand;
+ const brand=matchOne(t,ALL_BRANDS);if(brand)filters.brand=brand;
  const fuel=matchOne(t,FUEL);if(fuel)filters.fuel=fuel;
  const gearbox=matchOne(t,TRANSMISSION);if(gearbox)filters.transmission=gearbox;
  const price=amount(t,PRICE_UNITS,100000000);if(price!==null)filters.max_price=Math.round(price*100);
