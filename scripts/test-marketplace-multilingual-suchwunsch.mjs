@@ -23,7 +23,7 @@ assert.ok(modelsForBrand('Mercedes-Benz').includes('C-Klasse'),'Mercedes should 
 assert.ok(!modelsForBrand('BMW').includes('C-Klasse'),'models must not leak between brands');
 const source=readFileSync(resolve('src/lib/marketplace/multilingual-search.ts'),'utf8')
  .replace(/import \{CAR_BRANDS,CAR_BRAND_ALIASES\} from '\.\/car-brands';/, 'const CAR_BRANDS='+JSON.stringify(CAR_BRANDS)+'; const CAR_BRAND_ALIASES='+JSON.stringify(CAR_BRAND_ALIASES)+';')
- .replace(/import \{modelsForBrand\} from '\.\/car-models';/, 'const modelsForBrand=(brand)=>'+JSON.stringify(CAR_MODELS_BY_BRAND)+'[brand]||[];');
+ .replace(/import \{modelsForBrand\} from '\.\/car-models';/, 'const modelsForBrand=(brand)=>('+JSON.stringify(CAR_MODELS_BY_BRAND)+')[brand]||[];');
 const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext},reportDiagnostics:true});
 assert.equal((compiled.diagnostics||[]).filter(x=>x.category===ts.DiagnosticCategory.Error).length,0);
 const {interpretVehicleWish}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputText).toString('base64'));
