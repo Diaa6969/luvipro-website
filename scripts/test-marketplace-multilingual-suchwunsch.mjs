@@ -93,6 +93,7 @@ assert.match(browseSource,/placeholder=\{marketplaceSearchHint\(locale\)\}/,'Suc
 assert.match(browseSource,/useSiteLocale\(\)/,'Marketplace must follow the user-selected language');
 const pickerSource=readFileSync(resolve('src/components/ui/language-picker.tsx'),'utf8');
 assert.match(pickerSource,/onClick=\{\(\) => setPreferredSiteLocale\(code\)\}/,'site language picker must remember selection');
+assert.match(pickerSource,/next\.searchParams\.set\("lang", code\)/,'language switching must preserve existing route and checkout parameters');
 assert.match(siteLocalesSource,/return stored && isSiteLocale\(stored\) \? stored : 'de'/,'German must remain the default for unknown or missing preferences');
 
 assert.match(browseSource,/value=\{customBrand\?'__other__':String\(filters\.brand\?\?''\)\}/,'brand select must be bound to interpreted brand or manual mode');
