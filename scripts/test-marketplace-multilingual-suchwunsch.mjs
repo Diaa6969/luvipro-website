@@ -64,14 +64,14 @@ assert.equal(interpretVehicleWish('  ').recognized.length,0);
 const screenshotResult=interpretVehicleWish('Mercedes 19000 Euro');
 assert.ok(screenshotResult.recognized.includes('Preis bis: 19.000,00\u00a0€'),'price display must be full euros');
 const browseSource=readFileSync(resolve('src/components/marketplace/browse.tsx'),'utf8');
-assert.match(browseSource,/aria-label="Marke"/,'brand selection must be visibly editable');
+assert.match(browseSource,/aria-label=\{txt\.brands\}/,'brand selection must be visibly editable');
 assert.match(browseSource,/CAR_BRANDS\.map/,'dropdown must come from full shared catalog');
-assert.match(browseSource,/Andere Marke manuell eingeben/,'unlisted brand must be manually searchable');
-assert.match(browseSource,/aria-label="Modell"/,'model selector must be present');
+assert.match(browseSource,/txt\.brandOther/,'unlisted brand must be manually searchable');
+assert.match(browseSource,/aria-label=\{txt\.models\}/,'model selector must be present');
 assert.match(browseSource,/modelsForBrand\(String\(filters\.brand/,'model options must depend on selected brand');
 assert.match(browseSource,/delete next\.model/,'switching brands must reset any previous model');
-assert.match(browseSource,/aria-label="Erstzulassung ab"/,'first registration from control missing');
-assert.match(browseSource,/aria-label="Erstzulassung bis"/,'first registration to control missing');
+assert.match(browseSource,/aria-label=\{txt\.firstFrom\}/,'first registration from control missing');
+assert.match(browseSource,/aria-label=\{txt\.firstTo\}/,'first registration to control missing');
 assert.match(browseSource,/step="100"/,'price must change in €100 increments');
 assert.match(browseSource,/step="1000"/,'mileage must change in 1,000 km increments');
 assert.match(browseSource,/rounded\*100/,'price normalization must be stored as cents');
@@ -89,12 +89,26 @@ for(const [locale] of siteLocales){
 }
 assert.match(marketplaceSearchHint('de'),/BMW Diesel Automatik bis 20\.000 €/,'German must be default example');
 assert.match(marketplaceSearchHint('ar'),/أبحث عن/,'Arabic search example must not be mixed-language text');
-assert.match(browseSource,/placeholder=\{marketplaceSearchHint\(hintLocale\)\}/,'Suchwunsch textarea must use localized hint');
-assert.match(browseSource,/getPreferredSiteLocale\(\)/,'Marketplace must follow the user-selected language');
+assert.match(browseSource,/placeholder=\{marketplaceSearchHint\(locale\)\}/,'Suchwunsch textarea must use localized hint');
+assert.match(browseSource,/useSiteLocale\(\)/,'Marketplace must follow the user-selected language');
 const pickerSource=readFileSync(resolve('src/components/ui/language-picker.tsx'),'utf8');
 assert.match(pickerSource,/onClick=\{\(\) => setPreferredSiteLocale\(code\)\}/,'site language picker must remember selection');
 assert.match(siteLocalesSource,/return stored && isSiteLocale\(stored\) \? stored : 'de'/,'German must remain the default for unknown or missing preferences');
 
 assert.match(browseSource,/value=\{customBrand\?'__other__':String\(filters\.brand\?\?''\)\}/,'brand select must be bound to interpreted brand or manual mode');
 assert.match(browseSource,/await search\(0,next\)/,'interpreted filters must execute immediately');
+const marketCopySource=readFileSync(resolve('src/lib/marketplace/market-copy.ts'),'utf8')
+ .replace(/import \{siteLocales,type SiteLocale\} from '@\/lib\/site-locales';/, 'const siteLocales='+JSON.stringify(siteLocales)+';');
+const marketCopyJs=ts.transpileModule(marketCopySource,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext},reportDiagnostics:true});
+assert.equal((marketCopyJs.diagnostics||[]).filter(x=>x.category===ts.DiagnosticCategory.Error).length,0);
+const {marketCopy}=await import('data:text/javascript;base64,'+Buffer.from(marketCopyJs.outputText).toString('base64'));
+for(const [locale] of siteLocales){
+ const t=marketCopy(locale);
+ assert.equal(Object.keys(t).length,29,'All 29 Marketplace labels required for '+locale);
+ for(const [k,v] of Object.entries(t))assert.ok(typeof v==='string'&&v.length>=2,'Missing '+k+' in '+locale);
+}
+assert.equal(marketCopy('de').brands,'Alle Marken');
+assert.equal(marketCopy('ar').brands,'كل الماركات');
+assert.equal(marketCopy('en').brands,'All makes');
+
 console.log('Multilingual Suchwunsch: '+cases.length+' language and safety cases passed.');
