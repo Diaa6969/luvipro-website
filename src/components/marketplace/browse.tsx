@@ -8,7 +8,7 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  async function search(page=0,selected=filters){setBusy(true);setError('');try{const x=await market({action:'read',mode:'search',filters:selected,offset:page});setItems(x.items||[]);setApplied({...selected});setTotal(x.total||0);setOffset(page);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
  useEffect(()=>{void search();},[]); // Searches are explicit; no stale responses from per-keystroke requests.
  const set=(k:string,v:string)=>setFilters(f=>{const next={...f};if(v)next[k]=v;else delete next[k];return next;});
- const [wish,setWish]=useState('');const [assistNotice,setAssistNotice]=useState('');const [recognized,setRecognized]=useState<string[]>([]);const [assisting,setAssisting]=useState(false);
+ const [customBrand,setCustomBrand]=useState(false);const [wish,setWish]=useState('');const [assistNotice,setAssistNotice]=useState('');const [recognized,setRecognized]=useState<string[]>([]);const [assisting,setAssisting]=useState(false);
  async function suggest(){
   setAssisting(true);
   try{
@@ -19,6 +19,7 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
    // Search immediately, including for anonymous buyers and right-to-left text.
    // Keep dealer scope and selected sort, replace old search wish constraints.
    const next:Record<string,unknown>={...(dealerId?{dealer_id:dealerId}:{}),sort:filters.sort||'newest',...result.filters};
+   setCustomBrand(false);
    setFilters(next);
    await search(0,next);
   }finally{setAssisting(false);}
@@ -28,13 +29,15 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  <button className={button+' mt-3'} disabled={assisting||busy||wish.trim().length<3} onClick={()=>void suggest()}>{assisting?'Suche läuft …':'Suchwunsch suchen / بحث'}</button>
  {assistNotice&&<div role="status" aria-live="polite" className="mt-4 rounded-lg border border-cyan-400/25 p-3 text-sm"><p>{assistNotice}</p>{recognized.length>0&&<p className="mt-2 text-slate-300">Erkannt: {recognized.join(' · ')}</p>}</div>}
  </details><form className={panel+' grid gap-3 sm:grid-cols-3'} onSubmit={e=>{e.preventDefault();void search();}}>
- <select aria-label="Marke" title="Automarke auswählen" value={String(filters.brand??'')} className={input} onChange={e=>set('brand',e.target.value)}>
+ <select aria-label="Marke" title="Automarke auswählen" value={customBrand?'__other__':String(filters.brand??'')} className={input} onChange={e=>{if(e.target.value==='__other__'){setCustomBrand(true);set('brand','');}else{setCustomBrand(false);set('brand',e.target.value);}}}>
  <option value="">Alle Marken</option>
+ <option value="__other__">Andere Marke manuell eingeben …</option>
  {Boolean(filters.brand)&&!CAR_BRANDS.some(brand=>brand.toLowerCase()===String(filters.brand).toLowerCase())&&<option value={String(filters.brand)}>{String(filters.brand)}</option>}
  {Array.from(new Set(CAR_BRANDS.map(brand=>brand[0]!.toUpperCase()))).map(letter=>
  <optgroup key={letter} label={letter}>{CAR_BRANDS.filter(brand=>brand[0]!.toUpperCase()===letter).map(brand=><option key={brand} value={brand}>{brand}</option>)}</optgroup>
  )}
  </select>
+ {customBrand&&<input aria-label="Andere Automarke" placeholder="Markennamen eingeben" className={input} value={String(filters.brand??'')} maxLength={80} onChange={e=>set('brand',e.target.value)}/>}
  <input aria-label="Modell oder Ort" placeholder="Modell oder Ort" value={String(filters.q??'')} className={input} onChange={e=>set('q',e.target.value)}/>
  <input aria-label="Preis bis EUR" type="number" min="0" placeholder="Preis bis EUR" value={filters.max_price?Number(filters.max_price)/100:''} className={input} onChange={e=>set('max_price',e.target.value?String(Math.round(Number(e.target.value)*100)):'')}/>
  <input aria-label="Kilometer bis" type="number" min="0" placeholder="Kilometer bis" value={String(filters.max_mileage??'')} className={input} onChange={e=>set('max_mileage',e.target.value)}/>
