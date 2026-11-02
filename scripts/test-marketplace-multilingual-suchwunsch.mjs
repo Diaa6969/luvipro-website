@@ -8,6 +8,9 @@ const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarge
 assert.equal((compiled.diagnostics||[]).filter(x=>x.category===ts.DiagnosticCategory.Error).length,0);
 const {interpretVehicleWish}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputText).toString('base64'));
 const cases=[
+ ['Screenshot Arabic price regression','ابحث عن مرسيدس 19000 يورو بنزين حوالي مدينة هانوفر',{brand:'Mercedes-Benz',fuel:'Benzin',max_price:1900000,city:'Hannover'}],
+ ['Screenshot German price and year regression','Suche bmw bis 18000 euro unfallfrei ab 2015',{brand:'BMW',max_price:1800000,first_from:'2015-01'}],
+ ['Price with German grouping and cents','Mercedes 19.000,50 Euro',{brand:'Mercedes-Benz',max_price:1900050}],
  ['Arabic from the site screenshot','ابحث عن bmw بنزين بسعر لحد 18000 يورو بدون حوادث',{brand:'BMW',fuel:'Benzin',max_price:1800000}],
  ['Arabic digits and city','BMW بنزين ١٨٬٠٠٠ يورو في هانوفر',{brand:'BMW',fuel:'Benzin',max_price:1800000,city:'Hannover'}],
  ['German','BMW Diesel Automatik unter 20.000 Euro weniger als 100.000 km in Berlin',{brand:'BMW',fuel:'Diesel',transmission:'Automatik',max_price:2000000,max_mileage:100000,city:'Berlin'}],
@@ -29,4 +32,10 @@ for(const [name,query,expected] of cases){
 }
 assert.deepEqual(interpretVehicleWish('ما بدي سيارة فيها حوادث').filters,{});
 assert.equal(interpretVehicleWish('  ').recognized.length,0);
+const screenshotResult=interpretVehicleWish('Mercedes 19000 Euro');
+assert.ok(screenshotResult.recognized.includes('Preis bis: 19.000,00\u00a0€'),'price display must be full euros');
+const browseSource=readFileSync(resolve('src/components/marketplace/browse.tsx'),'utf8');
+assert.match(browseSource,/aria-label="Marke"/,'brand selection must be visibly editable');
+assert.match(browseSource,/value=\{String\(filters\.brand\?\?''\)\}/,'brand select must be bound to interpreted brand');
+assert.match(browseSource,/await search\(0,next\)/,'interpreted filters must execute immediately');
 console.log('Multilingual Suchwunsch: '+cases.length+' language and safety cases passed.');
