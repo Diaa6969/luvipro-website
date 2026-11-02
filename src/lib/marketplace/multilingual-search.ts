@@ -59,14 +59,23 @@ const CITY:Record<string,string[]>={
  Nürnberg:['nürnberg','nurnberg','nuremberg','نورنبيرغ','нюрнберг']};
 const PRICE_UNITS=['€','eur','euro','euros','يورو','یورو','евро','ευρω','欧元','ユーロ','유로','यूरो'];
 const KM_UNITS=['km','kms','kilometer','kilometre','kilometres','kilometers','kilometros','kilómetros','كيلومتر','كيلو متر','كيلو','км','километров','χλμ','公里','キロ','킬로미터','किमी'];
-const NUMBER='(?:[0-9]{1,3}(?:[. ,\\u00a0\\u202f][0-9]{3})+|[0-9]{1,9})(?:[.,][0-9]{1,2})?';
+// Use the full integer token. Never strip the digit 0 (e.g. 19000 → 19).
+const NUMBER='[0-9]+(?:[., \\u00a0\\u202f][0-9]+)*';
+function parseNumeric(raw:string):number|null{
+ const compact=raw.replace(/[\s\u00a0\u202f]/g,'');
+ // Thousands grouping: 19.000 / 19,000; decimals: 19.000,50 / 19,000.50.
+ const tail=compact.match(/[.,]([0-9]{1,2})$/);
+ const integer=tail?compact.slice(0,-tail[0].length):compact;
+ const normalized=integer.replace(/[.,]/g,'')+(tail?'.'+tail[1]:'');
+ const n=Number(normalized);
+ return Number.isFinite(n)&&n>0?n:null;
+}
 function amount(t:string,units:string[],max:number):number|null{
  const u=units.map(escaped).join('|');
- const re=new RegExp('('+NUMBER+')\\s*(?:'+u+')(?![\\p{L}])|(?:'+u+')\\s*('+NUMBER+')','giu');
+ const re=new RegExp('(?<![0-9])('+NUMBER+')\\s*(?:'+u+')(?![\\p{L}\\p{N}])|(?:'+u+')\\s*('+NUMBER+')(?![0-9])','giu');
  for(const m of t.matchAll(re)){
-  const raw=(m[1]||m[2]).replace(/[\\s\\u00a0\\u202f]/g,'').replace(/(?<=\\d)[.,](?=\\d{3}(?:\\D|$))/g,'').replace(',','.');
-  const n=Number(raw);
-  if(Number.isFinite(n)&&n>0&&n<=max)return n;
+  const n=parseNumeric(m[1]||m[2]);
+  if(n!==null&&n<=max)return n;
  }
  return null;
 }
@@ -86,8 +95,14 @@ export function interpretVehicleWish(raw:string):SearchInterpretation {
  const gearbox=matchOne(t,TRANSMISSION);if(gearbox)filters.transmission=gearbox;
  const price=amount(t,PRICE_UNITS,100000000);if(price!==null)filters.max_price=Math.round(price*100);
  const mileage=amount(t,KM_UNITS,10000000);if(mileage!==null)filters.max_mileage=Math.round(mileage);
- const year=t.match(/(?<![0-9])(?:19[8-9][0-9]|20[0-3][0-9])(?![0-9])/u)?.[0];
- if(year&&contains(t,['ab','seit','from','after','newer than','a partir de','depuis','desde','dal','от','من سنة','موديل من','بعد','أحدث من','احدث من','سنة'])&&!contains(t,['before','vor','bis','قبل','до']))filters.first_from=year+'-01';
+ // Require a year-specific phrase: unrelated "bis 18.000 Euro" must not suppress "ab 2015".
+ const years=[...t.matchAll(/(?<![0-9])(?:19[8-9][0-9]|20[0-3][0-9])(?![0-9])/gu)];
+ for(const y of years){
+  const before=t.slice(Math.max(0,(y.index??0)-45),y.index).trim();
+  if(/(?:^|\s)(?:ab|seit|from|after|newer than|desde|depuis|dal|от|после|منذ|بعد|من|موديل|موديل من)\s*$/u.test(before)){
+   filters.first_from=y[0]+'-01';break;
+  }
+ }
  const city=matchOne(t,CITY);if(city)filters.city=city;
  const features=Object.entries(EQUIPMENT).filter(([,aliases])=>aliases.some(a=>contains(t,[a])&&!negated(t,a))).map(([name])=>name);
  if(features.length)filters.equipment=features;
