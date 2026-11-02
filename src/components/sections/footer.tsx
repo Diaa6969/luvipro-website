@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import {useSiteLocale} from "@/components/ui/site-locale-bridge";
 import {siteTranslation} from "@/lib/site-translation";
+import {localizedSiteHref} from "@/lib/site-locales";
 import {marketCopy} from "@/lib/marketplace/market-copy";
 
 const links = [
@@ -53,7 +54,7 @@ export function Footer() {
             {links.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
+                href={localizedSiteHref(locale,link.href)}
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-white"
