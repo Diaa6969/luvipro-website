@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import {SiteLocaleBridge} from "@/components/ui/site-locale-bridge";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -71,6 +72,7 @@ export default function RootLayout({
     <html lang="de-DE">
       <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}>
         {children}
+        <SiteLocaleBridge />
       </body>
     </html>
   );
