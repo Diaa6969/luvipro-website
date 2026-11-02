@@ -1,14 +1,32 @@
 'use client';
 import {useEffect,useState} from 'react';import Link from 'next/link';
 import {market,Listing,money,panel,input,button} from './client';import {MarketPhoto} from './photo';import {SponsoredSlots} from './promotions';
+import {interpretVehicleWish} from '@/lib/marketplace/multilingual-search';
 export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  const [filters,setFilters]=useState<Record<string,unknown>>(dealerId?{dealer_id:dealerId}:{});const [applied,setApplied]=useState<Record<string,unknown>>(dealerId?{dealer_id:dealerId}:{});const [items,setItems]=useState<Listing[]>([]);const [offset,setOffset]=useState(0);const [total,setTotal]=useState(0);const [busy,setBusy]=useState(true);const [error,setError]=useState('');
- async function search(page=0){setBusy(true);setError('');try{const x=await market({action:'read',mode:'search',filters,offset:page});setItems(x.items||[]);setApplied({...filters});setTotal(x.total||0);setOffset(page);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
+ async function search(page=0,selected=filters){setBusy(true);setError('');try{const x=await market({action:'read',mode:'search',filters:selected,offset:page});setItems(x.items||[]);setApplied({...selected});setTotal(x.total||0);setOffset(page);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
  useEffect(()=>{void search();},[]); // Searches are explicit; no stale responses from per-keystroke requests.
  const set=(k:string,v:string)=>setFilters(f=>{const next={...f};if(v)next[k]=v;else delete next[k];return next;});
- const [wish,setWish]=useState('');const [assistNotice,setAssistNotice]=useState('');const [suggestion,setSuggestion]=useState<Record<string,unknown>|null>(null);const [assisting,setAssisting]=useState(false);
- async function suggest(){setAssisting(true);setError('');try{const x=await market({action:'assist',kind:'search',text:wish});setSuggestion(x.filters||{});setAssistNotice(String(x.notice||'Vorschläge prüfen.'));}catch(e){setError((e as Error).message);}finally{setAssisting(false);}}
- return <><details className={panel+' mb-5'}><summary className="cursor-pointer font-semibold">Suchwunsch formulieren</summary><p className="my-3 text-slate-300">Optionale Suchhilfe. Keine privaten Daten eingeben. Vorschläge prüfen; nicht erkannte Angaben manuell ergänzen.</p><textarea aria-label="Suchwunsch" className={input} maxLength={1000} value={wish} onChange={e=>setWish(e.target.value)} placeholder="BMW Diesel Automatik unter 20000 Euro in Berlin"/><button className={button+' mt-3'} disabled={assisting||wish.trim().length<3} onClick={()=>void suggest()}>{assisting?'Filterhilfe läuft …':'Filter vorschlagen'}</button>{suggestion&&<div className="mt-4"><p>{assistNotice}</p><dl>{Object.entries(suggestion).map(([k,v])=><div key={k}><dt className="font-semibold">{({max_price:'Preis bis',max_mileage:'Kilometer bis',first_from:'Erstzulassung ab',brand:'Marke',fuel:'Kraftstoff',transmission:'Getriebe',city:'Ort',equipment:'Ausstattung'} as Record<string,string>)[k]||k}</dt><dd>{k==='max_price'?money(v):Array.isArray(v)?v.join(', '):String(v)}</dd></div>)}</dl>{!Object.keys(suggestion).length?<p>Keine eindeutigen Filter erkannt.</p>:<button className={button+' mt-3'} onClick={()=>{setFilters(f=>({...f,...suggestion,q:''}));setSuggestion(null);}}>Filter übernehmen; anschließend Suche starten</button>}<button className={button+' ml-2'} onClick={()=>setSuggestion(null)}>Verwerfen</button></div>}</details><form className={panel+' grid gap-3 sm:grid-cols-3'} onSubmit={e=>{e.preventDefault();void search();}}>
+ const [wish,setWish]=useState('');const [assistNotice,setAssistNotice]=useState('');const [recognized,setRecognized]=useState<string[]>([]);const [assisting,setAssisting]=useState(false);
+ async function suggest(){
+  setAssisting(true);
+  try{
+   const result=interpretVehicleWish(wish);
+   setRecognized(result.recognized);
+   setAssistNotice(result.notice);
+   if(!result.recognized.length)return;
+   // Search immediately, including for anonymous buyers and right-to-left text.
+   // Keep dealer scope and selected sort, replace old search wish constraints.
+   const next:Record<string,unknown>={...(dealerId?{dealer_id:dealerId}:{}),sort:filters.sort||'newest',...result.filters};
+   setFilters(next);
+   await search(0,next);
+  }finally{setAssisting(false);}
+ }
+ return <><details className={panel+' mb-5'} open><summary className="cursor-pointer font-semibold">Suchwunsch formulieren · Jede Sprache willkommen</summary><p className="my-3 text-slate-300">Suchanfragen auf Deutsch, Arabisch und vielen weiteren Sprachen möglich. Erkennbare Angaben werden sofort als Filter gesucht. Unklare Angaben bitte manuell ergänzen. Keine privaten Daten eingeben.</p>
+ <textarea aria-label="Suchwunsch in beliebiger Sprache" dir="auto" lang="und" className={input} maxLength={1000} value={wish} onChange={e=>setWish(e.target.value)} placeholder="BMW بنزين لحد 18000 يورو · Audi diesel automatic under €20,000"/>
+ <button className={button+' mt-3'} disabled={assisting||busy||wish.trim().length<3} onClick={()=>void suggest()}>{assisting?'Suche läuft …':'Suchwunsch suchen / بحث'}</button>
+ {assistNotice&&<div role="status" aria-live="polite" className="mt-4 rounded-lg border border-cyan-400/25 p-3 text-sm"><p>{assistNotice}</p>{recognized.length>0&&<p className="mt-2 text-slate-300">Erkannt: {recognized.join(' · ')}</p>}</div>}
+ </details><form className={panel+' grid gap-3 sm:grid-cols-3'} onSubmit={e=>{e.preventDefault();void search();}}>
  <input aria-label="Fahrzeuge suchen" placeholder="Marke, Modell oder Ort" value={String(filters.q??'')} className={input} onChange={e=>set('q',e.target.value)}/>
  <input aria-label="Preis bis EUR" type="number" min="0" placeholder="Preis bis EUR" value={filters.max_price?Number(filters.max_price)/100:''} className={input} onChange={e=>set('max_price',e.target.value?String(Math.round(Number(e.target.value)*100)):'')}/>
  <input aria-label="Kilometer bis" type="number" min="0" placeholder="Kilometer bis" value={String(filters.max_mileage??'')} className={input} onChange={e=>set('max_mileage',e.target.value)}/>
