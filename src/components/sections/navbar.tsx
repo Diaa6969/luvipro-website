@@ -9,6 +9,7 @@ import { BrandLogo } from "@/components/ui/brand-logo";
 import { LanguagePicker } from "@/components/ui/language-picker";
 
 const navItems = [
+  { label: "Marketplace", href: "/marketplace" },
   { label: "Fahrzeugcheck", href: "/verify#partner-map" },
   { label: "Preise", href: "/#pricing" },
   { label: "Werkstatt finden", href: "/verify#partner-map" },
@@ -19,6 +20,7 @@ const navItems = [
 
 const mobileLinks = [
   { label: "Startseite", href: "/" },
+  { label: "Marketplace · Autos entdecken", href: "/marketplace" },
   { label: "Für Werkstätten · Gerät & Konditionen", href: "/products" },
   { label: "Fahrzeugcheck-Preise", href: "/#pricing" },
   { label: "Prüfbericht suchen", href: "/reports" },
