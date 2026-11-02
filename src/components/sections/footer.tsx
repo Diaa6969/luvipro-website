@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/ui/brand-logo";
 
 const links = [
+  { label: "Marketplace · Geprüfte Fahrzeuge", href: "/marketplace" },
   { label: "Partnerwerkstatt finden", href: "/partner-workshops" },
   { label: "Affiliate-Partner werden", href: "/affiliate" },
   { label: "Affiliate-Konto & Einnahmen", href: "/affiliate/login" },
