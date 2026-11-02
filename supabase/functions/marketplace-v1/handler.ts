@@ -1,6 +1,7 @@
+import {optionalAssist,type AssistConfig} from './assist.ts';
 import type {SupabaseClient, SupabaseClientOptions} from 'npm:@supabase/supabase-js@2.117.3';
 import {UUID,imageType,bounded,rpcAction} from './validation.ts';
-type Dependencies={url?:string;secret?:string;anon?:string;createClient:(url:string,key:string,options:SupabaseClientOptions<'public'>)=>SupabaseClient};
+type Dependencies={assist?:AssistConfig;url?:string;secret?:string;anon?:string;createClient:(url:string,key:string,options:SupabaseClientOptions<'public'>)=>SupabaseClient};
 const headers={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'authorization,apikey,content-type,x-client-info','Access-Control-Allow-Methods':'POST,OPTIONS','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
 const reply=(status:number,data:unknown)=>new Response(JSON.stringify(data),{status,headers:{...headers,'Content-Type':'application/json'}});
 export async function handleMarketplace(req:Request,deps:Dependencies):Promise<Response>{
@@ -49,6 +50,11 @@ export async function handleMarketplace(req:Request,deps:Dependencies):Promise<R
  if(!call.public&&!actor)return reply(401,{error:'authentication_required'});
  const {data,error}=await scoped.rpc(call.name,call.params);
  if(error)return reply(422,{error:'Aktion nicht ausgeführt. Berechtigung, Pflichtangaben, Prüfbericht und aktuellen Status prüfen.'});
+ if(input.action==='assist'&&actor&&data&&typeof data==='object'){
+  const assisted=await optionalAssist(String(input.kind),String(input.text??''),data,deps.assist,async(request,action,cost,model)=>{
+   const {data:accepted,error}=await service.rpc('luvipro_marketplace_ai_reserve_v1',{p_actor:actor,p_request:request,p_action:action,p_cost:cost,p_model:model});return !error&&accepted===true;
+  });return reply(200,assisted);
+ }
  return reply(200,data);
  }catch{return reply(400,{error:'request_not_completed_retry_safely'});}
 }

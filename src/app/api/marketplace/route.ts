@@ -20,7 +20,7 @@ export async function POST(req:NextRequest){
   // authorization still filters published eligible listings and their photos.
   if(response.status===401&&token&&(req.headers.get('content-type')||'').startsWith('application/json')){
    let publicRead=false;
-   try{const request=JSON.parse(new TextDecoder().decode(body));publicRead=(request.action==='read'&&['search','detail'].includes(request.mode))||['report_offer','photo'].includes(request.action);}catch{/* Invalid input retains its original rejection. */}
+   try{const request=JSON.parse(new TextDecoder().decode(body));publicRead=(request.action==='read'&&['search','detail'].includes(request.mode))||['report_offer','photo'].includes(request.action)||(request.action==='promotion'&&request.transition==='public');}catch{/* Invalid input retains its original rejection. */}
    if(publicRead){await response.body?.cancel();response=await upstream();}
   }
   return new NextResponse(await response.text(),{status:response.status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});

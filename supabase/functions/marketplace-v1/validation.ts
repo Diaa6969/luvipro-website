@@ -6,7 +6,7 @@ export function imageType(b:Uint8Array):string|null{
  if(new TextDecoder().decode(b.slice(0,4))==='RIFF'&&new TextDecoder().decode(b.slice(8,12))==='WEBP')return 'image/webp';
  return null;
 }
-export async function bounded(req:Request,max:number):Promise<Uint8Array>{
+export async function bounded(req:Pick<Request,'body'>,max:number):Promise<Uint8Array>{
  const reader=req.body?.getReader();if(!reader)throw Error('empty');let size=0;const parts:Uint8Array[]=[];
  while(true){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>max){await reader.cancel();throw Error('too_large');}parts.push(value);}
  const result=new Uint8Array(size);let n=0;for(const p of parts){result.set(p,n);n+=p.length;}return result;
@@ -16,11 +16,18 @@ export function rpcAction(input:Record<string,unknown>):{name:string;params:Reco
  if(!Number.isInteger(offset)||offset<0||offset>100000)return null;
  if(input.action==='autopilot')return {name:'luvipro_marketplace_autopilot_v1',params:{p_offset:offset},public:false};
  if(input.action==='dealer')return UUID.test(String(id))?{name:'luvipro_marketplace_dealer_v1',params:{p_dealer:id},public:true}:null;
+ if(input.action==='buyer_quote')return UUID.test(String(id))?{name:'luvipro_marketplace_buyer_quote_v1',params:{p_request:id},public:false}:null;
  if(input.action==='check_partners')return UUID.test(String(id))?{name:'luvipro_marketplace_check_partners_v1',params:{p_listing:id},public:false}:null;
  if(input.action==='buyer_check'){
   if(!['list','admin_list','history','create','seller_accept','assign_partner','partner_accept','propose_slot','confirm_slot','complete','reject','cancel'].includes(String(input.transition))||typeof(input.note??'')!=='string'||String(input.note??'').length>1000)return null;
   for(const value of [id,input.listing_id,input.partner_uid,input.request_key])if(value!=null&&!UUID.test(String(value)))return null;
   return {name:'luvipro_marketplace_buyer_check_v1',params:{p_action:input.transition,p_id:id??null,p_listing:input.listing_id??null,p_partner:input.partner_uid??null,p_revision:input.revision??null,p_note:input.note??'',p_slot:input.slot??null,p_confirm:input.confirm===true,p_request:input.request_key??null,p_product:input.product??'inspection_standard'},public:false};
+ }
+ if(input.action==='marketplace_config')return {name:'luvipro_marketplace_config_v1',params:{p_payload:input.payload??null,p_revision:input.revision??null,p_reason:input.reason??''},public:false};
+ if(input.action==='promotion'){
+  if(!['public','catalog','create','list','admin_list','history','confirm_payment','suspend','resume','cancel','reverse'].includes(String(input.transition))||typeof(input.note??'')!=='string'||String(input.note??'').length>1000)return null;
+  for(const value of [id,input.listing_id,input.request_key])if(value!=null&&!UUID.test(String(value)))return null;
+  return {name:'luvipro_marketplace_promotion_v1',params:{p_action:input.transition,p_id:id??null,p_listing:input.listing_id??null,p_product:input.product_id??null,p_request:input.request_key??null,p_revision:input.revision??null,p_note:input.note??'',p_payment_date:input.payment_date??null,p_reference:input.reference??null,p_amount:input.amount_cents??null,p_external_confirmed:input.external_confirmed===true,p_start:input.starts_at??null,p_filters:input.filters??{}},public:input.transition==='public'};
  }
  if(input.action==='report_offer')return UUID.test(String(id))?{name:'luvipro_marketplace_report_offer_v1',params:{p_listing:id},public:true}:null;
  if(input.action==='assist'){
