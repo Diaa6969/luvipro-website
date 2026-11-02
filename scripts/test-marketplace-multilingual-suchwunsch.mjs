@@ -56,6 +56,7 @@ assert.ok(screenshotResult.recognized.includes('Preis bis: 19.000,00\u00a0€'),
 const browseSource=readFileSync(resolve('src/components/marketplace/browse.tsx'),'utf8');
 assert.match(browseSource,/aria-label="Marke"/,'brand selection must be visibly editable');
 assert.match(browseSource,/CAR_BRANDS\.map/,'dropdown must come from full shared catalog');
+assert.match(browseSource,/Andere Marke manuell eingeben/,'unlisted brand must be manually searchable');
 assert.match(browseSource,/value=\{String\(filters\.brand\?\?''\)\}/,'brand select must be bound to interpreted brand');
 assert.match(browseSource,/await search\(0,next\)/,'interpreted filters must execute immediately');
 console.log('Multilingual Suchwunsch: '+cases.length+' language and safety cases passed.');
