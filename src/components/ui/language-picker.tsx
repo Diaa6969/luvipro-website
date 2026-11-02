@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Globe2, Search, X } from "lucide-react";
-import { localeHome, localeHref, siteLocales, type SiteLocale } from "@/lib/site-locales";
+import { localeHome, localeHref, siteLocales, setPreferredSiteLocale, type SiteLocale } from "@/lib/site-locales";
 
 /**
  * Visible language control on every viewport. The menu uses a body portal so
@@ -135,6 +135,7 @@ export function LanguagePicker({
                   lang={code}
                   hrefLang={code}
                   href={section ? localeHref(code, section) : localeHome(code)}
+                  onClick={() => setPreferredSiteLocale(code)}
                   aria-current={code === current ? "page" : undefined}
                   className={`flex min-h-12 items-center justify-between gap-3 rounded-xl border px-4 py-3 text-base transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse ${
                     code === current
