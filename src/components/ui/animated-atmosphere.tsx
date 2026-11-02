@@ -1,25 +1,15 @@
+import { SemanticFilm } from "@/components/ui/semantic-film";
+
+/** Genuine workshop filming is a dark, blurred ATMOSPHERIC background only.
+ * Website content stays readable in the foreground. No square grids.
+ */
 export function AnimatedAtmosphere() {
   return (
-    <div className="cinematic-atmosphere" aria-hidden="true">
-      <div className="cinematic-grid" />
-      <div className="cinematic-glow cinematic-glow-purple" />
-      <div className="cinematic-glow cinematic-glow-blue" />
-      <div className="cinematic-beam cinematic-beam-one" />
-      <div className="cinematic-beam cinematic-beam-two" />
-      <div className="cinematic-haze" />
-      <div className="cinematic-particles">
-        {Array.from({ length: 24 }).map((_, index) => (
-          <span
-            key={index}
-            style={{
-              left: `${(index * 41) % 100}%`,
-              top: `${(index * 23) % 100}%`,
-              animationDelay: `${index * 0.28}s`,
-              animationDuration: `${9 + (index % 6)}s`,
-            }}
-          />
-        ))}
-      </div>
+    <div className="cinematic-atmosphere semantic-atmosphere" aria-hidden="true">
+      <SemanticFilm scene="ambient" mode="ambient" />
+      <div className="semantic-ambient-aurora semantic-ambient-aurora-left" />
+      <div className="semantic-ambient-aurora semantic-ambient-aurora-right" />
+      <div className="semantic-ambient-beam" />
     </div>
   );
 }

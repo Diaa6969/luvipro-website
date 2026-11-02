@@ -20,9 +20,10 @@
     "test:language-navigation": "node scripts/test-language-navigation.mjs",
     "test:legal-published": "node scripts/test-legal-published.mjs",
     "test:vehicle-check": "node scripts/test-vehicle-check-journey.mjs",
+    "test:customer-home": "node scripts/test-customer-first-homepage.mjs",
+    "test:semantic-film": "node scripts/test-semantic-film-design.mjs",
     "test:affiliate-routes": "node scripts/test-affiliate-routes.mjs",
     "test:promo-pricing": "node scripts/test-promo-pricing.mjs",
-    "test:customer-home": "node scripts/test-customer-first-homepage.mjs",
     "test:smtp-compatibility": "node scripts/test-smtp-compatibility.mjs",
     "test:affiliate-admin-session": "node scripts/test-affiliate-admin-session.mjs"
   },
