@@ -106,8 +106,11 @@ export function interpretVehicleWish(raw:string):SearchInterpretation {
  const city=matchOne(t,CITY);if(city)filters.city=city;
  const features=Object.entries(EQUIPMENT).filter(([,aliases])=>aliases.some(a=>contains(t,[a])&&!negated(t,a))).map(([name])=>name);
  if(features.length)filters.equipment=features;
- const recognized=Object.entries(filters).map(([k,v])=>k+': '+(Array.isArray(v)?v.join(', '):v));
+ const labels:Record<string,string>={brand:'Marke',fuel:'Kraftstoff',transmission:'Getriebe',max_price:'Preis bis',max_mileage:'Kilometer bis',city:'Ort',first_from:'Erstzulassung ab',equipment:'Ausstattung'};
+ const recognized=Object.entries(filters).map(([k,v])=>{const value=k==='max_price'?new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(v)/100):k==='first_from'?String(v).slice(0,4):Array.isArray(v)?v.join(', '):String(v);return (labels[k]||k)+': '+value;});
+ const accidentRequested=/(?:unfallfrei|ohne unf[aä]ll?e?|without accidents?|accident.free|sin accidentes|بدون حوادث|بلا حوادث|بدون حادث|sans accident|без дтп)/u.test(t);
+ const caveat=accidentRequested?' Unfallfreiheit wird nicht automatisch als Filter behauptet. / لا يمكن ضمان خلو السيارة من الحوادث من البحث وحده.':'';
  return {filters,recognized,notice:recognized.length
-  ? 'Mehrsprachige Filter angewendet. Bitte Ergebnisse und Filter prüfen. / تم تنفيذ البحث وفق الشروط المعروفة؛ راجع النتائج.'
+  ? 'Mehrsprachige Filter angewendet. Bitte Ergebnisse und Filter prüfen. / تم تنفيذ البحث وفق الشروط المعروفة؛ راجع النتائج.'+caveat
   : 'Keine eindeutigen Fahrzeugfilter erkannt. Bitte Suchbegriffe oder die manuellen Filter ergänzen. / تعذّر فهم الشروط؛ استخدم الفلاتر اليدوية.'};
 }
