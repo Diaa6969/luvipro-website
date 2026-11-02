@@ -41,7 +41,7 @@ export function isSiteLocale(value: string): value is SiteLocale { return codes.
 export const PREFERRED_SITE_LOCALE_KEY = 'luvipro:preferred-language';
 export function setPreferredSiteLocale(locale: SiteLocale): void {
   if (typeof window === 'undefined') return;
-  try { window.localStorage.setItem(PREFERRED_SITE_LOCALE_KEY, locale); }
+  try { window.localStorage.setItem(PREFERRED_SITE_LOCALE_KEY, locale); window.dispatchEvent(new Event('luvipro:language-changed')); }
   catch { /* Private browsing may block persistence; navigation still works. */ }
 }
 export function getPreferredSiteLocale(): SiteLocale {
