@@ -54,6 +54,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
     href: [`/${locale}#ecosystem`, `/${locale}/products`, `/${locale}#how-it-works`, `/${locale}#pricing`, `/${locale}#partner-map`][index],
   }));
   const mobileLinks = [
+    { label: locale === "ar" ? "سوق السيارات · Marketplace" : "Marketplace · Find cars", href: "/marketplace" },
     { label: t.site.home, href: `/${locale}` },
     { label: locale === "ar" ? "للورشات · الجهاز" : "For workshops · Device", href: `/${locale}/products` },
     { label: t.site.prices, href: `/${locale}#pricing` },
@@ -137,6 +138,7 @@ export function InternationalNavbar({ locale }: { locale: InternationalLocale })
         <nav className="section-shell flex h-16 min-w-0 items-center justify-between gap-3 sm:h-20" aria-label={t.site.navigation}>
           <BrandLogo homeHref={`/${locale}`} />
           <div className="hidden items-center gap-4 xl:flex">
+            <Link href="/marketplace" className="text-sm font-medium text-cyan-300 transition hover:text-white">Marketplace</Link>
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className="text-sm font-medium text-slate-300 transition hover:text-white">
                 {item.label}
