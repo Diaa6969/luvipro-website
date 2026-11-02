@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import {usePathname} from "next/navigation";
 import { Globe2, Search, X } from "lucide-react";
 import { localeHome, localeHref, siteLocales, setPreferredSiteLocale, type SiteLocale } from "@/lib/site-locales";
 
@@ -25,7 +26,23 @@ export function LanguagePicker({
   const [search, setSearch] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const pathname=usePathname();
   const selected = siteLocales.find(([code]) => code === current);
+  function targetHref(code:SiteLocale):string {
+    if(section)return localeHref(code,section);
+    const segments=pathname.split("/").filter(Boolean);
+    if(segments.length===0||segments.length===1&&siteLocales.some(([x])=>x===segments[0]))return localeHome(code);
+    // Transactional routes such as Marketplace, report purchase, Affiliate,
+    // account, and Admin stay on the SAME page during language changes.
+    // Keep vehicle inspectionId, order product, search parameters and anchors intact.
+    // The language dialog is client-only, so the active URL is available here.
+    if (typeof window !== "undefined") {
+      const next = new URL(window.location.href);
+      next.searchParams.set("lang", code);
+      return next.pathname + next.search + next.hash;
+    }
+    return pathname+'?lang='+encodeURIComponent(code);
+  }
   const title = current === "ar" ? "اختر اللغة" : current === "de" ? "Sprache wählen" : "Choose language";
 
   const filtered = useMemo(() => {
@@ -134,7 +151,7 @@ export function LanguagePicker({
                   key={code}
                   lang={code}
                   hrefLang={code}
-                  href={section ? localeHref(code, section) : localeHome(code)}
+                  href={targetHref(code)}
                   onClick={() => setPreferredSiteLocale(code)}
                   aria-current={code === current ? "page" : undefined}
                   className={`flex min-h-12 items-center justify-between gap-3 rounded-xl border px-4 py-3 text-base transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-pulse ${

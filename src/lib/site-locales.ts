@@ -41,7 +41,7 @@ export function isSiteLocale(value: string): value is SiteLocale { return codes.
 export const PREFERRED_SITE_LOCALE_KEY = 'luvipro:preferred-language';
 export function setPreferredSiteLocale(locale: SiteLocale): void {
   if (typeof window === 'undefined') return;
-  try { window.localStorage.setItem(PREFERRED_SITE_LOCALE_KEY, locale); }
+  try { window.localStorage.setItem(PREFERRED_SITE_LOCALE_KEY, locale); window.dispatchEvent(new Event('luvipro:language-changed')); }
   catch { /* Private browsing may block persistence; navigation still works. */ }
 }
 export function getPreferredSiteLocale(): SiteLocale {
@@ -54,6 +54,20 @@ export function getPreferredSiteLocale(): SiteLocale {
 export function localeHome(locale: SiteLocale) { return locale === "de" ? "/" : `/${locale}`; }
 export function localeHref(locale: SiteLocale, section: "products" | "reports" | "workshops" | "contact" | "app") {
   return locale === "de" ? (section === "workshops" ? "/partner-workshops" : "/" + section) : `/${locale}/${section}`;
+}
+/** Keep the same service, not the German-only route, when a supported
+ * localized service page exists. Transactions remain under secure canonical URLs.
+ */
+export function localizedSiteHref(locale:SiteLocale,href:string):string {
+ if(locale==='de')return href;
+ if(href==='/')return localeHome(locale);
+ const map:Record<string,'products'|'reports'|'workshops'|'contact'|'app'>={
+  '/products':'products','/reports':'reports','/partner-workshops':'workshops',
+  '/contact':'contact','/app':'app','/verify#partner-map':'workshops'
+ };
+ if(map[href])return localeHref(locale,map[href]);
+ if(href.startsWith('/#'))return localeHome(locale)+href.slice(1);
+ return href;
 }
 export const languageAlternates = Object.fromEntries([
   ...siteLocales.map(([locale, , tag]) => [tag, localeHome(locale)]),
