@@ -35,6 +35,22 @@ export const siteLocales = [
 export type SiteLocale = (typeof siteLocales)[number][0];
 const codes = new Set<string>(siteLocales.map(entry => entry[0]));
 export function isSiteLocale(value: string): value is SiteLocale { return codes.has(value); }
+/** Remember the language chosen in LUVIPRO's site language selector.
+ * German is the default until the visitor explicitly selects a language.
+ */
+export const PREFERRED_SITE_LOCALE_KEY = 'luvipro:preferred-language';
+export function setPreferredSiteLocale(locale: SiteLocale): void {
+  if (typeof window === 'undefined') return;
+  try { window.localStorage.setItem(PREFERRED_SITE_LOCALE_KEY, locale); }
+  catch { /* Private browsing may block persistence; navigation still works. */ }
+}
+export function getPreferredSiteLocale(): SiteLocale {
+  if (typeof window === 'undefined') return 'de';
+  try {
+    const stored=window.localStorage.getItem(PREFERRED_SITE_LOCALE_KEY);
+    return stored && isSiteLocale(stored) ? stored : 'de';
+  } catch { return 'de'; }
+}
 export function localeHome(locale: SiteLocale) { return locale === "de" ? "/" : `/${locale}`; }
 export function localeHref(locale: SiteLocale, section: "products" | "reports" | "workshops" | "contact" | "app") {
   return locale === "de" ? (section === "workshops" ? "/partner-workshops" : "/" + section) : `/${locale}/${section}`;
