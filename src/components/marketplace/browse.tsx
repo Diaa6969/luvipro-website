@@ -2,6 +2,7 @@
 import {useEffect,useState} from 'react';import Link from 'next/link';
 import {market,Listing,money,panel,input,button} from './client';import {MarketPhoto} from './photo';import {SponsoredSlots} from './promotions';
 import {interpretVehicleWish} from '@/lib/marketplace/multilingual-search';
+import {CAR_BRANDS} from '@/lib/marketplace/car-brands';
 export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  const [filters,setFilters]=useState<Record<string,unknown>>(dealerId?{dealer_id:dealerId}:{});const [applied,setApplied]=useState<Record<string,unknown>>(dealerId?{dealer_id:dealerId}:{});const [items,setItems]=useState<Listing[]>([]);const [offset,setOffset]=useState(0);const [total,setTotal]=useState(0);const [busy,setBusy]=useState(true);const [error,setError]=useState('');
  async function search(page=0,selected=filters){setBusy(true);setError('');try{const x=await market({action:'read',mode:'search',filters:selected,offset:page});setItems(x.items||[]);setApplied({...selected});setTotal(x.total||0);setOffset(page);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
@@ -27,7 +28,13 @@ export function MarketBrowse({dealerId}:{dealerId?:string}={}){
  <button className={button+' mt-3'} disabled={assisting||busy||wish.trim().length<3} onClick={()=>void suggest()}>{assisting?'Suche läuft …':'Suchwunsch suchen / بحث'}</button>
  {assistNotice&&<div role="status" aria-live="polite" className="mt-4 rounded-lg border border-cyan-400/25 p-3 text-sm"><p>{assistNotice}</p>{recognized.length>0&&<p className="mt-2 text-slate-300">Erkannt: {recognized.join(' · ')}</p>}</div>}
  </details><form className={panel+' grid gap-3 sm:grid-cols-3'} onSubmit={e=>{e.preventDefault();void search();}}>
- <select aria-label="Marke" value={String(filters.brand??'')} className={input} onChange={e=>set('brand',e.target.value)}><option value="">Alle Marken</option>{['Audi','BMW','Mercedes-Benz','Volkswagen','Opel','Ford','Toyota','Skoda','Seat','Volvo','Porsche','Renault','Peugeot','Hyundai','Kia','Tesla','Honda','Nissan','Mazda','Fiat','Dacia','Mini'].map(brand=><option key={brand} value={brand}>{brand}</option>)}</select>
+ <select aria-label="Marke" title="Automarke auswählen" value={String(filters.brand??'')} className={input} onChange={e=>set('brand',e.target.value)}>
+ <option value="">Alle Marken</option>
+ {filters.brand&&!CAR_BRANDS.some(brand=>brand.toLowerCase()===String(filters.brand).toLowerCase())&&<option value={String(filters.brand)}>{String(filters.brand)}</option>}
+ {Array.from(new Set(CAR_BRANDS.map(brand=>brand[0]!.toUpperCase()))).map(letter=>
+ <optgroup key={letter} label={letter}>{CAR_BRANDS.filter(brand=>brand[0]!.toUpperCase()===letter).map(brand=><option key={brand} value={brand}>{brand}</option>)}</optgroup>
+ )}
+ </select>
  <input aria-label="Modell oder Ort" placeholder="Modell oder Ort" value={String(filters.q??'')} className={input} onChange={e=>set('q',e.target.value)}/>
  <input aria-label="Preis bis EUR" type="number" min="0" placeholder="Preis bis EUR" value={filters.max_price?Number(filters.max_price)/100:''} className={input} onChange={e=>set('max_price',e.target.value?String(Math.round(Number(e.target.value)*100)):'')}/>
  <input aria-label="Kilometer bis" type="number" min="0" placeholder="Kilometer bis" value={String(filters.max_mileage??'')} className={input} onChange={e=>set('max_mileage',e.target.value)}/>
