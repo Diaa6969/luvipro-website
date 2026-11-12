@@ -1,4 +1,5 @@
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { BrandLogo } from "@/components/ui/brand-logo";
+import { ArrowRight } from "lucide-react";
 import { CtaLink } from "@/components/ui/cta-link";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -8,9 +9,9 @@ export function FinalCta() {
       <div className="section-shell">
         <Reveal>
           <div className="glass-panel rounded-lg p-8 text-center sm:p-12">
-            <ShieldCheck className="mx-auto h-12 w-12 text-pulse" />
+            <BrandLogo />
             <h2 className="mx-auto mt-6 max-w-4xl font-[var(--font-space-grotesk)] text-3xl font-semibold text-white sm:text-5xl">
-              Lassen Sie Ihr nächstes Auto prüfen, bevor Sie es kaufen.
+              Vertrauen ist gut, LUVIPRO ist besser.
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
               Finden Sie eine Partnerwerkstatt für Ihren Fahrzeugcheck. Liegt bereits ein Prüfbericht vor, können Sie die Verfügbarkeit über FIN/VIN oder Berichtsnummer prüfen.

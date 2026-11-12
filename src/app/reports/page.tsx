@@ -1,3 +1,4 @@
+import { VehicleExperience } from "@/components/cinema/vehicle-experience";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Navbar } from "@/components/sections/navbar";
@@ -29,6 +30,7 @@ export default function ReportsPage() {
           </p>
         </div>
         <div className="mt-12 max-w-3xl"><ReportLookup /></div>
+        <div className="mt-8 max-w-3xl"><VehicleExperience scene={4} /></div>
         <p className="mt-8 text-sm leading-7 text-slate-400">
           Noch kein Fahrzeugbericht vorhanden? <Link href="/verify#partner-map" className="font-semibold text-pulse underline">Partnerwerkstatt suchen</Link>
         </p>

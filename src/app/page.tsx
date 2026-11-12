@@ -1,3 +1,4 @@
+import { VehicleExperience } from "@/components/cinema/vehicle-experience";
 import { languageAlternates } from "@/lib/site-locales";
 import type { Metadata } from "next";
 
@@ -24,10 +25,11 @@ import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
 
 export default function Home() {
   return (
-    <main className="cinematic-page min-h-screen overflow-hidden bg-obsidian text-white">
+    <main className="cinematic-page vehicle-home min-h-screen bg-obsidian text-white">
       <AnimatedAtmosphere />
       <Navbar />
       <Hero />
+      <VehicleExperience id="fahrzeugreise" />
       <Problem />
       <Ecosystem />
       <UvScanner />

@@ -1,3 +1,4 @@
+import { VehicleExperience } from "@/components/cinema/vehicle-experience";
 import type { Metadata } from "next";
 import { Mail, MapPin, Phone, UserRound } from "lucide-react";
 import { Footer } from "@/components/sections/footer";
@@ -77,6 +78,7 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+      <div className="section-shell my-8"><VehicleExperience scene={0} /></div>
       <Footer />
     </main>
   );

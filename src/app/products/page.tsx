@@ -1,3 +1,4 @@
+import { VehicleExperience } from "@/components/cinema/vehicle-experience";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -53,7 +54,7 @@ export default function ProductsPage() {
           <span className="text-white">Produkte</span>
         </nav>
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
-          <Reveal><ProductShowcase /></Reveal>
+          <div className="space-y-5"><Reveal><ProductShowcase /></Reveal><VehicleExperience scene={2} /></div>
           <Reveal delay={0.1}>
             <div className="flex flex-wrap items-center gap-3">
               <span className="rounded-full border border-pulse/30 bg-pulse/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-pulse">LUVIPRO Hardware</span>

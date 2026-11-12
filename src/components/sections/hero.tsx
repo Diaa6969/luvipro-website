@@ -31,6 +31,7 @@ export function Hero() {
                 Fahrzeug checken lassen <ArrowRight className="h-4 w-4" />
               </CtaLink>
               <CtaLink href="/reports" variant="secondary">Prüfbericht suchen</CtaLink>
+              <CtaLink href="#fahrzeugreise" variant="secondary">Fahrzeugreise erleben</CtaLink>
             </div>
           </div>
         </Reveal>
