@@ -264,6 +264,15 @@ export const agbSections: LegalSection[] = [
     ],
   },
   {
+    title: "Vergütung von Partnerwerkstätten bei Fahrzeugprüfungen",
+    paragraphs: [
+      "Für Fahrzeugprüfungen im vereinbarten LUVIPRO-Partnervergütungsmodell entfallen 80 % der Verteilungsbasis auf die ausführende Partnerwerkstatt und 20 % auf LUVIPRO. Die Verteilungsbasis ist der tatsächlich vereinnahmte Prüfpreis ohne Umsatzsteuer und nach eingeräumten Rabatten.",
+      "Beim Standard-Check erfolgt die Aufteilung unmittelbar auf Grundlage dieses Netto-Prüfpreises; ein Abzug für externe Fahrzeughistorienberichte ist nicht vorgesehen.",
+      "Beim Premium-Check werden vor der Aufteilung ausschließlich die ausdrücklich vereinbarten und tatsächlich angefallenen Netto-Kosten eines externen Fahrzeughistorienberichts von der Verteilungsbasis abgezogen. Sofern keine solchen Kosten angefallen sind, erfolgt kein entsprechender Abzug.",
+      "Weitere Kostenabzüge bedürfen einer ausdrücklichen Vereinbarung. Ergänzende oder ausdrücklich abweichende individuelle Partnerverträge gehen vor. Auszahlungsmodalitäten und die umsatzsteuerliche Behandlung der Partnervergütung richten sich nach der jeweiligen Vereinbarung und geltendem Recht.",
+    ],
+  },
+  {
     title: "Beschreibung der LUVIPRO Dienste",
     paragraphs: [
       "LUVIPRO ist ein Automobil-Verifizierungs-Ökosystem für den Gebrauchtwagenmarkt.",
