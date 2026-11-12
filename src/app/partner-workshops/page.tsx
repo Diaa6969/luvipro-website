@@ -1,5 +1,4 @@
-import { CinemaMotion } from "@/components/ui/cinema-motion";
-import { CinemaVehicle } from "@/components/ui/cinema-vehicle";
+import { VehicleExperience } from "@/components/cinema/vehicle-experience";
 import type { Metadata } from "next";
 import { Navbar } from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
@@ -18,12 +17,8 @@ export default function PartnerWorkshopsPage() {
       <AnimatedAtmosphere />
       <Navbar />
       <section id="partner-map" className="section-shell scroll-mt-24 pb-24 pt-32 sm:pt-40">
-        <CinemaMotion className="cinema-feature mb-8">
-          <CinemaVehicle />
-          <h2>Technologie trifft Werkstattkompetenz.</h2>
-          <ol><li>Werkstatt finden</li><li>Prüfung anfragen</li><li>Prüfbericht erhalten</li></ol>
-        </CinemaMotion>
         <WorkshopFinder locale="de" />
+        <div className="mt-8"><VehicleExperience scene={6} /></div>
       </section>
       <Footer />
     </main>

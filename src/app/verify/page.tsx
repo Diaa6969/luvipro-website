@@ -1,3 +1,4 @@
+import { VehicleExperience } from "@/components/cinema/vehicle-experience";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ClipboardCheck, FileCheck2, Fingerprint, ShieldCheck, Wrench } from "lucide-react";
@@ -78,6 +79,7 @@ export default function VerifyPage() {
           Eine LUVIPRO Prüfung unterstützt fundierte Entscheidungen, ist jedoch keine Garantie für die Mängelfreiheit eines Fahrzeugs.
         </p>
       </section>
+      <div className="section-shell my-8"><VehicleExperience scene={1} /></div>
       <Footer />
     </main>
   );

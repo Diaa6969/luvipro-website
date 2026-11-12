@@ -1,4 +1,3 @@
-import { CinemaVehicle } from "@/components/ui/cinema-vehicle";
 import {
   AlertTriangle, ArrowRight, BadgeCheck, BadgeEuro, Bell, Car, CarFront, Check,
   DatabaseZap, ExternalLink, FileCheck2, FileLock2, FileScan,
@@ -37,8 +36,9 @@ export function InternationalHome({ locale }: { locale: InternationalLocale }) {
       <AnimatedAtmosphere />
       <InternationalNavbar locale={locale} />
 
-      <section className="cinema-locale-hero relative min-h-screen overflow-hidden pt-24 sm:pt-32">
-        <CinemaVehicle priority />
+      {/* Hero: identical visual structure to the German homepage. */}
+      <section className="semantic-hero relative min-h-screen overflow-hidden pt-24 sm:pt-32">
+        <SemanticFilm scene="hero" mode="hero" />
         <div className="section-shell relative grid min-w-0 items-center gap-10 pb-20 sm:gap-12 sm:pb-24 lg:grid-cols-[1.02fr_0.98fr]">
           <Reveal>
             <div className="min-w-0 max-w-full">

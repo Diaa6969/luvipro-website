@@ -1,4 +1,3 @@
-import { CinemaVehicle } from "@/components/ui/cinema-vehicle";
 import Link from "next/link";
 import { ArrowRight, BatteryCharging, CarFront, Check, FileCheck2, FileLock2, Fingerprint, Globe2, Mail, MapPin, ScanLine, ShieldCheck } from "lucide-react";
 import { BrandLogo } from "@/components/ui/brand-logo";
@@ -77,8 +76,8 @@ export function EuropeanHome({ locale }: { locale: SiteLocale }) {
       <DocumentLanguage locale={locale} />
       <AnimatedAtmosphere />
       <EuropeanHeader locale={locale} />
-      <section className="cinema-locale-hero relative overflow-hidden py-20 sm:py-28">
-        <CinemaVehicle priority />
+      <section className="semantic-hero relative overflow-hidden py-20 sm:py-28">
+        <SemanticFilm scene="hero" mode="hero" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(126,34,206,0.25),transparent_45%),radial-gradient(circle_at_20%_70%,rgba(32,214,255,0.12),transparent_35%)]" />
         <div className="section-shell relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="min-w-0">
