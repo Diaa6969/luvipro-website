@@ -549,6 +549,7 @@ body {
 
 /* The visual stage sits inside the existing page layout and typography. */
 body:has(.vehicle-home), .cinematic-page.vehicle-home { overflow-x: clip; }
+html:has(.vehicle-home) { scroll-behavior: auto; overflow-anchor: none; }
 .vehicle-runway { --vehicle-top: 5rem; height: 530svh; scroll-margin-top: var(--vehicle-top); }
 .vehicle-stage {
   position: relative;
