@@ -96,6 +96,7 @@ export function isPreorderBackendReady() {
 
 export function isStripeCheckoutReady() {
   return (
+    (process.env.VERCEL_ENV !== "preview" || process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_") === true) &&
     process.env.STORE_CHECKOUT_ENABLED === "true" &&
     Boolean(process.env.STRIPE_SECRET_KEY) &&
     Boolean(process.env.STRIPE_PRICE_ID) &&

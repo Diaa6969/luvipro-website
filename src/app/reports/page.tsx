@@ -1,3 +1,4 @@
+import { CinemaMotion } from "@/components/ui/cinema-motion";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Navbar } from "@/components/sections/navbar";
@@ -28,7 +29,7 @@ export default function ReportsPage() {
             ohne Aufkleber oder Scan. Der Download setzt einen autorisierten Zugang zum Bericht voraus.
           </p>
         </div>
-        <div className="mt-12 max-w-3xl"><ReportLookup /></div>
+        <CinemaMotion className="cinema-feature mt-8 max-w-3xl"><ReportLookup /></CinemaMotion>
         <p className="mt-8 text-sm leading-7 text-slate-400">
           Noch kein Fahrzeugbericht vorhanden? <Link href="/verify#partner-map" className="font-semibold text-pulse underline">Partnerwerkstatt suchen</Link>
         </p>

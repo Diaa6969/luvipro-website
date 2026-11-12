@@ -1,3 +1,4 @@
+import { CinemaMotion } from "@/components/ui/cinema-motion";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -9,7 +10,7 @@ import { Footer } from "@/components/sections/footer";
 import { AnimatedAtmosphere } from "@/components/ui/animated-atmosphere";
 import { Reveal } from "@/components/ui/reveal";
 import { CtaLink } from "@/components/ui/cta-link";
-import { IncludedItem, ProductShowcase } from "@/components/shop/product-showcase";
+import { IncludedItem } from "@/components/shop/product-showcase";
 import { Pricing } from "@/components/sections/pricing";
 import { BUNDLE_ITEMS, DEVICE, formatEuro, isStripeCheckoutReady } from "@/lib/store";
 
@@ -53,7 +54,7 @@ export default function ProductsPage() {
           <span className="text-white">Produkte</span>
         </nav>
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
-          <Reveal><ProductShowcase /></Reveal>
+          <CinemaMotion className="cinema-feature"><div className="cinema-device-beam"><strong>365 nm</strong><span>UV-Licht · Schematische Darstellung</span></div></CinemaMotion>
           <Reveal delay={0.1}>
             <div className="flex flex-wrap items-center gap-3">
               <span className="rounded-full border border-pulse/30 bg-pulse/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-pulse">LUVIPRO Hardware</span>
@@ -114,7 +115,7 @@ export default function ProductsPage() {
             <div className="mt-8 grid gap-4">
               {BUNDLE_ITEMS.map(item => <IncludedItem key={item} label={item} />)}
             </div>
-            <p className="mt-6 text-xs leading-6 text-slate-500">Die Produktvisualisierung ist schematisch und kein Originalfoto. Verbindliche Produktdetails ergeben sich aus der Bestätigung Ihres Auftrags.</p>
+            <p className="mt-6 text-xs leading-6 text-slate-500">Verbindliche Produktdetails ergeben sich aus der Bestätigung Ihres Auftrags.</p>
           </Reveal>
           <Reveal delay={0.1}>
             <div className="glass-panel rounded-2xl p-7 sm:p-9">

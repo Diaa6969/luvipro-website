@@ -1,4 +1,6 @@
 "use client";
+import { CinemaMotion } from "@/components/ui/cinema-motion";
+import { CinemaVehicle } from "@/components/ui/cinema-vehicle";
 import Link from 'next/link';
 import {useSiteLocale} from '@/components/ui/site-locale-bridge';
 import {marketCopy} from '@/lib/marketplace/market-copy';
@@ -13,6 +15,7 @@ export function MarketplaceIntro(){
    <Link href="/marketplace/favorites">{t.favorites}</Link>
    <Link href="/marketplace/inquiries">{t.inquiries}</Link>
   </nav>
+  <CinemaMotion className="cinema-feature mb-7"><CinemaVehicle />
   <p className="text-sm uppercase tracking-[.3em] text-cyan-300">LUVIPRO Marketplace</p>
   <h1 className="my-5 max-w-4xl text-4xl font-semibold leading-tight md:text-6xl">{t.heading}</h1>
   <p className="mb-7 max-w-2xl text-slate-300">{locale==='de'
@@ -20,6 +23,7 @@ export function MarketplaceIntro(){
     : locale==='ar'
     ? 'كل سيارة منشورة مرتبطة بتقرير فحص LUVIPRO. يصف التقرير حالة السيارة وقت الفحص، ولا يضمن خلوها من العيوب.'
     : 'Every published vehicle is linked to a LUVIPRO inspection report. The report documents the inspection date and does not guarantee a defect-free vehicle.'}</p>
+  </CinemaMotion>
   <Link href="/marketplace/create" className="mb-10 inline-flex rounded-xl bg-violet-600 px-6 py-3 font-semibold">{t.insert}</Link>
  </>;
 }

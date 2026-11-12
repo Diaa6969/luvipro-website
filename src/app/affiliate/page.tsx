@@ -1,3 +1,4 @@
+import { CinemaMotion } from "@/components/ui/cinema-motion";
 import type { Metadata } from "next";
 import {SitePhrase} from '@/components/ui/site-phrase';
 import Link from "next/link";
@@ -14,6 +15,9 @@ export default async function AffiliatePage({searchParams}:{searchParams:Promise
   <Link href="/" className="text-pulse">← LUVIPRO</Link>
   <p className="mt-10 text-xs font-bold uppercase tracking-widest text-pulse">LUVIPRO · Partnerprogramm</p>
   <h1 className="mt-3 text-4xl font-bold"><SitePhrase id="affiliateJoin"/></h1>
+  <CinemaMotion className="cinema-feature mt-5">
+   <ol lang="de"><li>Bewerbung</li><li>Gewerbeprüfung</li><li>Freigabe</li><li>Rabattcode</li><li>Verifizierte Bestellungen</li><li>Provisionsabrechnung</li></ol>
+  </CinemaMotion>
   <div className="mt-5 rounded-xl border border-violet-400/30 bg-violet-500/10 p-5 text-sm leading-7 text-slate-200"><b>Vertragsgrundlagen:</b> Vor einer Aufnahme lesen Sie bitte die <Link href="/affiliate/agb" className="font-semibold text-pulse underline">Affiliate-Teilnahmebedingungen (AGB)</Link>. Ihre individuelle Rabatt- und Provisionsquote wird erst gesondert vereinbart. Bei vereinbarter Brutto-Provision ist eine auf Ihre Leistung anfallende Umsatzsteuer bereits im Provisionsgesamtbetrag enthalten. Ihre eigenen Ertragsteuern tragen Sie selbst.</div>
   <div className="mt-6 flex flex-wrap gap-3"><Link href="/affiliate/login" className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-500"><SitePhrase id="affiliateAccount"/></Link></div>
   <p className="mt-5 max-w-2xl leading-8 text-slate-300">Bewerben Sie sich als registriertes Unternehmen oder Gewerbetreibender. Jede Bewerbung und jede Rabattaktion wird persönlich geprüft und freigegeben. Provisionen werden nur für verifizierte Käufe nach Ablauf der maßgeblichen Widerrufs- bzw. Rückgabefrist monatlich abgerechnet. Die individuell vereinbarte Provisionsquote bezieht sich auf den Nettoverkaufspreis nach Rabatt; der Provisionsbetrag ist als gesamte Bruttovergütung einschließlich gegebenenfalls anfallender Umsatzsteuer vorgesehen. Voraussetzung ist eine ausdrückliche schriftliche Vergütungsvereinbarung. Für die eigene Gewinnbesteuerung ist der Affiliate verantwortlich.</p>

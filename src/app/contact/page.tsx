@@ -1,3 +1,4 @@
+import { CinemaMotion } from "@/components/ui/cinema-motion";
 import type { Metadata } from "next";
 import { Mail, MapPin, Phone, UserRound } from "lucide-react";
 import { Footer } from "@/components/sections/footer";
@@ -42,7 +43,7 @@ export default function ContactPage() {
     <main className="min-h-screen overflow-x-hidden bg-radial-grid text-white">
       <Navbar />
       <section className="section-shell flex min-h-[72vh] items-center pt-28 sm:pt-32">
-        <div className="glass-panel w-full rounded-lg p-6 sm:p-10">
+        <CinemaMotion className="cinema-feature w-full">
           <div className="max-w-3xl">
             <p className="mb-4 text-sm font-semibold uppercase text-pulse">Kontakt</p>
             <h1 className="font-[var(--font-space-grotesk)] text-4xl font-semibold sm:text-5xl">
@@ -75,7 +76,7 @@ export default function ContactPage() {
               Zurück zur Startseite
             </CtaLink>
           </div>
-        </div>
+        </CinemaMotion>
       </section>
       <Footer />
     </main>

@@ -1,3 +1,5 @@
+import { CinemaMotion } from "@/components/ui/cinema-motion";
+import { CinemaVehicle } from "@/components/ui/cinema-vehicle";
 import type { Metadata } from "next";
 import { FileCheck2, Fingerprint, ShieldCheck, Wrench } from "lucide-react";
 import { Navbar } from "@/components/sections/navbar";
@@ -28,6 +30,13 @@ export default function AppPage() {
           <p className="text-sm font-semibold uppercase tracking-widest text-pulse">LUVIPRO Plattform</p>
           <h1 className="mt-5 font-[var(--font-space-grotesk)] text-4xl font-semibold leading-tight sm:text-6xl">Fahrzeugprüfung digital dokumentieren.</h1>
           <p className="mt-6 text-lg leading-8 text-slate-300">LUVIPRO verbindet die UV-Prüfung in der Werkstatt mit strukturierten Fahrzeugdaten und der digitalen Zuordnung von Prüfberichten über die FIN/VIN.</p>
+        </div>
+        <div className="my-10">
+          <CinemaMotion className="cinema-feature">
+            <CinemaVehicle />
+            <h2>Vom Fahrzeug zum Prüfbericht</h2>
+            <ol><li>FIN zuordnen</li><li>Prüfung dokumentieren</li><li>Bericht abschließen</li></ol>
+          </CinemaMotion>
         </div>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {capabilities.map(({ icon: Icon, title, text }) => (
