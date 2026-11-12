@@ -12,7 +12,7 @@ type PricingProps = { id?: string; embedded?: boolean; audience?: "customer" | "
 export function Pricing({ id = "pricing", embedded = false, audience = "customer" }: PricingProps) {
   if (audience === "partner") return <section id={id} className={`scroll-mt-24 ${embedded ? "bg-midnight py-20 sm:py-24" : "bg-obsidian py-24"}`}><div className="section-shell">
     <Reveal><SectionHeading eyebrow="Für Werkstätten & Unternehmen" title="LU3656060: Gerät und Konditionen für Profis." description="Gerätepreis, Ausstattung und Bestellanfrage für gewerbliche LUVIPRO Partner. Die Geräteinformationen sind bewusst von den Fahrzeugcheck-Angeboten für Privatkunden getrennt." /></Reveal>
-    <div className="mt-10 max-w-xl"><Reveal delay={0.16}>
+    <div className="mt-10 grid gap-5 lg:grid-cols-2"><Reveal delay={0.16}>
             <div className="glass-panel flex h-full flex-col rounded-2xl p-6 sm:p-7">
               <div className="flex items-center gap-3">
                 <ScanLine className="h-7 w-7 text-pulse" />
@@ -40,7 +40,33 @@ export function Pricing({ id = "pricing", embedded = false, audience = "customer
                 Gerät unverbindlich anfragen <ArrowRight className="h-4 w-4" />
               </CtaLink>
             </div>
-          </Reveal></div>
+          </Reveal>
+      <Reveal delay={0.24}>
+        <div className="glass-panel flex h-full flex-col rounded-2xl p-6 sm:p-7">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-pulse">Vergütung für Partnerwerkstätten</p>
+          <h3 className="mt-3 font-[var(--font-space-grotesk)] text-2xl font-semibold text-white">80 % für die Werkstatt · 20 % für LUVIPRO</h3>
+          <p className="mt-4 text-sm leading-7 text-slate-300">
+            Grundlage ist der tatsächlich vereinnahmte Prüfpreis <strong className="text-white">ohne Umsatzsteuer</strong> und nach gewährten Rabatten.
+          </p>
+          <div className="mt-6 space-y-4">
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+              <p className="font-semibold text-white">Standard</p>
+              <p className="mt-2 text-sm leading-6 text-slate-300">
+                Die Werkstatt erhält 80 % des Netto-Prüfpreises; 20 % verbleiben bei LUVIPRO. Für einen externen Fahrzeughistorienbericht erfolgt hier kein Abzug.
+              </p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+              <p className="font-semibold text-white">Premium</p>
+              <p className="mt-2 text-sm leading-6 text-slate-300">
+                Vor der 80/20-Aufteilung werden ausschließlich die vertraglich vereinbarten, tatsächlich angefallenen Netto-Kosten eines externen Fahrzeughistorienberichts vom Netto-Prüfpreis abgezogen.
+              </p>
+            </div>
+          </div>
+          <p className="mt-5 text-xs leading-6 text-slate-400">
+            Weitere Kostenabzüge erfolgen nur bei ausdrücklicher Vereinbarung. Abrechnung, Auszahlungsbedingungen und eine gegebenenfalls auf die Partnerleistung anfallende Umsatzsteuer richten sich nach dem Partnervertrag und dem geltenden Steuerrecht.
+          </p>
+        </div>
+      </Reveal></div>
   </div></section>;
 
   return (
