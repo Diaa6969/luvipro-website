@@ -66,7 +66,8 @@ export function VehicleExperience({ scene, id }: { scene?: number; id?: string }
       if (!journey || preference.matches || contextLost) return;
       const bounds = container.getBoundingClientRect();
       const travel = Math.max(1, bounds.height - viewport.offsetHeight);
-      progress = Math.min(1, Math.max(0, -bounds.top / travel)) * (chapters.length - 1);
+      const top = Number.parseFloat(getComputedStyle(viewport).top) || 0;
+      progress = Math.min(1, Math.max(0, (top - bounds.top) / travel)) * (chapters.length - 1);
       const chapter = Math.round(progress);
       if (chapter !== lastChapter) {
         lastChapter = chapter;
@@ -173,7 +174,8 @@ export function VehicleExperience({ scene, id }: { scene?: number; id?: string }
   const select = (index: number) => {
     setSelected(index);
     if (reduced || fallback || !runway.current || !surface.current) return;
-    const start = window.scrollY + runway.current.getBoundingClientRect().top;
+    const top = Number.parseFloat(getComputedStyle(surface.current).top) || 0;
+    const start = window.scrollY + runway.current.getBoundingClientRect().top - top;
     const travel = runway.current.offsetHeight - surface.current.offsetHeight;
     window.scrollTo({ top: start + travel * index / (chapters.length - 1), behavior: "auto" });
   };

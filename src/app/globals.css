@@ -548,8 +548,8 @@ body {
 }
 
 /* The visual stage sits inside the existing page layout and typography. */
-.cinematic-page.vehicle-home { overflow-x: clip; }
-.vehicle-runway { height: 530svh; scroll-margin-top: 4rem; }
+body:has(.vehicle-home), .cinematic-page.vehicle-home { overflow-x: clip; }
+.vehicle-runway { --vehicle-top: 5rem; height: 530svh; scroll-margin-top: var(--vehicle-top); }
 .vehicle-stage {
   position: relative;
   isolation: isolate;
@@ -565,8 +565,8 @@ body {
 }
 .vehicle-stage[data-ready="true"] canvas { opacity: 1; }
 .vehicle-stage-inline { height: clamp(14rem, 30vw, 23rem); overflow: hidden; border: 1px solid #a296ff40; border-radius: 1rem; }
-.vehicle-stage-journey { height: calc(100svh - 4rem); min-height: 29rem; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(1rem, 4vw, 3rem); }
-.vehicle-runway > .vehicle-stage { position: sticky; top: 4rem; }
+.vehicle-stage-journey { height: calc(100svh - var(--vehicle-top, 5rem)); min-height: 29rem; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(1rem, 4vw, 3rem); }
+.vehicle-runway > .vehicle-stage { position: sticky; top: var(--vehicle-top); }
 .vehicle-stage-journey::after {
   position: absolute;
   content: "";
@@ -583,7 +583,7 @@ body {
 .vehicle-chapters button { padding: .43rem .65rem; font-size: .75rem; }
 .vehicle-chapters button[aria-current="step"] { border-color: #8edfff; color: #b8efff; background: #181d3e; }
 .vehicle-stage :focus-visible { outline: 2px solid #8edfff; outline-offset: 3px; }
-.vehicle-uv { position: absolute; inset-inline-end: 1rem; bottom: 4.4rem; display: flex; gap: .6rem; align-items: center; padding: .4rem .65rem; font-size: .8rem; }
+.vehicle-uv { position: absolute; inset-inline-end: 1rem; bottom: calc(clamp(1rem, 4vw, 3rem) + 3rem); display: flex; gap: .6rem; align-items: center; padding: .4rem .65rem; font-size: .8rem; }
 .vehicle-stage-inline .vehicle-uv { bottom: .8rem; }
 .vehicle-uv input { width: clamp(5rem, 14vw, 10rem); accent-color: #a98dff; }
 @media (max-width: 660px) {
@@ -593,7 +593,7 @@ body {
   .vehicle-chapters button { padding: .34rem .45rem; }
   .vehicle-uv { bottom: 6rem; }
 }
-.vehicle-focus { position: absolute; z-index: 1; inset-inline-start: 1rem; bottom: 4.4rem; display: flex; gap: .35rem; }
+.vehicle-focus { position: absolute; z-index: 1; inset-inline-start: 1rem; bottom: calc(clamp(1rem, 4vw, 3rem) + 3rem); display: flex; gap: .35rem; }
 .vehicle-focus button { padding: .35rem .65rem; border: 1px solid #a9a2ff50; border-radius: .5rem; background: #0b0d1bef; color: #e8ecff; font-size: .75rem; }
 .vehicle-focus button[aria-pressed="true"], .vehicle-uv button[aria-pressed="true"] { color: #b8efff; }
 .vehicle-uv button { min-width: 2rem; }
