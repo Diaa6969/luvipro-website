@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
-import { dbRequest, readAccountingYear } from "@/lib/accounting/database";
+import { readMonthlyReportRows, readAccountingYear } from "@/lib/accounting/database";
 import { buildMonthlyTable, validYear } from "@/lib/accounting/monthly";
 export const runtime="nodejs";
 const euro=(n:number)=>new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(n/100);
@@ -30,7 +30,7 @@ export async function GET(req:NextRequest) {
  const month=req.nextUrl.searchParams.get("month")||"";
  if(!/^20\d{2}-(0[1-9]|1[0-2])$/.test(month)||!validYear(Number(month.slice(0,4)))) return NextResponse.json({error:"Ungültiger Monat"},{status:400,headers:{...cors(req),"Cache-Control":"no-store"}});
  try{
-  const {outgoing,incoming}=await readAccountingYear(Number(month.slice(0,4)));
+  const {outgoing,incoming}=await readAccountingYear(Number(month.slice(0,4)), readMonthlyReportRows);
   const row=buildMonthlyTable(Number(month.slice(0,4)),outgoing,incoming).find(x=>x.month===month);
   if(!row) throw new Error("Missing month");
   const sales=outgoing.filter(x=>x.invoice_date?.startsWith(month)&&x.delivery_state!=="reserved");
@@ -43,14 +43,14 @@ export async function GET(req:NextRequest) {
   try{
    const nextMonth=month.endsWith("-12")?String(Number(month.slice(0,4))+1)+"-01":month.slice(0,5)+String(Number(month.slice(5,7))+1).padStart(2,"0");
    const [r,c]=await Promise.all([
-     dbRequest("luvipro_affiliate_manual_transfers?select=gross_cents,bank_reference,transferred_on,affiliate_id,settlement_document_id&transferred_on=gte."+month+"-01&transferred_on=lt."+nextMonth+"-01&limit=500"),
-     dbRequest("luvipro_affiliate_settlement_documents?select=id,net_cents,vat_cents,gross_cents,document_number&limit=1000")
+     readMonthlyReportRows("luvipro_affiliate_manual_transfers?select=gross_cents,bank_reference,transferred_on,affiliate_id,settlement_document_id&transferred_on=gte."+month+"-01&transferred_on=lt."+nextMonth+"-01&limit=500"),
+     readMonthlyReportRows("luvipro_affiliate_settlement_documents?select=id,net_cents,vat_cents,gross_cents,document_number&limit=1000")
    ]);
    transfers=await r.json() as typeof transfers;
    creditNotes=await c.json() as typeof creditNotes;
   }catch{ /* Optional affiliate finance schema not installed; no false totals. */ }
   try{
-   const r=await dbRequest("luvipro_billing_cash_events?select=event_date,direction,category,description,gross_cents,payment_reference&event_date=gte."+month+"-01&event_date=lt."+ (month.endsWith("-12")?String(Number(month.slice(0,4))+1)+"-01-01":month.slice(0,5)+String(Number(month.slice(5,7))+1).padStart(2,"0")+"-01") +"&order=event_date.asc&limit=500");
+   const r=await readMonthlyReportRows("luvipro_billing_cash_events?select=event_date,direction,category,description,gross_cents,payment_reference&event_date=gte."+month+"-01&event_date=lt."+ (month.endsWith("-12")?String(Number(month.slice(0,4))+1)+"-01-01":month.slice(0,5)+String(Number(month.slice(5,7))+1).padStart(2,"0")+"-01") +"&order=event_date.asc&limit=500");
    journal=await r.json() as typeof journal;
   }catch{ /* Optional journal table is not installed on legacy installations. */ }
   const doc=await PDFDocument.create();

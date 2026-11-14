@@ -16,6 +16,22 @@ function ensureAvailable() {
 }
 export async function dbRequest(path: string, init: RequestInit = {}) {
   ensureAvailable();
+  return requestAccounting(path, init);
+}
+
+const monthlyReportTables = new Set([
+  "luvipro_billing_invoices", "luvipro_billing_expenses",
+  "luvipro_affiliate_manual_transfers", "luvipro_affiliate_settlement_documents",
+  "luvipro_billing_cash_events",
+]);
+
+// Only the monthly PDF route, after its administrator check, uses this GET-only reader.
+export async function readMonthlyReportRows(path: string) {
+  if (!monthlyReportTables.has(path.split("?")[0])) throw new Error("Invalid monthly report table");
+  return requestAccounting(path, { method: "GET" });
+}
+
+async function requestAccounting(path: string, init: RequestInit) {
   const response = await fetch(PROJECT_URL() + "/rest/v1/" + path, {
     ...init,
     headers: { ...headers(), "Content-Type": "application/json", ...init.headers },
@@ -26,13 +42,13 @@ export async function dbRequest(path: string, init: RequestInit = {}) {
   return response;
 }
 
-async function readAll<T>(table: string, fields: string, query: string): Promise<T[]> {
+async function readAll<T>(table: string, fields: string, query: string, read = dbRequest): Promise<T[]> {
   const PAGE = 500;
   const MAX = 10000;
   const results: T[] = [];
   for (let offset = 0; offset < MAX; offset += PAGE) {
     const url = `${table}?select=${fields}&${query}&order=created_at.asc&limit=${PAGE}&offset=${offset}`;
-    const response = await dbRequest(url);
+    const response = await read(url);
     const chunk = await response.json() as T[];
     if (!Array.isArray(chunk)) throw new Error("Malformed accounting response");
     results.push(...chunk);
@@ -41,15 +57,15 @@ async function readAll<T>(table: string, fields: string, query: string): Promise
   throw new Error("Mehr als 10.000 Datensätze; Export/Paginierung erforderlich.");
 }
 
-export async function readAccountingYear(year: number) {
+export async function readAccountingYear(year: number, read = dbRequest) {
   const from = `${year}-01-01`;
   const to = `${year + 1}-01-01`;
   const filter = `invoice_date=gte.${from}&invoice_date=lt.${to}`;
   const [outgoing, incoming] = await Promise.all([
     readAll<OutgoingInvoice>("luvipro_billing_invoices",
-      "id,invoice_number,invoice_date,created_at,delivery_state,net_cents,vat_cents,gross_cents,invoice_snapshot", filter),
+      "id,invoice_number,invoice_date,created_at,delivery_state,net_cents,vat_cents,gross_cents,invoice_snapshot", filter, read),
     readAll<IncomingInvoice>("luvipro_billing_expenses",
-      "id,supplier,supplier_invoice_number,invoice_date,category,description,net_cents,vat_cents,gross_cents,vat_rate,vorsteuer_confirmed,paid,file_path,created_at", filter),
+      "id,supplier,supplier_invoice_number,invoice_date,category,description,net_cents,vat_cents,gross_cents,vat_rate,vorsteuer_confirmed,paid,file_path,created_at", filter, read),
   ]);
   return { outgoing, incoming };
 }
