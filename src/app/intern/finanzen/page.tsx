@@ -1,3 +1,5 @@
+import { BankPreview } from "@/components/accounting/bank-preview";
+import { JournalPanel } from "@/components/accounting/journal-panel";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -156,6 +158,8 @@ export default async function AccountingDashboard({ searchParams }: {
               </section>
             </div>
 
+            <BankPreview />
+            <JournalPanel postingEnabled={process.env.FINANCE_JOURNAL_POSTING_ENABLED === "true"} />
             <section className="mx-auto mt-10 max-w-4xl rounded-2xl border border-pulse/20 bg-white/[0.045] p-6 sm:p-9">
               <p className="text-xs font-semibold uppercase tracking-[0.19em] text-pulse">Originalbelege sicher archivieren</p>
               <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">Eingangsrechnung erfassen</h2>
