@@ -1,7 +1,10 @@
-import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "npm:pdf-lib@1.17.1";
+import { PDFDocument, rgb, type PDFFont, type PDFPage } from "npm:pdf-lib@1.17.1";
+import fontkit from "npm:@pdf-lib/fontkit@1.1.1";
+import { regularFont, boldFont } from "./fonts.ts";
 import { buildMonthlyTable, validYear, type IncomingInvoice, type OutgoingInvoice } from "./monthly.ts";
 const euro=(n:number)=>new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(n/100);
-const clean=(s:string)=>s.replace(/[\u0000-\u001f\u007f]/g," ").replace(/[\u2000-\u206f]/g,"-").trim();
+const date = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value)
+  ? value.split("-").reverse().join(".") : value;
 const appOrigins = new Set([
  "https://ff-debug-service-frontend-free-ygxkweukma-uc.a.run.app",
 ]);
@@ -73,10 +76,12 @@ Deno.serve(async (req) => {
    journal=await r.json() as typeof journal;
   }catch{ /* Optional journal table is not installed on legacy installations. */ }
   const doc=await PDFDocument.create();
-  doc.setTitle("LUVIPRO Monatsuebersicht "+month);
+  doc.setTitle("LUVIPRO Monatsübersicht "+month);
   doc.setAuthor("LUVIPRO");
-  doc.setSubject("Interne Buchhaltungsuebersicht - kein Steuerbescheid");
-  const regular=await doc.embedFont(StandardFonts.Helvetica), bold=await doc.embedFont(StandardFonts.HelveticaBold);
+  doc.setSubject("Interne Buchhaltungsübersicht - kein Steuerbescheid");
+  doc.registerFontkit(fontkit);
+  const regular = await doc.embedFont(regularFont, { subset: true });
+  const bold = await doc.embedFont(boldFont, { subset: true });
   let page:PDFPage, y=0, pageNo=0;
   const width=595.28;
   function addPage(){
@@ -87,52 +92,67 @@ Deno.serve(async (req) => {
    y=754;
   }
   function txt(v:string,size=10,font:PDFFont=regular){
-   if(y<65) addPage();
-   // WinAnsi text only: replace characters outside latin1 to avoid PDF encoding errors.
-   const safe=clean(v).replace(/[^\x20-\xFF]/g,"?").slice(0,103);
-   const max=504;let line=safe;
-   while(line.length>1&&font.widthOfTextAtSize(line,size)>max) line=line.slice(0,-1);
-   page.drawText(line,{x:43,y,font,size,color:rgb(.12,.14,.20)});
-   y-=size+9;
+   let line = "";
+   const draw = () => {
+    if (!line) return;
+    if (y < 65) addPage();
+    page.drawText(line, { x: 43, y, font, size, color: rgb(.12,.14,.20) });
+    y -= size + 7;
+    line = "";
+   };
+   for (const word of v.normalize("NFC").split(/\s+/u)) {
+    const candidate = line ? line + " " + word : word;
+    if (font.widthOfTextAtSize(candidate, size) <= 504) {
+     line = candidate;
+     continue;
+    }
+    draw();
+    for (const character of word) {
+     if (line && font.widthOfTextAtSize(line + character, size) > 504) draw();
+     line += character;
+    }
+   }
+   draw();
   }
   function title(t:string){y-=9;txt(t,13,bold);}
   addPage();
-  txt("MONATSABRECHNUNG (INTERNE UEBERSICHT)",15,bold);
-  txt("Zeitraum: "+month+"   Erstellt: "+new Date().toISOString().slice(0,10));
-  txt("Hinweis: keine Steuererklaerung, E-Rechnung oder GoBD-Zertifizierung.",9);
+  txt("MONATSABRECHNUNG (INTERNE ÜBERSICHT)",15,bold);
+  txt("Zeitraum: "+month.slice(5)+"."+month.slice(0,4)+"   Erstellt: "+new Intl.DateTimeFormat("de-DE",{timeZone:"Europe/Berlin"}).format(new Date()));
+  txt("Hinweis: keine Steuererklärung, E-Rechnung oder GoBD-Zertifizierung.",9);
   title("Monatssummen");
   txt("Ausgangsrechnungen: "+row.outgoingCount+"    Einnahmen netto: "+euro(row.revenueNet));
   txt("Umsatzsteuer Ausgang: "+euro(row.revenueVat)+"    Umsatz brutto: "+euro(row.revenueGross));
   txt("Eingangsbelege: "+row.incomingCount+"    Ausgaben brutto: "+euro(row.costsGross));
-  txt("Vorsteuer manuell bestaetigt: "+euro(row.inputVatConfirmed));
+  txt("Vorsteuer manuell bestätigt: "+euro(row.inputVatConfirmed));
   txt("Indikativer USt-Saldo: "+euro(row.vatBalance));
   txt("Vereinfachte Netto-Differenz: "+euro(row.netDifference));
   txt("Affiliate Bankauszahlungen brutto (separat): "+euro(transfers.reduce((s,x)=>s+x.gross_cents,0)));
-  txt("Affiliate: Vorsteuer NUR NACH Steuerberaterpruefung.");
-  title("Nachgewiesene manuelle Affiliate-Ueberweisungen");
+  txt("Affiliate: Vorsteuer NUR NACH Steuerberaterprüfung.");
+  title("Nachgewiesene manuelle Affiliate-Überweisungen");
   if(!transfers.length)txt("Keine erfassten Bankueberweisungen.");
   else for(const t of transfers){
     const d=creditNotes.find(x=>x.id===t.settlement_document_id);
-    txt([t.transferred_on,d?.document_number||"Beleg fehlt","Netto "+euro(d?.net_cents||0),
+    txt([date(t.transferred_on),d?.document_number||"Beleg fehlt","Netto "+euro(d?.net_cents||0),
       "USt "+euro(d?.vat_cents||0),"Brutto "+euro(t.gross_cents)].join("  |  "),9);
   }
   title("Weitere Geldbewegungen (separates Journal)");
   txt("Zugang brutto: "+euro(journal.filter(x=>x.direction==="in").reduce((s,x)=>s+x.gross_cents,0))+"  |  Abgang brutto: "+euro(journal.filter(x=>x.direction==="out").reduce((s,x)=>s+x.gross_cents,0)));
   if(!journal.length) txt("Keine separaten Geldbewegungen.");
-  else for(const event of journal){txt([event.event_date,event.direction==="in"?"+":"-",event.category,euro(event.gross_cents),event.description].join("  |  "),9);}
+  else for(const event of journal){txt([date(event.event_date),event.direction==="in"?"+":"-",event.category,euro(event.gross_cents),event.description].join("  |  "),9);}
   title("Ausgangsrechnungen");
   if(!sales.length) txt("Keine ausgestellten Rechnungen in diesem Monat.");
-  else for(const inv of sales){txt([inv.invoice_date||"",inv.invoice_number,euro(inv.gross_cents||0),inv.delivery_state].join("  |  "),9);}
+  else for(const inv of sales){txt([date(inv.invoice_date||""),inv.invoice_number,euro(inv.gross_cents||0),inv.delivery_state].join("  |  "),9);}
   title("Eingangsrechnungen");
   if(!costs.length) txt("Keine Eingangsbelege in diesem Monat.");
-  else for(const cost of costs){txt([cost.invoice_date,cost.supplier_invoice_number,cost.supplier,euro(cost.gross_cents),cost.paid?"bezahlt":"offen"].join("  |  "),9);}
-  title("Abgrenzung / Pruefhinweise");
+  else for(const cost of costs){txt([date(cost.invoice_date),cost.supplier_invoice_number,cost.supplier,euro(cost.gross_cents),cost.paid?"bezahlt":"offen"].join("  |  "),9);}
+  title("Abgrenzung / Prüfhinweise");
   txt("Keine automatische GuV / Bilanz / UStVA. Ist-/Soll-Versteuerung,");
   txt("Anzahlungen, Wareneinsatz, AfA, Erstattungen, Bankabgleich,");
-  txt("Vorsteuerrecht und Gutschriften sind steuerlich zu pruefen.");
+  txt("Vorsteuerrecht und Gutschriften sind steuerlich zu prüfen.");
   txt("Belege und Buchungsdaten im Original aufbewahren; PDF ersetzt sie nicht.");
   const body=await doc.save();
   return new Response(new Uint8Array(body),{headers:{...cors(req),"Content-Type":"application/pdf","Content-Disposition":`attachment; filename="LUVIPRO-Monatsabrechnung-${month}.pdf"`,"Cache-Control":"private, no-store","X-Robots-Tag":"noindex","X-Content-Type-Options":"nosniff"}});
  }catch{return Response.json({error:"Buchhaltungs-PDF nicht verfügbar; Tabellen und Verknüpfungen prüfen."},{status:503,headers:{...cors(req),"Cache-Control":"no-store"}});}
 
 });
+
