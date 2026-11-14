@@ -1,3 +1,5 @@
+import { inspectInvoiceXml } from "./xml.ts";
+
 // Intake only. A format check is not an EN 16931 validation result.
 const originAllowed = "https://ff-debug-service-frontend-free-ygxkweukma-uc.a.run.app";
 const maxBytes = 5_242_880;
@@ -92,12 +94,15 @@ Deno.serve(async (request) => {
     const pdf = type === "application/pdf";
     if (pdf && new TextDecoder().decode(bytes.slice(0, 5)) !== "%PDF-")
       return reply(422, { error: "Invalid PDF signature" });
+    let invoiceHeader;
     if (!pdf) {
       let xml: string;
       try { xml = new TextDecoder("utf-8", { fatal: true }).decode(bytes); }
       catch { return reply(422, { error: "Expected UTF-8 XML" }); }
       if (!xml.trimStart().startsWith("<") || /<!\s*(?:DOCTYPE|ENTITY)/i.test(xml))
         return reply(422, { error: "Unsupported XML input" });
+      try { invoiceHeader = inspectInvoiceXml(xml); }
+      catch { return reply(422, { error: "Malformed XML or unsupported invoice header" }); }
     }
     const sha256 = await hash(bytes.buffer);
     const path = `intake/${sha256}.${pdf ? "pdf" : "xml"}`;
@@ -124,7 +129,7 @@ Deno.serve(async (request) => {
     });
     if (!recorded.ok) return reply(503, { error: "Intake unavailable; retry the same document" });
     const rows = await recorded.json();
-    return rows.length ? reply(201, { id: rows[0].id, state: "pending_validation" })
+    return rows.length ? reply(201, { id: rows[0].id, state: "pending_validation", invoiceHeader })
       : reply(200, { state: "already_received" });
   } catch {
     return reply(503, { error: "Intake unavailable" });
