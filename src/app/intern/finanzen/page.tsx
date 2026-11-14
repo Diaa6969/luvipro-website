@@ -55,7 +55,7 @@ export default async function AccountingDashboard({ searchParams }: {
           <div>
             <Link href="/" className="text-sm text-pulse hover:text-white">← LUVIPRO Website</Link>
             <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-pulse">LUVIPRO · Verwaltung</p>
-            <h1 className="mt-2 font-[var(--font-space-grotesk)] text-4xl font-bold sm:text-5xl">Buchhaltung & Rechnungen</h1>
+            <h1 className="mt-2 font-[var(--font-space-grotesk)] text-4xl font-bold sm:text-5xl">Buchhaltung & Finanzen</h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">Interne Rechnungsablage und monatliche Übersicht zu Umsatz, ausgewiesener Umsatzsteuer, Eingangsbelegen und manuell bestätigter Vorsteuer.</p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
