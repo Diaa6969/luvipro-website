@@ -87,7 +87,7 @@ export async function storePrivateExpenseFile(path: string, body: Buffer, type: 
   if (!r.ok) throw new Error("Private receipt upload failed");
 }
 export async function readPrivateExpenseFile(path: string) {
-  if (!/^[0-9a-f-]{36}\.(pdf|png|jpg)$/.test(path)) throw new Error("Invalid receipt path");
+  if (!/^[0-9a-f-]{36}\.(pdf|png|jpg|xml)$/.test(path)) throw new Error("Invalid receipt path");
   ensureAvailable();
   const response = await fetch(PROJECT_URL() + "/storage/v1/object/authenticated/" + BUCKET + "/" + path, {
     headers: headers(),
@@ -97,6 +97,6 @@ export async function readPrivateExpenseFile(path: string) {
   if (!response.ok) throw new Error("Private receipt unavailable");
   const content = Buffer.from(await response.arrayBuffer());
   if (content.length > 5 * 1024 * 1024) throw new Error("Receipt exceeds limit");
-  const type = path.endsWith(".pdf") ? "application/pdf" : path.endsWith(".png") ? "image/png" : "image/jpeg";
+  const type = path.endsWith(".pdf") ? "application/pdf" : path.endsWith(".png") ? "image/png" : path.endsWith(".xml") ? "application/xml" : "image/jpeg";
   return { content, type };
 }

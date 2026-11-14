@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     } else {
       return NextResponse.json({ error: "Invalid document kind" }, { status: 400 });
     }
-    if (req.nextUrl.searchParams.get("format") === "pdf" && type !== "application/pdf") {
+    if (req.nextUrl.searchParams.get("format") === "pdf" && type.startsWith("image/")) {
       const doc = await PDFDocument.create();
       const embedded = type === "image/png" ? await doc.embedPng(new Uint8Array(body)) : await doc.embedJpg(new Uint8Array(body));
       const page = doc.addPage([595.28, 841.89]);
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
     return new NextResponse(new Uint8Array(body), {
       headers: {
         "Content-Type": type,
-        "Content-Disposition": `attachment; filename="Beleg-${id}.${type === "application/pdf" ? "pdf" : type === "image/png" ? "png" : "jpg"}"`,
+        "Content-Disposition": `attachment; filename="Beleg-${id}.${type === "application/pdf" ? "pdf" : type === "image/png" ? "png" : type === "application/xml" ? "xml" : "jpg"}"`,
         "Cache-Control": "no-store",
         "X-Robots-Tag": "noindex",
         "X-Content-Type-Options": "nosniff",

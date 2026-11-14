@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import ts from "typescript";
+import { createRequire } from "node:module";
+
+const source = readFileSync("src/lib/accounting/invoice-xml.ts", "utf8");
+const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
+const exports = {};
+new Function("require", "exports", js)(createRequire(import.meta.url), exports);
+const parse = exports.inspectInvoiceXml;
+const ubl = '<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:b="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"><b:ID>TEST-42</b:ID><b:IssueDate>2026-01-01</b:IssueDate><b:DocumentCurrencyCode>EUR</b:DocumentCurrencyCode></Invoice>';
+assert.equal(parse(ubl).invoiceNumber, "TEST-42");
+assert.equal(parse(ubl).currency, "EUR");
+const cii = '<x:CrossIndustryInvoice xmlns:x="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:r="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"><x:ExchangedDocument><r:ID>CII-42</r:ID></x:ExchangedDocument></x:CrossIndustryInvoice>';
+assert.equal(parse(cii).invoiceNumber, "CII-42");
+assert.throws(() => parse('<!DOCTYPE Invoice [<!ENTITY blocked "text">]>' + ubl));
+assert.throws(() => parse(ubl.replace("Invoice-2", "Wrong-2")));
+assert.throws(() => parse(ubl.slice(0, -2)));
+assert.throws(() => parse(" ".repeat(500001)));
+console.log("UBL/CII metadata, malformed XML, DOCTYPE and size checks passed.");

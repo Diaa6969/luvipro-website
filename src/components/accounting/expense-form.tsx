@@ -13,6 +13,7 @@ const cls = "mt-2 min-h-11 w-full min-w-0 rounded-xl border border-white/20 bg-[
 export function ExpenseForm() {
   const [gross, setGross] = useState("");
   const [rate, setRate] = useState<0|7|19>(19);
+  const [invoice, setInvoice] = useState<Record<string, string> | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const normalized = gross.trim().replace(",", ".");
@@ -20,6 +21,21 @@ export function ExpenseForm() {
   let preview: ReturnType<typeof safeVatSplit> | null = null;
   try { if (amount > 0) preview = safeVatSplit(amount, rate); } catch { /* wait for valid value */ }
   const format = (v: number) => new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(v / 100);
+
+  async function inspect(file?: File) {
+    setInvoice(null);
+    setError("");
+    if (!file || !/\.xml$/i.test(file.name)) return;
+    if (file.size > 500_000) { setError("XML-Datei zu groß."); return; }
+    try {
+      const response = await fetch("/api/accounting/inspect-invoice", { method: "POST", body: file });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "XML konnte nicht gelesen werden.");
+      setInvoice(data.invoice);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "XML konnte nicht gelesen werden.");
+    }
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -67,9 +83,19 @@ export function ExpenseForm() {
       <label className="text-sm text-slate-200 sm:col-span-2">Beschreibung
         <input className={cls} name="description" maxLength={500} placeholder="Wofür wurde die Rechnung ausgestellt?" />
       </label>
-      <label className="text-sm text-slate-200 sm:col-span-2">Originalbeleg (PDF, PNG oder JPG, max. 5 MB) *
-        <input className={cls} name="receipt" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" required />
+      <label className="text-sm text-slate-200 sm:col-span-2">Originalbeleg (PDF, PNG, JPG oder XML) *
+        <input className={cls} name="receipt" type="file" accept=".pdf,.png,.jpg,.jpeg,.xml" onChange={event => void inspect(event.target.files?.[0])} required />
       </label>
+      {invoice && <aside className="rounded-xl border border-white/10 p-4 text-sm sm:col-span-2">
+        <p className="font-semibold">Ausgelesene Rechnungsdaten zur Prüfung</p>
+        <dl className="mt-2 grid gap-2 sm:grid-cols-2">
+          {([["Lieferant", "supplier"], ["Rechnungsnummer", "invoiceNumber"], ["Rechnungsdatum", "invoiceDate"],
+            ["Währung", "currency"], ["Netto", "net"], ["Brutto", "gross"], ["Fällig am", "due"]] as const).map(([label, key]) =>
+            <div key={key}><dt>{label}</dt><dd className="break-words text-slate-300">{invoice[key] || "–"}</dd></div>
+          )}
+        </dl>
+        <p className="mt-3 text-slate-300">Übertragen Sie die geprüften Angaben in das Formular. Die Vorschau führt keine EN-16931-Validierung durch.</p>
+      </aside>}
       {preview && (
         <div className="sm:col-span-2 flex flex-wrap gap-5 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
           <span>Netto: <b className="text-white">{format(preview.netCents)}</b></span>

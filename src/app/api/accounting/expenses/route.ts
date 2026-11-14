@@ -1,3 +1,4 @@
+import { inspectInvoiceXml } from "@/lib/accounting/invoice-xml";
 import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { isAccountingRequestAuthorized, isSameOrigin } from "@/lib/accounting/admin-auth";
@@ -49,9 +50,14 @@ export async function POST(req: NextRequest) {
     const pdf = upload.type === "application/pdf" && bytes.subarray(0, 5).toString("utf8") === "%PDF-";
     const png = upload.type === "image/png" && bytes.subarray(0, 8).toString("hex") === "89504e470d0a1a0a";
     const jpg = upload.type === "image/jpeg" && bytes.subarray(0, 3).toString("hex") === "ffd8ff";
-    if (!pdf && !png && !jpg) throw new Error("Nur echte PDF-, PNG- oder JPEG-Belege erlaubt.");
-    const ext = pdf ? "pdf" : png ? "png" : "jpg";
-    const type = pdf ? "application/pdf" : png ? "image/png" : "image/jpeg";
+    const xml = /\.xml$/i.test(upload.name) && bytes.length <= 500_000;
+    if (xml) {
+      const inspected = inspectInvoiceXml(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+      if (inspected.currency !== "EUR") throw new Error("Fremdwährung muss separat geprüft werden.");
+    }
+    if (!pdf && !png && !jpg && !xml) throw new Error("Dateiformat nicht unterstützt.");
+    const ext = pdf ? "pdf" : png ? "png" : xml ? "xml" : "jpg";
+    const type = pdf ? "application/pdf" : png ? "image/png" : xml ? "application/xml" : "image/jpeg";
     const file_path = randomUUID() + "." + ext;
     // VAT recognition is a manually reviewed status; no automatic right to
     // Vorsteuer is inferred merely by selecting a tax rate.

@@ -1,3 +1,6 @@
+import { CompanyDraftPanel } from "@/components/accounting/company-draft-panel";
+import { BankPreview } from "@/components/accounting/bank-preview";
+import { JournalPanel } from "@/components/accounting/journal-panel";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -55,7 +58,7 @@ export default async function AccountingDashboard({ searchParams }: {
           <div>
             <Link href="/" className="text-sm text-pulse hover:text-white">← LUVIPRO Website</Link>
             <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-pulse">LUVIPRO · Verwaltung</p>
-            <h1 className="mt-2 font-[var(--font-space-grotesk)] text-4xl font-bold sm:text-5xl">Buchhaltung & Rechnungen</h1>
+            <h1 className="mt-2 font-[var(--font-space-grotesk)] text-4xl font-bold sm:text-5xl">Buchhaltung & Finanzen</h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">Interne Rechnungsablage und monatliche Übersicht zu Umsatz, ausgewiesener Umsatzsteuer, Eingangsbelegen und manuell bestätigter Vorsteuer.</p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -156,6 +159,9 @@ export default async function AccountingDashboard({ searchParams }: {
               </section>
             </div>
 
+            <CompanyDraftPanel />
+            <BankPreview />
+            <JournalPanel postingEnabled={process.env.FINANCE_JOURNAL_POSTING_ENABLED === "true"} />
             <section className="mx-auto mt-10 max-w-4xl rounded-2xl border border-pulse/20 bg-white/[0.045] p-6 sm:p-9">
               <p className="text-xs font-semibold uppercase tracking-[0.19em] text-pulse">Originalbelege sicher archivieren</p>
               <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">Eingangsrechnung erfassen</h2>

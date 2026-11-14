@@ -34,9 +34,11 @@
     "nodemailer": "10.3.1",
     "pdf-lib": "1.17.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "saxes": "6.0.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.16",
     "@eslint/eslintrc": "^3.2.0",
     "@types/node": "^22.10.2",
     "@types/nodemailer": "8.0.2",
