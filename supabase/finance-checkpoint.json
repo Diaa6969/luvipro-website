@@ -1,0 +1,21 @@
+{
+  "status": "incomplete",
+  "project": "nfjyxutozrbgkujedoke",
+  "baseCommit": "e7e7ea43b4be8da4e510ca6ede50c738bb524ae6",
+  "verified": {
+    "intake": "Isolated PostgreSQL migration, guarded rollback, grants and duplicate hash. XML header parsing and authorization exercised with stubbed network.",
+    "ledger": "Isolated PostgreSQL posting, balance, closed period, duplicate source and service-role immutability checks.",
+    "monthlyPdf": "Existing Edge Function v2 deployed. End-to-end FlutterFlow download remains unverified."
+  },
+  "nextActions": [
+    "Verify a current recoverable production backup and confirm scope of schema approval before applying migrations.",
+    "Enable application/xml on the existing private accounting bucket via the supported Storage administration interface, preserving current MIME types.",
+    "Finish intake metadata, review transitions, ZUGFeRD attachment extraction and independent standards validation, then test upload and retrieval through the original Admin Center.",
+    "Complete outgoing generation, corrections and synthetic delivery tests.",
+    "Integrate source adapters, reviewed SKR mappings and reversals with the posting transaction. Review and test a ledger rollback before deployment.",
+    "Implement payment matching, GuV, Bilanz, SuSa, VAT preparation, DATEV, versioned company configuration and archive controls. Verify in FlutterFlow."
+  ],
+  "productionChangesThisBatch": [],
+  "realIssuanceDeliveryFiling": "disabled"
+}
+
