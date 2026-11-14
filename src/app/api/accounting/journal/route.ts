@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAccountingRequestAuthorized, isSameOrigin } from "@/lib/accounting/admin-auth";
+import { isAuthorizedFinanceAdmin } from "@/lib/accounting/admin-request";
 import { dbRequest } from "@/lib/accounting/database";
 
 const noStore = { "Cache-Control": "no-store" };
 const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 
 export async function GET(request: NextRequest) {
-  if (!isAccountingRequestAuthorized(request)) return new NextResponse(null, { status: 403 });
+  if (!(await isAuthorizedFinanceAdmin(request))) return new NextResponse(null, { status: 403, headers: noStore });
   try {
     const result = await dbRequest("luvipro_finance_journal?select=id,posting_date,reference,memo,reversal_of,luvipro_finance_lines(account,debit_cents,credit_cents,line_number)&order=posting_date.desc,id.desc&limit=100");
     return NextResponse.json(await result.json(), { headers: noStore });
