@@ -1,3 +1,4 @@
+import { CompanyDraftPanel } from "@/components/accounting/company-draft-panel";
 import { BankPreview } from "@/components/accounting/bank-preview";
 import { JournalPanel } from "@/components/accounting/journal-panel";
 import type { Metadata } from "next";
@@ -158,6 +159,7 @@ export default async function AccountingDashboard({ searchParams }: {
               </section>
             </div>
 
+            <CompanyDraftPanel />
             <BankPreview />
             <JournalPanel postingEnabled={process.env.FINANCE_JOURNAL_POSTING_ENABLED === "true"} />
             <section className="mx-auto mt-10 max-w-4xl rounded-2xl border border-pulse/20 bg-white/[0.045] p-6 sm:p-9">
