@@ -6,10 +6,29 @@ import { buildMonthlyTable, validYear } from "@/lib/accounting/monthly";
 export const runtime="nodejs";
 const euro=(n:number)=>new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(n/100);
 const clean=(s:string)=>s.replace(/[\u0000-\u001f\u007f]/g," ").replace(/[\u2000-\u206f]/g,"-").trim();
+const appOrigins = new Set([
+ "https://ff-debug-service-frontend-free-ygxkweukma-uc.a.run.app",
+]);
+function cors(req: NextRequest): Record<string,string> {
+ const origin = req.headers.get("origin");
+ return origin && appOrigins.has(origin)
+  ? {"Access-Control-Allow-Origin": origin, "Vary": "Origin"}
+  : {"Vary": "Origin"};
+}
+export function OPTIONS(req: NextRequest) {
+ const headers = cors(req);
+ const accepted = headers["Access-Control-Allow-Origin"] &&
+   req.headers.get("access-control-request-method") === "GET" &&
+   req.headers.get("access-control-request-headers")?.trim().toLowerCase() === "authorization";
+ return new NextResponse(null, {status:accepted ? 204 : 403, headers:{
+   ...headers, "Cache-Control":"no-store",
+   ...(accepted ? {"Access-Control-Allow-Methods":"GET","Access-Control-Allow-Headers":"Authorization"} : {}),
+ }});
+}
 export async function GET(req:NextRequest) {
- if(!(await isAuthorizedFinanceAdmin(req))) return NextResponse.json({error:"Unauthorized"},{status:401});
+ if(!(await isAuthorizedFinanceAdmin(req))) return NextResponse.json({error:"Unauthorized"},{status:401,headers:{...cors(req),"Cache-Control":"no-store"}});
  const month=req.nextUrl.searchParams.get("month")||"";
- if(!/^20\d{2}-(0[1-9]|1[0-2])$/.test(month)||!validYear(Number(month.slice(0,4)))) return NextResponse.json({error:"Ungültiger Monat"},{status:400});
+ if(!/^20\d{2}-(0[1-9]|1[0-2])$/.test(month)||!validYear(Number(month.slice(0,4)))) return NextResponse.json({error:"Ungültiger Monat"},{status:400,headers:{...cors(req),"Cache-Control":"no-store"}});
  try{
   const {outgoing,incoming}=await readAccountingYear(Number(month.slice(0,4)));
   const row=buildMonthlyTable(Number(month.slice(0,4)),outgoing,incoming).find(x=>x.month===month);
@@ -94,6 +113,7 @@ export async function GET(req:NextRequest) {
   txt("Vorsteuerrecht und Gutschriften sind steuerlich zu pruefen.");
   txt("Belege und Buchungsdaten im Original aufbewahren; PDF ersetzt sie nicht.");
   const body=await doc.save();
-  return new NextResponse(new Uint8Array(body),{headers:{"Content-Type":"application/pdf","Content-Disposition":`attachment; filename="LUVIPRO-Monatsabrechnung-${month}.pdf"`,"Cache-Control":"private, no-store","X-Robots-Tag":"noindex","X-Content-Type-Options":"nosniff"}});
- }catch{return NextResponse.json({error:"Buchhaltungs-PDF nicht verfügbar; Tabellen und Verknüpfungen prüfen."},{status:503,headers:{"Cache-Control":"no-store"}});}
+  return new NextResponse(new Uint8Array(body),{headers:{...cors(req),"Content-Type":"application/pdf","Content-Disposition":`attachment; filename="LUVIPRO-Monatsabrechnung-${month}.pdf"`,"Cache-Control":"private, no-store","X-Robots-Tag":"noindex","X-Content-Type-Options":"nosniff"}});
+ }catch{return NextResponse.json({error:"Buchhaltungs-PDF nicht verfügbar; Tabellen und Verknüpfungen prüfen."},{status:503,headers:{...cors(req),"Cache-Control":"no-store"}});}
 }
+
